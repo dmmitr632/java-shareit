@@ -1,4 +1,4 @@
--- CREATE TYPE status AS ENUM ('WAITING', 'APPROVED', 'REJECTED', 'CANCELLED');
+CREATE TYPE booking_status AS ENUM ('WAITING', 'APPROVED', 'REJECTED', 'CANCELLED');
 
 CREATE TABLE IF NOT EXISTS items
 (
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS bookings
     end_time timestamp without time zone,
     item_id int REFERENCES items (item_id),
     booker_id int REFERENCES users (user_id),
-    status varchar(12)
+    status booking_status
 );
 
 CREATE TABLE IF NOT EXISTS requests

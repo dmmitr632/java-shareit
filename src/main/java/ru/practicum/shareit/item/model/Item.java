@@ -24,4 +24,7 @@ public class Item {
     @NotNull
     private Integer owner;
     private Integer request;
+    public Boolean isAvailable() {
+        return this.getAvailable();
+    }
 }
