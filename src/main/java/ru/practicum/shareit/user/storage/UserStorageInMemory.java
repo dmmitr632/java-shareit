@@ -28,7 +28,13 @@ public class UserStorageInMemory implements UserStorage {
 
     @Override
     public User editUser(int id, User user) {
-        return users.put(user.getId(), user);
+        if (users.containsKey(id)) {
+            checkIfEmailIsDuplicated(user.getEmail());
+            user.setId(id);
+            users.put(id, user);
+            return user;
+        }
+        else throw new ValidationException();
     }
 
     @Override
