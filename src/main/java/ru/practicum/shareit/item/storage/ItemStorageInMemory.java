@@ -2,11 +2,13 @@ package ru.practicum.shareit.item.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 @Slf4j
@@ -56,12 +58,12 @@ public class ItemStorageInMemory implements ItemStorage {
     public List<Item> getItemsByTextSearch(String text) {
         ArrayList<Item> foundItems = new ArrayList<>();
 
-            for (Item item : items.values()) {
-                if ((item.getName().toLowerCase().contains(text) ||
-                        item.getDescription().toLowerCase().contains(text)) && item.isAvailable()) {
-                    foundItems.add(item);
-                }
+        for (Item item : items.values()) {
+            if ((item.getName().toLowerCase().contains(text) ||
+                    item.getDescription().toLowerCase().contains(text)) && item.isAvailable()) {
+                foundItems.add(item);
             }
+        }
 
         return foundItems;
     }

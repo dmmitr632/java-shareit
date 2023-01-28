@@ -45,7 +45,7 @@ public class ItemService {
     }
 
 
-    public List<ItemDto> getItemsByTextSearch(String text) {
-        return null;
+    public List<Item> getItemsByTextSearch(String text) {
+        return itemStorage.getItemsByTextSearch(text);
     }
 }
