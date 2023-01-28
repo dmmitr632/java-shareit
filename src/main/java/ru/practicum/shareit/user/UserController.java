@@ -41,9 +41,9 @@ public class UserController {
 
     @GetMapping
     public List<UserDto> getAllUsers() {
-        List<User> userList =  userService.getAllUsers();
+        List<User> usersList =  userService.getAllUsers();
         List<UserDto> usersDtoList = new ArrayList<>();
-        userList.forEach(user -> usersDtoList.add(UserMapper.toUserDto(user)));
+        usersList.forEach(user -> usersDtoList.add(UserMapper.toUserDto(user)));
         return usersDtoList;
     }
 
