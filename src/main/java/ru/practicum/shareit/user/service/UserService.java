@@ -26,8 +26,8 @@ public class UserService {
         return userStorage.editUser(userId, UserMapper.toUser(userId, userDto, new User()));
     }
 
-    public UserDto getUserById(int userId) {
-        return UserMapper.toUserDto(userStorage.getUserById(userId));
+    public User getUserById(int userId) {
+        return userStorage.getUserById(userId);
     }
 
     public User deleteUser(int userId) {

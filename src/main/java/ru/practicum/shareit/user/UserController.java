@@ -3,10 +3,12 @@ package ru.practicum.shareit.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,28 +25,31 @@ public class UserController {
     }
 
     @PostMapping
-    public User addUser(@Valid @RequestBody User user) {
-        return userService.addUser(user);
+    public UserDto addUser(@Valid @RequestBody User user) {
+        return UserMapper.toUserDto(userService.addUser(user));
     }
 
     @PatchMapping("{userId}")
-    public User editUser(@PathVariable int userId, @RequestBody UserDto userDto) {
-        return userService.editUser(userId, userDto);
+    public UserDto editUser(@PathVariable int userId, @RequestBody UserDto userDto) {
+        return UserMapper.toUserDto(userService.editUser(userId, userDto));
     }
 
     @GetMapping("{userId}")
     public UserDto getUser(@PathVariable int userId) {
-        return userService.getUserById(userId);
+        return UserMapper.toUserDto(userService.getUserById(userId));
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public List<UserDto> getAllUsers() {
+        List<User> userList =  userService.getAllUsers();
+        List<UserDto> usersDtoList = new ArrayList<>();
+        userList.forEach(user -> usersDtoList.add(UserMapper.toUserDto(user)));
+        return usersDtoList;
     }
 
     @DeleteMapping("{userId}")
-    public void deleteUser(@PathVariable int userId) {
-        userService.deleteUser(userId);
+    public UserDto deleteUser(@PathVariable int userId) {
+        return UserMapper.toUserDto(userService.deleteUser(userId));
     }
 
 
