@@ -24,13 +24,13 @@ public class ItemService {
     }
 
     public Item addItem(int id, Item item) {
-        return itemStorage.addItem(id, item);
+        return itemStorage.addItem(item, id);
 
     }
 
     public Item editItem(int userId, int itemId, ItemDto itemDto) {
         Item item = itemStorage.getItemById(itemId);
-        return itemStorage.editItem(userId, ItemMapper.toItem(itemDto, userId)); //Доделать toItem
+        return itemStorage.editItem(ItemMapper.toItem(itemDto, userId), userId); //Доделать toItem
 
 
     }

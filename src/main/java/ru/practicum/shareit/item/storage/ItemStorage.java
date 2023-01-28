@@ -6,9 +6,9 @@ import java.util.List;
 
 
 public interface ItemStorage {
-    Item addItem(int id, Item item);
+    Item addItem(Item item, int id);
 
-    Item editItem(int id, Item item);
+    Item editItem(Item item, int id);
 
     Item getItemById(int id);
 

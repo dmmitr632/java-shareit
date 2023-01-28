@@ -10,52 +10,59 @@ import java.util.*;
 
 @Repository
 @Slf4j
-@Component
 @Qualifier("ItemStorageInMemory")
 public class ItemStorageInMemory implements ItemStorage {
 
 
-    private List<Item> items = new ArrayList<>();
+    private Map<Integer, Item> items = new HashMap<>();
     private int id = 0;
 
 
     @Override
-    public Item addItem(int userId, Item item) {
+    public Item addItem(Item item, int userId) {
         id++;
         item.setId(id);
         item.setOwner(userId);
-        items.add(item);
+        items.put(id, item);
         return item;
     }
 
     @Override
-    public Item editItem(int userId, Item item) {
-        items.remove(item.getId());
-        items.add(item);
-        return item;
+    public Item editItem(Item item, int userId) {
+        if (item.getOwner() == userId) {
+            items.put(item.getId(), item);
+            return item;
+        }
+        return null;
     }
 
     @Override
     public Item getItemById(int itemId) {
-        for (Item item : items) {
-            if (item.getId() == itemId) return item;
-        }
-        return null;
+
+        return items.get(itemId);
     }
 
     @Override
-    public List<Item> getAllItemsByUserId(int userId) {
-        List<Item> itemsByUserId = new ArrayList<>();
-        for (Item item : items) {
-            if (item.getOwner() == userId) {
-                itemsByUserId.add(item);
-            }
+    public List<Item> getAllItemsByUserId(int id) {
+        ArrayList<Item> foundItems = new ArrayList<>();
+
+        for (Item item : items.values()) {
+            if (item.getOwner() == id) foundItems.add(item);
         }
-        return itemsByUserId;
+        return foundItems;
     }
 
     @Override
     public List<Item> getItemsByTextSearch(String text) {
-        return null;
+        ArrayList<Item> foundItems = new ArrayList<>();
+
+            for (Item item : items.values()) {
+                if ((item.getName().toLowerCase().contains(text) ||
+                        item.getDescription().toLowerCase().contains(text)) && item.isAvailable()) {
+                    foundItems.add(item);
+                }
+            }
+
+        return foundItems;
     }
 }
