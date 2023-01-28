@@ -4,11 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -20,6 +22,7 @@ public class UserStorageInMemory implements UserStorage {
 
     @Override
     public User addUser(User user) {
+        checkIfEmailIsDuplicated(user.getEmail());
         id++;
         user.setId(id);
         users.put(id, user);
@@ -45,5 +48,13 @@ public class UserStorageInMemory implements UserStorage {
     @Override
     public List<User> getAllUsers() {
         return (List<User>) users.values();
+    }
+
+    @Override
+    public void checkIfEmailIsDuplicated(String email) {
+        Optional<User> user = users.values().stream().filter(u -> u.getEmail().equals(email)).findFirst();
+        if (user.isPresent()) {
+            throw new ValidationException();
+        }
     }
 }

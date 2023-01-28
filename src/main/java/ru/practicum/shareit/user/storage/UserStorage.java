@@ -15,4 +15,6 @@ public interface UserStorage {
     User deleteUser(int id);
 
     List<User> getAllUsers();
+
+    void checkIfEmailIsDuplicated(String email);
 }
