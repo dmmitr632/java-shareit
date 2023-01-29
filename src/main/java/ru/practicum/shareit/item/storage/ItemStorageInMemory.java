@@ -60,10 +60,12 @@ public class ItemStorageInMemory implements ItemStorage {
     @Override
     public List<Item> getItemsByTextSearch(String text) {
         ArrayList<Item> foundItems = new ArrayList<>();
-
+        if (text.isBlank()) {
+            return foundItems;
+        }
         for (Item item : items.values()) {
-            if ((item.getName().toLowerCase().contains(text) ||
-                    item.getDescription().toLowerCase().contains(text)) && item.isAvailable()) {
+            if ((item.getName().toLowerCase().contains(text.toLowerCase()) ||
+                    item.getDescription().toLowerCase().contains(text.toLowerCase())) && item.isAvailable()) {
                 foundItems.add(item);
             }
         }
