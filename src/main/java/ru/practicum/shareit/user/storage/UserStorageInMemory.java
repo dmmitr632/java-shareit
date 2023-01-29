@@ -43,8 +43,7 @@ public class UserStorageInMemory implements UserStorage {
     public User getUserById(int id) {
         if (users.containsKey(id)) {
             return users.get(id);
-        }
-        else throw new NotFoundException("user not found");
+        } else throw new NotFoundException("user not found");
 
     }
 

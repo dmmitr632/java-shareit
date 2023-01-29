@@ -28,7 +28,7 @@ public class ItemController {
 
     @PatchMapping("{itemId}")
     public ItemDto editItem(@RequestHeader("X-Sharer-User-Id") int userId, @PathVariable int itemId,
-                         @RequestBody Item item) {
+                            @RequestBody Item item) {
         return ItemMapper.toItemDto(itemService.editItem(userId, itemId, item));
     }
 
