@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/items")
+@Slf4j
 public class ItemController {
     private final ItemService itemService;
 
@@ -26,8 +28,8 @@ public class ItemController {
 
     @PatchMapping("{itemId}")
     public ItemDto editItem(@RequestHeader("X-Sharer-User-Id") int userId, @PathVariable int itemId,
-                         @RequestBody ItemDto itemDto) {
-        return ItemMapper.toItemDto(itemService.editItem(userId, itemId, itemDto));
+                         @RequestBody Item item) {
+        return ItemMapper.toItemDto(itemService.editItem(userId, itemId, item));
     }
 
     @GetMapping("{itemId}")

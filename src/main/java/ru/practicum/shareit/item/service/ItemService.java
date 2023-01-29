@@ -3,8 +3,6 @@ package ru.practicum.shareit.item.service;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemStorage;
 import ru.practicum.shareit.user.storage.UserStorage;
@@ -31,15 +29,21 @@ public class ItemService {
 
     }
 
-    public Item editItem(int userId, int itemId, ItemDto itemDto) {
-        if (itemStorage.getItemById(itemId) != null)
-            return itemStorage.editItem(ItemMapper.toItem(itemDto, userId), userId);
+    public Item editItem(int userId, int itemId, Item item) {
+        Item item1 = getItemById(itemId);
+
+        if (item1.getOwner() == null || (!item1.getOwner().equals(userId)))
+            throw new NotFoundException();
+
+        if (itemStorage.getItemById(itemId) != null && userStorage.getUserById(userId) != null)
+            return itemStorage.editItem(userId, itemId, item);
         else throw new NotFoundException();
 
     }
 
     public Item getItemById(int id) {
         return itemStorage.getItemById(id);
+
 
     }
 

@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
@@ -30,18 +31,19 @@ public class ItemStorageInMemory implements ItemStorage {
     }
 
     @Override
-    public Item editItem(Item item, int userId) {
-        if (item.getOwner() == userId) {
-            items.put(item.getId(), item);
-            return item;
-        }
-        return null;
+    public Item editItem(int userId, int itemId, Item item) {
+        //if (item.getOwner() == userId) {
+        items.put(item.getId(), item);
+        return item;
+        //}
+        //throw new NotFoundException();
     }
 
     @Override
     public Item getItemById(int itemId) {
-
-        return items.get(itemId);
+        if (items.containsKey(itemId))
+            return items.get(itemId);
+        else throw new NotFoundException();
     }
 
     @Override

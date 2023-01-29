@@ -29,12 +29,10 @@ public class UserStorageInMemory implements UserStorage {
     @Override
     public User editUser(int id, User user) {
         if (users.containsKey(id)) {
-            checkIfEmailIsDuplicated(user.getEmail());
+            checkIfEditedEmailIsDuplicated(user.getEmail(), id);
             user.setId(id);
-            if (user.getName() == null)
-                user.setName(users.get(id).getName());
-            if (user.getEmail() == null)
-                user.setEmail(users.get(id).getEmail());
+            if (user.getName() == null) user.setName(users.get(id).getName());
+            if (user.getEmail() == null) user.setEmail(users.get(id).getEmail());
             users.put(id, user);
             return user;
         } else throw new ValidationException();
@@ -56,7 +54,14 @@ public class UserStorageInMemory implements UserStorage {
         return new ArrayList<>(users.values());
     }
 
-    @Override
+    public void checkIfEditedEmailIsDuplicated(String email, int userId) {
+        Optional<User> user = users.values().stream().filter(u -> u.getEmail().equals(email)).findFirst();
+        if (user.isPresent() && user.orElse(null).getId() != userId) {
+            throw new ValidationException();
+        }
+    }
+
+
     public void checkIfEmailIsDuplicated(String email) {
         Optional<User> user = users.values().stream().filter(u -> u.getEmail().equals(email)).findFirst();
         if (user.isPresent()) {
