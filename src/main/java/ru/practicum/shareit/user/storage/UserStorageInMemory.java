@@ -14,7 +14,7 @@ import java.util.*;
 @Component
 @Qualifier("UserStorageInMemory")
 public class UserStorageInMemory implements UserStorage {
-    private Map<Integer, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
     private int id = 0;
 
     @Override
@@ -31,10 +31,13 @@ public class UserStorageInMemory implements UserStorage {
         if (users.containsKey(id)) {
             checkIfEmailIsDuplicated(user.getEmail());
             user.setId(id);
+            if (user.getName() == null)
+                user.setName(users.get(id).getName());
+            if (user.getEmail() == null)
+                user.setEmail(users.get(id).getEmail());
             users.put(id, user);
             return user;
-        }
-        else throw new ValidationException();
+        } else throw new ValidationException();
     }
 
     @Override
@@ -50,7 +53,7 @@ public class UserStorageInMemory implements UserStorage {
 
     @Override
     public List<User> getAllUsers() {
-        return new ArrayList<User>(users.values());
+        return new ArrayList<>(users.values());
     }
 
     @Override

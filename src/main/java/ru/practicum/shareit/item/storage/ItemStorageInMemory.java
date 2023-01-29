@@ -16,7 +16,7 @@ import java.util.Map;
 public class ItemStorageInMemory implements ItemStorage {
 
 
-    private Map<Integer, Item> items = new HashMap<>();
+    private final Map<Integer, Item> items = new HashMap<>();
     private int id = 0;
 
 
