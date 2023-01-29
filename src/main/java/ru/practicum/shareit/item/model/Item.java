@@ -18,7 +18,7 @@ public class Item {
     private String description;
     @NotNull
     private Boolean available;
-    @NotNull
+
     private Integer owner;
     private Integer request;
 
