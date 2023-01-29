@@ -32,15 +32,15 @@ public class ItemService {
     }
 
     public Item editItem(int userId, int itemId, ItemDto itemDto) {
-        Item item = itemStorage.getItemById(itemId);
-        return itemStorage.editItem(ItemMapper.toItem(itemDto, userId), userId); //Доделать toItem
-
+        if (itemStorage.getItemById(itemId) != null)
+            return itemStorage.editItem(ItemMapper.toItem(itemDto, userId), userId);
+        else throw new NotFoundException();
 
     }
 
-    public ItemDto getItemById(int id) {
-        Item item = itemStorage.getItemById(id);
-        return ItemMapper.toItemDto(item);
+    public Item getItemById(int id) {
+        return itemStorage.getItemById(id);
+
     }
 
     public List<Item> getAllItemsByUserId(int id) {
