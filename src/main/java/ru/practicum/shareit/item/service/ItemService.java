@@ -30,14 +30,32 @@ public class ItemService {
     }
 
     public Item editItem(int userId, int itemId, Item item) {
-        Item item1 = getItemById(itemId);
+        Item editedItem = getItemById(itemId);
+        System.out.println(editedItem);
+        System.out.println(userId);
 
-        if (item1.getOwner() == null || (!item1.getOwner().equals(userId)))
-            throw new NotFoundException();
+
+
+
+        if (editedItem.getOwner() == null && item.getOwner() != null)
+            throw new NotFoundException("неверный id");
+        else if (editedItem.getOwner() != null && userId != editedItem.getOwner()) {
+            throw new NotFoundException("неверный id");
+        }
+
+        if (item.getId() == null) item.setId(editedItem.getId());
+
+        if (item.getName() == null) item.setName(editedItem.getName());
+
+        if (item.getDescription() == null) item.setDescription(editedItem.getDescription());
+
+        if (item.getAvailable() == null) item.setAvailable(editedItem.getAvailable());
+
 
         if (itemStorage.getItemById(itemId) != null && userStorage.getUserById(userId) != null)
             return itemStorage.editItem(userId, itemId, item);
         else throw new NotFoundException();
+
 
     }
 

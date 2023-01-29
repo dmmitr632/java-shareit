@@ -32,11 +32,11 @@ public class ItemStorageInMemory implements ItemStorage {
 
     @Override
     public Item editItem(int userId, int itemId, Item item) {
-        //if (item.getOwner() == userId) {
-        items.put(item.getId(), item);
-        return item;
-        //}
-        //throw new NotFoundException();
+        if (items.containsKey(itemId)) {
+            items.put(item.getId(), item);
+            return item;
+        } else throw new NotFoundException();
+
     }
 
     @Override
