@@ -30,11 +30,8 @@ public class ItemService {
     }
 
     public Item editItem(int userId, int itemId, Item item) {
-        Item editedItem = getItemById(itemId);
-        System.out.println(editedItem);
-        System.out.println(userId);
-
-
+        userStorage.getUserById(userId);
+        Item editedItem = itemStorage.getItemById(itemId);
 
 
         if (editedItem.getOwner() == null && item.getOwner() != null)
@@ -52,10 +49,10 @@ public class ItemService {
         if (item.getAvailable() == null) item.setAvailable(editedItem.getAvailable());
 
 
-        if (itemStorage.getItemById(itemId) != null && userStorage.getUserById(userId) != null)
+        if (itemStorage.getItemById(itemId) != null && userStorage.getUserById(userId) != null) {
+            item.setOwner(editedItem.getOwner());
             return itemStorage.editItem(userId, itemId, item);
-        else throw new NotFoundException();
-
+        } else throw new NotFoundException();
 
     }
 

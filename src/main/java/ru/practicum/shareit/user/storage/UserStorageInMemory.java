@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.model.User;
 
@@ -40,7 +41,10 @@ public class UserStorageInMemory implements UserStorage {
 
     @Override
     public User getUserById(int id) {
-        return users.get(id);
+        if (users.containsKey(id)) {
+            return users.get(id);
+        }
+        else throw new NotFoundException("user not found");
 
     }
 
