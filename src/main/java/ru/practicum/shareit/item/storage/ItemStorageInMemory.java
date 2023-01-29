@@ -69,7 +69,6 @@ public class ItemStorageInMemory implements ItemStorage {
                 foundItems.add(item);
             }
         }
-
         return foundItems;
     }
 }
