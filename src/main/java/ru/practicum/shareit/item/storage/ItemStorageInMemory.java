@@ -25,7 +25,7 @@ public class ItemStorageInMemory implements ItemStorage {
     public Item addItem(Item item, int userId) {
         id++;
         item.setId(id);
-        item.setOwner(userId);
+
         items.put(id, item);
         return item;
     }
@@ -42,9 +42,9 @@ public class ItemStorageInMemory implements ItemStorage {
 
     @Override
     public Item getItemById(int itemId) {
-        if (items.containsKey(itemId))
+        if (items.containsKey(itemId)) {
             return items.get(itemId);
-        else throw new NotFoundException();
+        } else throw new NotFoundException();
     }
 
     @Override
@@ -52,7 +52,9 @@ public class ItemStorageInMemory implements ItemStorage {
         ArrayList<Item> foundItems = new ArrayList<>();
 
         for (Item item : items.values()) {
-            if (item.getOwner() == id) foundItems.add(item);
+            if (item.getOwner().getId() == id) {
+                foundItems.add(item);
+            }
         }
         return foundItems;
     }
@@ -63,9 +65,11 @@ public class ItemStorageInMemory implements ItemStorage {
         if (text.isBlank()) {
             return foundItems;
         }
+        text = text.toLowerCase();
+
         for (Item item : items.values()) {
-            if ((item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                    item.getDescription().toLowerCase().contains(text.toLowerCase())) && item.isAvailable()) {
+            if ((item.getName().toLowerCase().contains(text) ||
+                    item.getDescription().toLowerCase().contains(text)) && item.isAvailable()) {
                 foundItems.add(item);
             }
         }

@@ -59,7 +59,7 @@ public class UserStorageInMemory implements UserStorage {
 
     public void checkIfEditedEmailIsDuplicated(String email, int userId) {
         Optional<User> user = users.values().stream().filter(u -> u.getEmail().equals(email)).findFirst();
-        if (user.isPresent() && user.orElse(null).getId() != userId) {
+        if (user.isPresent() && user.get().getId() != userId) {
             throw new ValidationException();
         }
     }

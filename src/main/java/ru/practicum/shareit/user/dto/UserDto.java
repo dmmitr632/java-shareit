@@ -11,10 +11,10 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class UserDto {
     @EqualsAndHashCode.Exclude
-    int id;
+    private int id;
     @NotBlank
-    String name;
+    private String name;
     @NotBlank
     @Email
-    String email;
+    private String email;
 }
