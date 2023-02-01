@@ -9,10 +9,10 @@ public class ItemMapper {
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.isAvailable(),
-                // item.getRequest() != null ? item.getRequest().getId() : null
-                item.getOwner(),
-                item.getRequest()
+                item.getAvailable(),
+                item.getItemRequest() != null ? item.getItemRequest() : null
         );
     }
+
+
 }
