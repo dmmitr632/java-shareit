@@ -5,6 +5,7 @@ import lombok.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -15,8 +16,12 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "bookings", schema = "public")
 public class Booking {
+    @Id
     @EqualsAndHashCode.Exclude
+    @Column(name="booking_id")
     private Integer id;
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -24,10 +29,15 @@ public class Booking {
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime end;
+    @ManyToOne
+    @JoinColumn(name = "item_id")
     @NotNull
     private Item item;
+    @ManyToOne
+    @JoinColumn(name = "booker_id")
     @NotNull
     private User booker;
     @NotNull
+    @Enumerated
     private BookingStatus status;
 }

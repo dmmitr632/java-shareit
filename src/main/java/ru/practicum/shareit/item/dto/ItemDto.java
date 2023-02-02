@@ -19,5 +19,5 @@ public class ItemDto {
     private String description;
     @NotNull
     private Boolean available;
-    private ItemRequest itemRequest;
+    // private ItemRequest itemRequest;
 }
