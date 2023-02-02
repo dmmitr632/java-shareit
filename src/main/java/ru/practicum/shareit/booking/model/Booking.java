@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -23,9 +25,9 @@ public class Booking {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime end;
     @NotNull
-    private Integer item;
+    private Item item;
     @NotNull
-    private Integer booker;
+    private User booker;
     @NotNull
     private BookingStatus status;
 }
