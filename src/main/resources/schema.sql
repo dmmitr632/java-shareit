@@ -48,3 +48,4 @@ CREATE TABLE comments
     item_id    int REFERENCES items (item_id),
     author_id  int REFERENCES users (user_id)
 );
+
