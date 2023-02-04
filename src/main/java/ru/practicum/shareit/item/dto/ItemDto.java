@@ -1,7 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.*;
-import ru.practicum.shareit.request.model.ItemRequest;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

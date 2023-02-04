@@ -22,7 +22,7 @@ public class Booking {
     @Id
     @EqualsAndHashCode.Exclude
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="booking_id")
+    @Column(name = "booking_id")
     private Integer id;
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd")

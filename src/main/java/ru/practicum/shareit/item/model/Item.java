@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="item_id")
+    @Column(name = "item_id")
     @EqualsAndHashCode.Exclude
     private Integer id;
     @NotBlank

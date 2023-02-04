@@ -17,7 +17,7 @@ public class User {
     @EqualsAndHashCode.Exclude
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private int id;
     @NotBlank
     @NotEmpty
