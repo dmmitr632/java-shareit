@@ -10,6 +10,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,10 +46,7 @@ public class ItemServiceImpl implements ItemService {
         if (item.getName() == null) item.setName(editedItem.getName());
         if (item.getDescription() == null) item.setDescription(editedItem.getDescription());
 
-
-
-
-         if (item.getAvailable() == null) item.setAvailable(editedItem.getAvailable());
+        if (item.getAvailable() == null) item.setAvailable(editedItem.getAvailable());
         //item.setOwner(editedItem.getOwner());
 
         return itemRepository.save(item);
@@ -67,6 +65,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> getItemsByTextSearch(String text) {
+        if (text.isBlank()) {
+            return new ArrayList<>();
+        }
         return itemRepository.search(text);
     }
 }
