@@ -22,14 +22,14 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") int userId, @Valid @RequestBody Item item) {
-        return ItemMapper.toItemDto(itemService.addItem(userId, item));
+    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") int userId, @Valid @RequestBody ItemDto itemDto) {
+        return ItemMapper.toItemDto(itemService.addItem(userId, itemDto));
     }
 
     @PatchMapping("{itemId}")
     public ItemDto editItem(@RequestHeader("X-Sharer-User-Id") int userId, @PathVariable int itemId,
-                            @RequestBody Item item) {
-        return ItemMapper.toItemDto(itemService.editItem(userId, itemId, item));
+                            @RequestBody ItemDto itemDto) {
+        return ItemMapper.toItemDto(itemService.editItem(userId, itemId, itemDto));
     }
 
     @GetMapping("{itemId}")

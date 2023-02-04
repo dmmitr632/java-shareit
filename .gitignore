@@ -34,3 +34,5 @@ build/
 
 /src/main/resources/db1.properties
 
+/src/main/java/ru/practicum/shareit/booking/repository/BookingRepositoryFirstAttempt.java
+/src/main/java/ru/practicum/shareit/booking/BookingControllerFirstAttempt.java

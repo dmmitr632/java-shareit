@@ -6,18 +6,13 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
+@Value
 public class ItemDto {
     @EqualsAndHashCode.Exclude
-    private Integer id;
-    @NotBlank
-    private String name;
-    @NotBlank
-    private String description;
-    @NotNull
-    private Boolean available;
-    // private ItemRequest itemRequest;
+    Integer id;
+    @NotBlank String name;
+    @NotBlank String description;
+    @NotNull Boolean available;
+
 }

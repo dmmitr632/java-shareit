@@ -3,74 +3,67 @@ package ru.practicum.shareit.item.service;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.storage.ItemStorage;
-import ru.practicum.shareit.user.storage.UserStorage;
+import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 
 @Service
+@Qualifier("ItemServiceDb")
 public class ItemServiceImpl implements ItemService {
+    public final ItemRepository itemRepository;
+    public final UserRepository userRepository;
 
-    private final ItemStorage itemStorage;
-    private final UserStorage userStorage;
-
-    public ItemServiceImpl(@Qualifier("ItemStorageInMemory") ItemStorage itemStorage,
-                           @Qualifier("UserStorageInMemory") UserStorage userStorage) {
-        this.itemStorage = itemStorage;
-        this.userStorage = userStorage;
+    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository) {
+        this.itemRepository = itemRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public Item addItem(int userId, Item item) {
-
-        item.setOwner(userStorage.getUserById(userId));
-        return itemStorage.addItem(item, userId);
-
-
+    public Item addItem(int userId, ItemDto itemDto) {
+        User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        Item item = ItemMapper.toItem(itemDto, owner);
+        return itemRepository.save(item);
     }
 
     @Override
-    public Item editItem(int userId, int itemId, Item item) {
-        userStorage.getUserById(userId);
-        Item editedItem = itemStorage.getItemById(itemId);
+    public Item editItem(int userId, int itemId, ItemDto itemDto) {
+        User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        Item item = ItemMapper.toItem(itemDto, owner);
+        Item editedItem = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
 
-
-        if (editedItem.getOwner() == null && item.getOwner() != null)
-            throw new NotFoundException("неверный id");
+        if (editedItem.getOwner() == null && item.getOwner() != null) throw new NotFoundException("неверный id");
         else if (editedItem.getOwner() != null && userId != editedItem.getOwner().getId()) {
             throw new NotFoundException("неверный id");
         }
 
         if (item.getId() == null) item.setId(editedItem.getId());
-
         if (item.getName() == null) item.setName(editedItem.getName());
-
         if (item.getDescription() == null) item.setDescription(editedItem.getDescription());
 
-        if (item.getAvailable() == null) item.setAvailable(editedItem.getAvailable());
+        // if (item.getAvailable() == null) item.setAvailable(editedItem.getAvailable());
+        //item.setOwner(editedItem.getOwner());
 
-
-        item.setOwner(editedItem.getOwner());
-        return itemStorage.editItem(userId, itemId, item);
-
+        return itemRepository.save(item);
 
     }
 
     @Override
     public Item getItemById(int id) {
-        return itemStorage.getItemById(id);
-
-
+        return null;
     }
 
     @Override
     public List<Item> getAllItemsByUserId(int id) {
-        return itemStorage.getAllItemsByUserId(id);
+        return null;
     }
 
     @Override
     public List<Item> getItemsByTextSearch(String text) {
-        return itemStorage.getItemsByTextSearch(text);
+        return null;
     }
 }

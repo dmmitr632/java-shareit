@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 public class Booking {
     @Id
     @EqualsAndHashCode.Exclude
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="booking_id")
     private Integer id;
     @NotNull
