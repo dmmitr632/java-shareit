@@ -1,4 +1,4 @@
-package ru.practicum.shareit.request.model;
+package ru.practicum.shareit.itemrequest.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -21,8 +21,4 @@ public class ItemRequest {
     private String description;
     @NotNull
     private Integer requester;
-    @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime created;
-
 }

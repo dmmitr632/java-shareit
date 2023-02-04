@@ -45,7 +45,10 @@ public class ItemServiceImpl implements ItemService {
         if (item.getName() == null) item.setName(editedItem.getName());
         if (item.getDescription() == null) item.setDescription(editedItem.getDescription());
 
-        // if (item.getAvailable() == null) item.setAvailable(editedItem.getAvailable());
+
+
+
+         if (item.getAvailable() == null) item.setAvailable(editedItem.getAvailable());
         //item.setOwner(editedItem.getOwner());
 
         return itemRepository.save(item);
@@ -54,16 +57,16 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item getItemById(int id) {
-        return null;
+        return itemRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @Override
     public List<Item> getAllItemsByUserId(int id) {
-        return null;
+        return itemRepository.findByOwnerId(id);
     }
 
     @Override
     public List<Item> getItemsByTextSearch(String text) {
-        return null;
+        return itemRepository.search(text);
     }
 }

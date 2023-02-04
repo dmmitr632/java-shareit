@@ -26,8 +26,8 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto addUser(@Valid @RequestBody User user) {
-        return UserMapper.toUserDto(userService.addUser(user));
+    public UserDto addUser(@Valid @RequestBody UserDto userDto) {
+        return UserMapper.toUserDto(userService.addUser(userDto));
     }
 
     @PatchMapping("{userId}")
@@ -49,8 +49,8 @@ public class UserController {
     }
 
     @DeleteMapping("{userId}")
-    public UserDto deleteUser(@PathVariable int userId) {
-        return UserMapper.toUserDto(userService.deleteUser(userId));
+    public void deleteUser(@PathVariable int userId) {
+        userService.deleteUser(userId);
     }
 
 
