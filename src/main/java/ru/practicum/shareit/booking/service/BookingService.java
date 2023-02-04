@@ -1,9 +1,9 @@
 package ru.practicum.shareit.booking.service;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.model.Booking;
 
-@Service
-@Slf4j
-public class BookingService {
+
+public interface BookingService {
+    Booking requestBooking(int userId, Booking booking);
+    Booking approveOrRejectBooking(int userId, int bookingId, Boolean approvedOrNot);
 }
