@@ -2,12 +2,15 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -30,6 +33,21 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking approveOrRejectBooking(int userId, int bookingId, Boolean approvedOrNot) {
+        return null;
+    }
+
+    @Override
+    public Booking getBookingById(int userId, int bookingId) {
+        return null;
+    }
+
+    @Override
+    public List<BookingDto> getBookingByBookerId(int userId, String state) {
+        return null;
+    }
+
+    @Override
+    public List<BookingDto> getBookingByOwnerId(int userId, String state) {
         return null;
     }
 

@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
-// import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
+
+import java.util.List;
 
 
 // import javax.validation.Valid;
@@ -24,18 +25,39 @@ public class BookingController {
 
     @PostMapping()
     public BookingDto requestBooking(@RequestHeader("X-Sharer-User-Id") int userId,
-                                        @RequestBody BookingDto bookingDto) {
+                                     @RequestBody BookingDto bookingDto) {
         return BookingMapper.toBookingDto(bookingService.requestBooking(userId,
                 BookingMapper.toBooking(bookingDto)));
     }
 
     @PatchMapping("/{bookingId}")
     public BookingDto approveOrRejectBooking(@RequestHeader("X-Sharer-User-Id") int userId,
-                                           @PathVariable int bookingId,
-                                           @RequestParam String approved) {
+                                             @PathVariable int bookingId,
+                                             @RequestParam String approved) {
         return BookingMapper.toBookingDto(bookingService.approveOrRejectBooking(userId, bookingId,
                 Boolean.valueOf(approved)));
     }
+
+    @GetMapping("/{bookingId}")
+    public BookingDto getBookingById(@RequestHeader("X-Sharer-User-Id") int userId,
+                                     @PathVariable int bookingId) {
+        return BookingMapper.toBookingDto(bookingService.getBookingById(userId, bookingId));
+    }
+
+    @GetMapping()
+    public List<BookingDto> getBookingByBookerId(@RequestHeader("X-Sharer-User-Id") int userId,
+                                               @RequestParam(name = "state", required = false,
+                                                       defaultValue = "ALL") String state) {
+        return bookingService.getBookingByBookerId(userId, state);
+    }
+
+    @GetMapping("/owner")
+    public List<BookingDto> getBookingByOwnerId(@RequestHeader("X-Sharer-User-Id") int userId,
+                                               @RequestParam(name = "state", required = false,
+                                                       defaultValue = "ALL") String state) {
+        return bookingService.getBookingByOwnerId(userId, state);
+    }
+
 
 }
 
@@ -53,6 +75,7 @@ public class BookingController {
 //Получение данных о конкретном бронировании (включая его статус).
 // Может быть выполнено либо автором бронирования, либо владельцем вещи,
 // к которой относится бронирование. Эндпоинт — GET /bookings/{bookingId}.
+
 
 //Получение списка всех бронирований текущего пользователя.
 // Эндпоинт — GET /bookings?state={state}. Параметр state необязательный и по умолчанию равен ALL (англ. «все»).
