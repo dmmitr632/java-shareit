@@ -32,24 +32,51 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking requestBooking(int userId, BookingDto bookingDto) {
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(NotFoundException::new);
-        User booker =  userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        User booker = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         Booking booking = BookingMapper.toBooking(bookingDto, booker, item);
 
-//        System.out.println(booking);
-//        System.out.println(item);
         int itemId = item.getId();
         if (!itemRepository.findById(itemId).orElseThrow(NotFoundException::new).isAvailable()) {
             throw new ValidationException("Item is not available");
         }
         booking.setBooker(booker);
         booking.setStatus(BookingStatus.WAITING);
+        System.out.println("booking" + booking);
         return bookingRepository.save(booking);
     }
 
     @Override
     public Booking approveOrRejectBooking(int userId, int bookingId, Boolean approvedOrNot) {
-        return null;
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
+        if (userId != booking.getItem().getOwner().getId()) {
+            return booking;
+        } else if (approvedOrNot) {
+            booking.setStatus(BookingStatus.APPROVED);
+        } else {
+            booking.setStatus(BookingStatus.REJECTED);
+        }
+        return booking;
     }
+//    public Booking requestBooking(int userId, BookingDto bookingDto) {
+//        Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(NotFoundException::new);
+//        User booker =  userRepository.findById(userId).orElseThrow(NotFoundException::new);
+//        Booking booking = BookingMapper.toBooking(bookingDto, booker, item);
+//
+////        System.out.println(booking);
+////        System.out.println(item);
+//        int itemId = item.getId();
+//        if (!itemRepository.findById(itemId).orElseThrow(NotFoundException::new).isAvailable()) {
+//            throw new ValidationException("Item is not available");
+//        }
+//        booking.setBooker(booker);
+//        booking.setStatus(BookingStatus.WAITING);
+//        return bookingRepository.save(booking);
+//    }
+//
+//    @Override
+//    public Booking approveOrRejectBooking(int userId, int bookingId, Boolean approvedOrNot) {
+//        return null;
+//    }
 
     @Override
     public Booking getBookingById(int userId, int bookingId) {

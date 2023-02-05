@@ -8,11 +8,8 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Value
-public class BookingDto {
+public class BookingWithItemAndBookerDto {
     @EqualsAndHashCode.Exclude
     Integer id;
     @NotNull
@@ -21,7 +18,7 @@ public class BookingDto {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime end;
-    @NotNull Integer itemId;
-    @NotNull Integer bookerId;
+    ItemShort item;
+    UserShort booker;
     BookingStatus status;
 }

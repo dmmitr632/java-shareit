@@ -27,11 +27,11 @@ public class Booking {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "start_time")
-    private LocalDateTime startTime;
+    private LocalDateTime start;
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "end_time")
-    private LocalDateTime endTime;
+    private LocalDateTime end;
     @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;

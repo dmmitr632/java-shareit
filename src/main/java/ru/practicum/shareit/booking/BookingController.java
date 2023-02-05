@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingWithItemAndBookerDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.service.BookingService;
 
@@ -24,9 +25,9 @@ public class BookingController {
 
 
     @PostMapping()
-    public BookingDto requestBooking(@RequestHeader("X-Sharer-User-Id") int userId,
-                                     @RequestBody BookingDto bookingDto) {
-        return BookingMapper.toBookingDto(bookingService.requestBooking(userId,bookingDto));
+    public BookingWithItemAndBookerDto requestBooking(@RequestHeader("X-Sharer-User-Id") int userId,
+                                                      @RequestBody BookingDto bookingDto) {
+        return BookingMapper.toBookingWithItemAndBookerDto(bookingService.requestBooking(userId,bookingDto));
     }
 
     @PatchMapping("/{bookingId}")
