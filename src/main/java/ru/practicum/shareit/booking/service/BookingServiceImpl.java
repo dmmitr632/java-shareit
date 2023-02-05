@@ -64,7 +64,12 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking getBookingById(int userId, int bookingId) {
-        return null;
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
+        if (userId != booking.getBooker().getId() && userId != booking.getItem().getOwner().getId()) {
+            throw new NotFoundException("user is not booker or item owner");
+        } else {
+            return booking;
+        }
     }
 
     @Override
