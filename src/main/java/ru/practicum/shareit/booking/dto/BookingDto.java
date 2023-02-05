@@ -18,12 +18,11 @@ public class BookingDto {
     @EqualsAndHashCode.Exclude
     Integer id;
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime start;
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime end;
-    @NotNull Item item;
-    @NotNull User booker;
-    @NotNull BookingStatus status;
+    @NotNull Integer itemId;
+    BookingStatus status;
 }

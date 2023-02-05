@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS items cascade;
 DROP TABLE IF EXISTS users cascade;
 
 CREATE TYPE booking_status AS ENUM ('WAITING', 'APPROVED', 'REJECTED', 'CANCELLED');
+CREATE CAST (varchar AS booking_status) WITH INOUT AS IMPLICIT;
 
 CREATE TABLE users
 (

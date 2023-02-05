@@ -25,20 +25,21 @@ public class Booking {
     @Column(name = "booking_id")
     private Integer id;
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime start;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @Column(name = "start_time")
+    private LocalDateTime startTime;
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime end;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
     @ManyToOne
     @JoinColumn(name = "item_id")
-    @NotNull
     private Item item;
     @ManyToOne
     @JoinColumn(name = "booker_id")
     @NotNull
     private User booker;
     @NotNull
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private BookingStatus status;
 }

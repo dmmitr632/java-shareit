@@ -5,16 +5,17 @@ import lombok.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+//@Data
+//@Builder
+//@AllArgsConstructor
+//@NoArgsConstructor
+@Value
 public class UserDto {
     @EqualsAndHashCode.Exclude
-    private int id;
+    int id;
     @NotBlank
-    private String name;
+    String name;
     @NotBlank
     @Email
-    private String email;
+    String email;
 }
