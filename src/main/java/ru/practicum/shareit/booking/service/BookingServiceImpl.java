@@ -45,13 +45,16 @@ public class BookingServiceImpl implements BookingService {
         }
         booking.setBooker(booker);
         booking.setStatus(BookingStatus.WAITING);
-        System.out.println("booking" + booking);
+
         return bookingRepository.save(booking);
     }
 
     @Override
     public Booking approveOrRejectBooking(int userId, int bookingId, Boolean approvedOrNot) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
+        if (booking.getStatus() == BookingStatus.APPROVED) {
+            throw new ValidationException("Already approved");
+        }
 
         if (userId != booking.getItem().getOwner().getId()) {
             throw new NotFoundException("Only owner can approve or reject booking");
@@ -117,6 +120,9 @@ public class BookingServiceImpl implements BookingService {
 
     public void validateBooking(Booking booking) {
         LocalDateTime currentTime = LocalDateTime.now();
+        if (booking.getBooker().getId() == booking.getItem().getOwner().getId()) {
+            throw new NotFoundException("Booker and owner cannot be the same person");
+        }
         if (booking.getEnd().isBefore(currentTime) || booking.getStart().isBefore(currentTime)) {
             throw new ValidationException("Booking time in before current time");
         }
