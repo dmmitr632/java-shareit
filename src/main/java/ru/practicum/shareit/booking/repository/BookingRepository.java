@@ -15,24 +15,29 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> findAllByBookerIdOrderByStartDesc(int userId); // ALL
 
-    List<Booking> findAllByBookerIdAndEndIsAfterOrderByStartDesc(int userId, LocalDateTime dateTime); // CURRENT
+    List<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(int booker_id,
+                                                                                 @NotNull LocalDateTime time1,
+                                                                                 @NotNull LocalDateTime time2); //
+    // CURRENT
 
     List<Booking> findAllByBookerIdAndEndIsBeforeOrderByStartDesc(int userId, LocalDateTime dateTime); // PAST
 
     List<Booking> findAllByBookerIdAndStartIsAfterOrderByStartDesc(int userId, LocalDateTime dateTime); // FUTURE
 
-    List<Booking> findAllByBookerIdAndStatusEqualsOrderByStartDesc(int userId,
-                                                                   @NotNull BookingStatus status); // WAITING or
+    List<Booking> findAllByBookerIdAndStatusOrderByStartDesc(int userId, @NotNull BookingStatus status);
+    // WAITING or
     // REJECTED
 
 
     @Query("select b from Booking b join b.item i where i.owner.id = :userId order by b.start desc")
     List<Booking> findAllByOwnerId(@Param("userId") int userId); // ALL
 
-    @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.end > :dateTime) order by b" +
+    @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.start < :dateTime1 and b.end > " +
+            ":dateTime2) order by b" +
             ".start desc ")
-    List<Booking> findAllByOwnerIdAndEndIsAfterOrderByStartDesc(@Param("userId") int userId,
-                                                                LocalDateTime dateTime); // CURRENT
+    List<Booking> findAllByOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(@Param("userId") int userId,
+                                                                LocalDateTime dateTime1, LocalDateTime dateTime2); //
+    // CURRENT
 
     @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.end < :dateTime) order by b" +
             ".start desc ")
@@ -44,8 +49,8 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> findAllByOwnerIdAndStartIsAfterOrderByStartDesc(@Param("userId") int userId,
                                                                   LocalDateTime dateTime); // FUTURE
 
-    @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.status = :status) order by b" +
-            ".start desc ")
+    @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.status = " +
+            ":status) order by b.start desc ")
     List<Booking> findAllByOwnerIdAndStatusEqualsOrderByStartDesc(@Param("userId") int userId,
                                                                   @NotNull BookingStatus status); // WAITING or REJECTED
 }

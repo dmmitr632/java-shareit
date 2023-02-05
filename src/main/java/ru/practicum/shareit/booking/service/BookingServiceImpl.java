@@ -26,7 +26,8 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
-    public BookingServiceImpl(BookingRepository bookingRepository, UserRepository userRepository, ItemRepository itemRepository) {
+    public BookingServiceImpl(BookingRepository bookingRepository,
+                              UserRepository userRepository, ItemRepository itemRepository) {
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
@@ -85,13 +86,16 @@ public class BookingServiceImpl implements BookingService {
         if (Objects.equals(state, "ALL")) {
             return bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
         } else if (Objects.equals(state, "CURRENT")) {
-            return bookingRepository.findAllByBookerIdAndEndIsAfterOrderByStartDesc(userId, LocalDateTime.now());
+            return bookingRepository.findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(userId,
+                    LocalDateTime.now(), LocalDateTime.now());
         } else if (Objects.equals(state, "PAST")) {
             return bookingRepository.findAllByBookerIdAndEndIsBeforeOrderByStartDesc(userId, LocalDateTime.now());
         } else if (Objects.equals(state, "FUTURE")) {
             return bookingRepository.findAllByBookerIdAndStartIsAfterOrderByStartDesc(userId, LocalDateTime.now());
-        } else if (Objects.equals(state, "WAITING") || Objects.equals(state, "REJECTED")) {
-            return bookingRepository.findAllByBookerIdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.valueOf(state));
+        } else if (Objects.equals(state, "WAITING")) {
+            return bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.WAITING);
+        } else if (Objects.equals(state, "REJECTED")) {
+            return bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED);
         } else {
             throw new WrongStateException("Unknown state: " + state);
         }
@@ -105,7 +109,8 @@ public class BookingServiceImpl implements BookingService {
         if (Objects.equals(state, "ALL")) {
             return bookingRepository.findAllByOwnerId(userId);
         } else if (Objects.equals(state, "CURRENT")) {
-            return bookingRepository.findAllByOwnerIdAndEndIsAfterOrderByStartDesc(userId, LocalDateTime.now());
+            return bookingRepository.findAllByOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(userId,
+                    LocalDateTime.now(), LocalDateTime.now());
         } else if (Objects.equals(state, "PAST")) {
             return bookingRepository.findAllByOwnerIdAndEndIsBeforeOrderByStartDesc(userId, LocalDateTime.now());
         } else if (Objects.equals(state, "FUTURE")) {

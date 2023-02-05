@@ -1,12 +1,8 @@
-DROP TYPE IF EXISTS booking_status cascade;
 DROP TABLE IF EXISTS comments cascade;
 DROP TABLE IF EXISTS requests cascade;
 DROP TABLE IF EXISTS bookings cascade;
 DROP TABLE IF EXISTS items cascade;
 DROP TABLE IF EXISTS users cascade;
-
-CREATE TYPE booking_status AS ENUM ('WAITING', 'APPROVED', 'REJECTED', 'CANCELLED');
-CREATE CAST (varchar AS booking_status) WITH INOUT AS IMPLICIT;
 
 CREATE TABLE users
 (
@@ -32,7 +28,7 @@ CREATE TABLE bookings
     end_time   timestamp without time zone                  NOT NULL,
     item_id    int REFERENCES items (item_id)               NOT NULL,
     booker_id  int REFERENCES users (user_id)               NOT NULL,
-    status     booking_status                               NOT NULL
+    status     varchar(20)                                  NOT NULL
 );
 
 CREATE TABLE requests
