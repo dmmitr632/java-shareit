@@ -16,6 +16,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -73,13 +74,34 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookingByBookerId(int userId, String state) {
-        return null;
+    public List<Booking> getBookingByBookerId(int userId, String state) {
+        if (Objects.equals(state, "ALL")) {
+            return bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
+        } else if (Objects.equals(state, "CURRENT")) {
+            return bookingRepository.findAllByBookerIdAndEndIsAfterOrderByStartDesc(userId, LocalDateTime.now());
+        } else if (Objects.equals(state, "PAST")) {
+            return bookingRepository.findAllByBookerIdAndEndIsBeforeOrderByStartDesc(userId, LocalDateTime.now());
+        } else if (Objects.equals(state, "FUTURE")) {
+            return bookingRepository.findAllByBookerIdAndStartIsAfterOrderByStartDesc(userId, LocalDateTime.now());
+        } else if (Objects.equals(state, "WAITING") || Objects.equals(state, "REJECTED")) {
+            return bookingRepository.findAllByBookerIdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.valueOf(state));
+        } else throw new ValidationException("Wrong state parameter");
     }
 
     @Override
-    public List<BookingDto> getBookingByOwnerId(int userId, String state) {
-        return null;
+    public List<Booking> getBookingByOwnerId(int userId, String state) {
+        if (Objects.equals(state, "ALL")) {
+            return bookingRepository.findAllByOwnerId(userId);
+        } else if (Objects.equals(state, "CURRENT")) {
+            return bookingRepository.findAllByOwnerIdAndEndIsAfterOrderByStartDesc(userId, LocalDateTime.now());
+        } else if (Objects.equals(state, "PAST")) {
+            return bookingRepository.findAllByOwnerIdAndEndIsBeforeOrderByStartDesc(userId, LocalDateTime.now());
+        } else if (Objects.equals(state, "FUTURE")) {
+            return bookingRepository.findAllByOwnerIdAndStartIsAfterOrderByStartDesc(userId, LocalDateTime.now());
+        } else if (Objects.equals(state, "WAITING") || Objects.equals(state, "REJECTED")) {
+            return bookingRepository.findAllByOwnerIdAndStatusEqualsOrderByStartDesc(userId,
+                    BookingStatus.valueOf(state));
+        } else throw new ValidationException("Wrong state parameter");
     }
 
     public void validateBooking(Booking booking) {

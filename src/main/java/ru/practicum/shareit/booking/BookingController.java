@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingWithItemAndBookerDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,35 +29,42 @@ public class BookingController {
     @PostMapping()
     public BookingWithItemAndBookerDto requestBooking(@RequestHeader("X-Sharer-User-Id") int userId,
                                                       @RequestBody BookingDto bookingDto) {
-        return BookingMapper.toBookingWithItemAndBookerDto(bookingService.requestBooking(userId,bookingDto));
+        return BookingMapper.toBookingWithItemAndBookerDto(bookingService.requestBooking(userId, bookingDto));
     }
 
     @PatchMapping("/{bookingId}")
     public BookingWithItemAndBookerDto approveOrRejectBooking(@RequestHeader("X-Sharer-User-Id") int userId,
-                                             @PathVariable int bookingId,
-                                             @RequestParam(value = "approved") String approved) {
+                                                              @PathVariable int bookingId,
+                                                              @RequestParam(value = "approved") String approved) {
         return BookingMapper.toBookingWithItemAndBookerDto(bookingService.approveOrRejectBooking(userId, bookingId,
                 Boolean.valueOf(approved)));
     }
 
     @GetMapping("/{bookingId}")
     public BookingWithItemAndBookerDto getBookingById(@RequestHeader("X-Sharer-User-Id") int userId,
-                                     @PathVariable int bookingId) {
+                                                      @PathVariable int bookingId) {
         return BookingMapper.toBookingWithItemAndBookerDto(bookingService.getBookingById(userId, bookingId));
     }
 
     @GetMapping()
-    public List<BookingDto> getBookingByBookerId(@RequestHeader("X-Sharer-User-Id") int userId,
-                                               @RequestParam(name = "state", required = false,
-                                                       defaultValue = "ALL") String state) {
-        return bookingService.getBookingByBookerId(userId, state);
+    public List<BookingWithItemAndBookerDto> getBookingByBookerId(@RequestHeader("X-Sharer-User-Id") int userId,
+                                                                  @RequestParam(name = "state", required = false,
+                                                                          defaultValue = "ALL") String state) {
+        List<Booking> bookings = bookingService.getBookingByBookerId(userId, state);
+        List<BookingWithItemAndBookerDto> bookingsDto = new ArrayList<>();
+        bookings.forEach(booking -> bookingsDto.add(BookingMapper.toBookingWithItemAndBookerDto(booking)));
+        return bookingsDto;
+
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> getBookingByOwnerId(@RequestHeader("X-Sharer-User-Id") int userId,
-                                               @RequestParam(name = "state", required = false,
-                                                       defaultValue = "ALL") String state) {
-        return bookingService.getBookingByOwnerId(userId, state);
+    public List<BookingWithItemAndBookerDto> getBookingByOwnerId(@RequestHeader("X-Sharer-User-Id") int userId,
+                                                                 @RequestParam(name = "state", required = false,
+                                                                         defaultValue = "ALL") String state) {
+        List<Booking> bookings = bookingService.getBookingByOwnerId(userId, state);
+        List<BookingWithItemAndBookerDto> bookingsDto = new ArrayList<>();
+        bookings.forEach(booking -> bookingsDto.add(BookingMapper.toBookingWithItemAndBookerDto(booking)));
+        return bookingsDto;
     }
 
 

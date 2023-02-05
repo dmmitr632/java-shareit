@@ -21,7 +21,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     List<Booking> findAllByBookerIdAndStartIsAfterOrderByStartDesc(int userId, LocalDateTime dateTime); // FUTURE
 
-    List<Booking> findAllByBookerIdAndStatusEqualsOrderByStartDesc(int booker_id,
+    List<Booking> findAllByBookerIdAndStatusEqualsOrderByStartDesc(int userId,
                                                                    @NotNull BookingStatus status); // WAITING or
     // REJECTED
 
