@@ -14,6 +14,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -34,6 +35,7 @@ public class BookingServiceImpl implements BookingService {
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(NotFoundException::new);
         User booker = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         Booking booking = BookingMapper.toBooking(bookingDto, booker, item);
+        validateBooking(booking);
 
         int itemId = item.getId();
         if (!itemRepository.findById(itemId).orElseThrow(NotFoundException::new).isAvailable()) {
@@ -48,6 +50,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking approveOrRejectBooking(int userId, int bookingId, Boolean approvedOrNot) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
+
         if (userId != booking.getItem().getOwner().getId()) {
             return booking;
         } else if (approvedOrNot) {
@@ -57,26 +60,7 @@ public class BookingServiceImpl implements BookingService {
         }
         return booking;
     }
-//    public Booking requestBooking(int userId, BookingDto bookingDto) {
-//        Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(NotFoundException::new);
-//        User booker =  userRepository.findById(userId).orElseThrow(NotFoundException::new);
-//        Booking booking = BookingMapper.toBooking(bookingDto, booker, item);
-//
-////        System.out.println(booking);
-////        System.out.println(item);
-//        int itemId = item.getId();
-//        if (!itemRepository.findById(itemId).orElseThrow(NotFoundException::new).isAvailable()) {
-//            throw new ValidationException("Item is not available");
-//        }
-//        booking.setBooker(booker);
-//        booking.setStatus(BookingStatus.WAITING);
-//        return bookingRepository.save(booking);
-//    }
-//
-//    @Override
-//    public Booking approveOrRejectBooking(int userId, int bookingId, Boolean approvedOrNot) {
-//        return null;
-//    }
+
 
     @Override
     public Booking getBookingById(int userId, int bookingId) {
@@ -93,5 +77,14 @@ public class BookingServiceImpl implements BookingService {
         return null;
     }
 
+    public void validateBooking(Booking booking) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        if (booking.getEnd().isBefore(currentTime) || booking.getStart().isBefore(currentTime)) {
+            throw new ValidationException("Booking time in before current time");
+        }
+        if (booking.getEnd().isBefore(booking.getStart())) {
+            throw new ValidationException("Booking end time is before start time");
+        }
+    }
 
 }

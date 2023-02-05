@@ -31,10 +31,10 @@ public class BookingController {
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingDto approveOrRejectBooking(@RequestHeader("X-Sharer-User-Id") int userId,
+    public BookingWithItemAndBookerDto approveOrRejectBooking(@RequestHeader("X-Sharer-User-Id") int userId,
                                              @PathVariable int bookingId,
-                                             @RequestParam String approved) {
-        return BookingMapper.toBookingDto(bookingService.approveOrRejectBooking(userId, bookingId,
+                                             @RequestParam(value = "approved") String approved) {
+        return BookingMapper.toBookingWithItemAndBookerDto(bookingService.approveOrRejectBooking(userId, bookingId,
                 Boolean.valueOf(approved)));
     }
 
