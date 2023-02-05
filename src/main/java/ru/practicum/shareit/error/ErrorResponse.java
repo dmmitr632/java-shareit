@@ -1,7 +1,7 @@
 package ru.practicum.shareit.error;
 
 public class ErrorResponse {
-    private final String error;
+    private String error;
     private final String description;
 
     public ErrorResponse(String error, String description) {
@@ -9,7 +9,11 @@ public class ErrorResponse {
         this.description = description;
     }
 
+    public ErrorResponse(String description) {
+        this.description = description;
+    }
+
     public String getError() {
-        return error + " " + description;
+        return description;
     }
 }

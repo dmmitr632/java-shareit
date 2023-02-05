@@ -9,6 +9,7 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.exception.WrongStateException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -53,13 +54,13 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
 
         if (userId != booking.getItem().getOwner().getId()) {
-            return booking;
+            throw new NotFoundException("Only owner can approve or reject booking");
         } else if (approvedOrNot) {
             booking.setStatus(BookingStatus.APPROVED);
         } else {
             booking.setStatus(BookingStatus.REJECTED);
         }
-        return booking;
+        return bookingRepository.save(booking);
     }
 
 
@@ -75,6 +76,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<Booking> getBookingByBookerId(int userId, String state) {
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException("user not found");
+        }
         if (Objects.equals(state, "ALL")) {
             return bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
         } else if (Objects.equals(state, "CURRENT")) {
@@ -85,11 +89,16 @@ public class BookingServiceImpl implements BookingService {
             return bookingRepository.findAllByBookerIdAndStartIsAfterOrderByStartDesc(userId, LocalDateTime.now());
         } else if (Objects.equals(state, "WAITING") || Objects.equals(state, "REJECTED")) {
             return bookingRepository.findAllByBookerIdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.valueOf(state));
-        } else throw new ValidationException("Wrong state parameter");
+        } else {
+            throw new WrongStateException("Unknown state: " + state);
+        }
     }
 
     @Override
     public List<Booking> getBookingByOwnerId(int userId, String state) {
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException("owner not found");
+        }
         if (Objects.equals(state, "ALL")) {
             return bookingRepository.findAllByOwnerId(userId);
         } else if (Objects.equals(state, "CURRENT")) {
@@ -101,7 +110,9 @@ public class BookingServiceImpl implements BookingService {
         } else if (Objects.equals(state, "WAITING") || Objects.equals(state, "REJECTED")) {
             return bookingRepository.findAllByOwnerIdAndStatusEqualsOrderByStartDesc(userId,
                     BookingStatus.valueOf(state));
-        } else throw new ValidationException("Wrong state parameter");
+        } else {
+            throw new WrongStateException("Unknown state: " + state);
+        }
     }
 
     public void validateBooking(Booking booking) {
