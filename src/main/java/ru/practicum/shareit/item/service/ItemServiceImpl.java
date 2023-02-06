@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemLastNextBooking;
 import ru.practicum.shareit.item.dto.ItemLastNextBookingDto;
-import ru.practicum.shareit.item.dto.ItemWithLastNextBookingIds;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -67,7 +67,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemLastNextBookingDto> getAllItemsByUserId(int ownerId) {
-        List<ItemWithLastNextBookingIds> foundItems = itemRepository.findByUserIdAndTime(ownerId, LocalDateTime.now());
+        List<ItemLastNextBooking> foundItems = itemRepository.findByUserIdAndTime(ownerId, LocalDateTime.now());
         List<ItemLastNextBookingDto> itemDtoList = new ArrayList<>();
 
 
