@@ -35,8 +35,4 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
             nativeQuery = true)
     List<ItemLastNextBooking> findByUserIdAndTime(@Param("userId") Integer userId,
                                                   @Param("currentTime") LocalDateTime currentTime);
-
-
-
-
 }
