@@ -10,11 +10,12 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
     // Booking findFirstBy(int userId);
-        List<Booking> findAllByBookerIdOrderByStartDesc(int userId); // ALL
+    List<Booking> findAllByBookerIdOrderByStartDesc(int userId); // ALL
 
     List<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(int booker_id,
                                                                                  @NotNull LocalDateTime time1,
@@ -37,7 +38,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             ":dateTime2) order by b" +
             ".start desc ")
     List<Booking> findAllByOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(@Param("userId") int userId,
-                                                                LocalDateTime dateTime1, LocalDateTime dateTime2); //
+                                                                                LocalDateTime dateTime1, LocalDateTime dateTime2); //
     // CURRENT
 
     @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.end < :dateTime) order by b" +
@@ -55,4 +56,5 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> findAllByOwnerIdAndStatusEqualsOrderByStartDesc(@Param("userId") int userId,
                                                                   @NotNull BookingStatus status); // WAITING or REJECTED
 
+    Optional<Booking> findFirstByBooker_IdAndItem_Id(int booker_id, int item_id);
 }

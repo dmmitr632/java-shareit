@@ -2,8 +2,10 @@ package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.mapper.CommentMapper;
 import ru.practicum.shareit.item.comment.model.Comment;
@@ -109,9 +111,15 @@ public class ItemServiceImpl implements ItemService {
     public CommentDto addComment(int userId, int itemId, CommentDto commentDto, LocalDateTime createdTime) {
         Item item = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
         User author = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        Booking booking = bookingRepository.findFirstByBooker_IdAndItem_Id(userId, itemId)
+                .orElseThrow(ValidationException::new);
+        if (createdTime.isBefore(booking.getEnd())) {
+            throw new ValidationException("Lease is not over");
+        }
         Comment comment = CommentMapper.toComment(commentDto, item, author);
         // comment.setCreated(LocalDateTime.now());
         comment.setCreated(createdTime);
+        comment.setAuthor(author);
         commentRepository.save(comment);
         return CommentMapper.toCommentDto(comment);
     }
