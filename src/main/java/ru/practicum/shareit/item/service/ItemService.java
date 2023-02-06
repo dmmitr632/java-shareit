@@ -5,6 +5,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemLastNextBookingDto;
 import ru.practicum.shareit.item.model.Item;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -19,5 +20,5 @@ public interface ItemService {
 
     List<Item> getItemsByTextSearch(String text);
 
-    CommentDto addComment(int userId, int itemId, CommentDto commentDto);
+    CommentDto addComment(int userId, int itemId, CommentDto commentDto, LocalDateTime createdTime);
 }

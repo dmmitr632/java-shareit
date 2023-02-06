@@ -44,6 +44,6 @@ CREATE TABLE comments
     text       varchar(600)                                 NOT NULL,
     item_id    int REFERENCES items (item_id)               NOT NULL,
     author_id  int REFERENCES users (user_id)               NOT NULL,
-    created    timestamp without time zone                  NOT NULL
+    created    timestamp without time zone
 );
 

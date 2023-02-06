@@ -10,6 +10,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +58,8 @@ public class ItemController {
     public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") int userId,
                                  @PathVariable int itemId,
                                  @RequestBody CommentDto commentDto) {
-        return itemService.addComment(userId, itemId, commentDto);
+        LocalDateTime commentCreatedTime = LocalDateTime.now();
+        return itemService.addComment(userId, itemId, commentDto, commentCreatedTime);
     }
 
 
