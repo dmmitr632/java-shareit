@@ -74,18 +74,20 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
         ItemLastNextBooking itemWithBooking = itemRepository.findByItemIdAndTime(itemId, LocalDateTime.now());
         List<Comment> comments = commentRepository.findAllByItem_id(itemId);
+        List<CommentDto> commentsDto = new ArrayList<>();
+       comments.forEach(comment-> commentsDto.add(CommentMapper.toCommentDto(comment)));
 
         if (itemWithBooking == null) {
             Item item = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
             return new ItemLastNextBookingDto(item.getId(), item.getName(),
-                    item.getDescription(), item.getAvailable(), null, null, comments);
+                    item.getDescription(), item.getAvailable(), null, null, commentsDto);
         }
 
         if (userId != itemWithBooking.getOwnerId()) {
             return new ItemLastNextBookingDto(itemWithBooking.getId(), itemWithBooking.getName(),
-                    itemWithBooking.getDescription(), itemWithBooking.getAvailable(), null, null, comments);
+                    itemWithBooking.getDescription(), itemWithBooking.getAvailable(), null, null, commentsDto);
         }
-        return ItemMapper.toItemLastNextBookingDto(itemWithBooking, comments);
+        return ItemMapper.toItemLastNextBookingDto(itemWithBooking, commentsDto);
     }
 
 
@@ -94,7 +96,9 @@ public class ItemServiceImpl implements ItemService {
         List<ItemLastNextBooking> foundItems = itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now());
         List<ItemLastNextBookingDto> itemDtoList = new ArrayList<>();
 
-        foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemLastNextBookingDto(item,
+
+
+        foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemLastNextBookingDtoC(item,
                 commentRepository.findAllByItem_id(item.getId()))));
         return itemDtoList;
     }
@@ -119,7 +123,7 @@ public class ItemServiceImpl implements ItemService {
         Comment comment = CommentMapper.toComment(commentDto, item, author);
         // comment.setCreated(LocalDateTime.now());
         comment.setCreated(createdTime);
-        comment.setAuthor(author);
+        // comment.setAuthor(author);
         commentRepository.save(comment);
         return CommentMapper.toCommentDto(comment);
     }
