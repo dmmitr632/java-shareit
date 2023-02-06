@@ -9,6 +9,7 @@ import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -23,6 +24,8 @@ public class Comment {
     @Column(name = "comment_id")
     private Integer id;
     @NotBlank
+    @NotNull
+    @NotEmpty
     private String text;
     @NotNull
     @ManyToOne

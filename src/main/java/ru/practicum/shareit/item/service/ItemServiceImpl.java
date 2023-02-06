@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.item.comment.dto.CommentDto;
+import ru.practicum.shareit.item.comment.mapper.CommentMapper;
+import ru.practicum.shareit.item.comment.model.Comment;
+import ru.practicum.shareit.item.comment.repository.CommentRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemLastNextBooking;
 import ru.practicum.shareit.item.dto.ItemLastNextBookingDto;
@@ -23,12 +27,15 @@ public class ItemServiceImpl implements ItemService {
     public final ItemRepository itemRepository;
     public final UserRepository userRepository;
     public final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
 
     public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository,
-                           BookingRepository bookingRepository) {
+                           BookingRepository bookingRepository,
+                           CommentRepository commentRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.bookingRepository = bookingRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -64,12 +71,13 @@ public class ItemServiceImpl implements ItemService {
     public ItemLastNextBookingDto getItemById(int userId, int itemId) {
         itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
         ItemLastNextBooking itemWithBooking = itemRepository.findByItemIdAndTime(itemId, LocalDateTime.now());
+        List<Comment> comments = commentRepository.findAllByItem_id(itemId);
 
         if (itemWithBooking.getOwnerId() == null || userId != itemWithBooking.getOwnerId()) {
             return new ItemLastNextBookingDto(itemWithBooking.getId(), itemWithBooking.getName(),
-                    itemWithBooking.getDescription(), itemWithBooking.getAvailable(), null, null);
+                    itemWithBooking.getDescription(), itemWithBooking.getAvailable(), null, null, comments);
         }
-        return ItemMapper.toItemLastNextBookingDto(itemWithBooking);
+        return ItemMapper.toItemLastNextBookingDto(itemWithBooking, comments);
     }
 
 
@@ -78,7 +86,8 @@ public class ItemServiceImpl implements ItemService {
         List<ItemLastNextBooking> foundItems = itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now());
         List<ItemLastNextBookingDto> itemDtoList = new ArrayList<>();
 
-        foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemLastNextBookingDto(item)));
+        foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemLastNextBookingDto(item,
+                commentRepository.findAllByItem_id(item.getId()))));
         return itemDtoList;
     }
 
@@ -88,6 +97,15 @@ public class ItemServiceImpl implements ItemService {
             return new ArrayList<>();
         }
         return itemRepository.search(text);
+    }
+
+    @Override
+    public CommentDto addComment(int userId, int itemId, CommentDto commentDto) {
+        Item item = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
+        User author = userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        Comment comment = CommentMapper.toComment(commentDto, item, author);
+        commentRepository.save(comment);
+        return CommentMapper.toCommentDto(comment);
     }
 
 

@@ -1,12 +1,15 @@
 package ru.practicum.shareit.item.mapper;
 
 
+import ru.practicum.shareit.item.comment.model.Comment;
 import ru.practicum.shareit.item.dto.BookingShort;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemLastNextBooking;
 import ru.practicum.shareit.item.dto.ItemLastNextBookingDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
+
+import java.util.List;
 
 public class ItemMapper {
 
@@ -28,7 +31,7 @@ public class ItemMapper {
                 owner);
     }
 
-    public static ItemLastNextBookingDto toItemLastNextBookingDto(ItemLastNextBooking item) {
+    public static ItemLastNextBookingDto toItemLastNextBookingDto(ItemLastNextBooking item, List<Comment> comments) {
         BookingShort lastBooking;
         BookingShort nextBooking;
         if (item.getLastBookingId() != null) {
@@ -44,12 +47,7 @@ public class ItemMapper {
             nextBooking = null;
         }
         return new ItemLastNextBookingDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable(),
-                lastBooking, nextBooking);
+                lastBooking, nextBooking, comments);
     }
 
-//    public static ItemLastNextBookingDto toItemLastNextBookingDtoFromItem(Item item
-//            , BookingShort lastBooking, BookingShort nextBooking) {
-//        return new ItemLastNextBookingDto(item.getId(), item.getName(), item.getDescription(),
-//                item.getAvailable(), lastBooking, nextBooking);
-//    }
 }

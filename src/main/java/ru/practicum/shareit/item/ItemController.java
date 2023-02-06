@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemLastNextBookingDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -40,10 +41,6 @@ public class ItemController {
 
     @GetMapping
     public List<ItemLastNextBookingDto> getAllItemsByUserId(@RequestHeader("X-Sharer-User-Id") int userId) {
-        //List<Item> itemList = itemService.getAllItemsByUserId(userId);
-        //List<ItemWithNextAndLastBookingsDto> itemDtoList = new ArrayList<>();
-        //itemList.forEach(item -> itemDtoList.add(ItemMapper.toItemWithNextAndLastBookingsDto(item)));
-
         return itemService.getAllItemsByUserId(userId);
     }
 
@@ -55,11 +52,13 @@ public class ItemController {
         return itemDtoList;
     }
 
-//    @GetMapping("/{itemId}")
-//    public ItemWithNextAndLastBookingsDto getItemDto(@RequestHeader("X-Sharer-User-Id") int userId,
-//                                                     @PathVariable int itemId) {
-//        return itemService.getItemWithNextAndLastBookings(userId, itemId);
-//    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") int userId,
+                                 @PathVariable int itemId,
+                                 @RequestBody CommentDto commentDto) {
+        return itemService.addComment(userId, itemId, commentDto);
+    }
 
 
 }
