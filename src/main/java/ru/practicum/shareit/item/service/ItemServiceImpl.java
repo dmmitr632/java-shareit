@@ -2,14 +2,18 @@ package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemLastNextBookingDto;
+import ru.practicum.shareit.item.dto.ItemWithLastNextBookingIds;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +22,13 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
     public final ItemRepository itemRepository;
     public final UserRepository userRepository;
+    public final BookingRepository bookingRepository;
 
-    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository,
+                           BookingRepository bookingRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
+        this.bookingRepository = bookingRepository;
     }
 
     @Override
@@ -59,8 +66,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getAllItemsByUserId(int id) {
-        return itemRepository.findByOwnerId(id);
+    public List<ItemLastNextBookingDto> getAllItemsByUserId(int ownerId) {
+        List<ItemWithLastNextBookingIds> foundItems = itemRepository.findByUserIdAndTime(ownerId, LocalDateTime.now());
+        List<ItemLastNextBookingDto> itemDtoList = new ArrayList<>();
+
+
+        foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemLastNextBookingDto(item)));
+        return itemDtoList;
+
     }
 
     @Override
@@ -70,4 +83,6 @@ public class ItemServiceImpl implements ItemService {
         }
         return itemRepository.search(text);
     }
+
+
 }

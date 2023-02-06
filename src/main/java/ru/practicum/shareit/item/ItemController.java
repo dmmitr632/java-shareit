@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemLastNextBookingDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -38,11 +39,12 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAllItemsByUserId(@RequestHeader("X-Sharer-User-Id") int userId) {
-        List<Item> itemList = itemService.getAllItemsByUserId(userId);
-        List<ItemDto> itemDtoList = new ArrayList<>();
-        itemList.forEach(item -> itemDtoList.add(ItemMapper.toItemDto(item)));
-        return itemDtoList;
+    public List<ItemLastNextBookingDto> getAllItemsByUserId(@RequestHeader("X-Sharer-User-Id") int userId) {
+        //List<Item> itemList = itemService.getAllItemsByUserId(userId);
+        //List<ItemWithNextAndLastBookingsDto> itemDtoList = new ArrayList<>();
+        //itemList.forEach(item -> itemDtoList.add(ItemMapper.toItemWithNextAndLastBookingsDto(item)));
+
+        return itemService.getAllItemsByUserId(userId);
     }
 
     @GetMapping("search")
@@ -52,4 +54,18 @@ public class ItemController {
         itemList.forEach(item -> itemDtoList.add(ItemMapper.toItemDto(item)));
         return itemDtoList;
     }
+
+//    @GetMapping("/{itemId}")
+//    public ItemWithNextAndLastBookingsDto getItemDto(@RequestHeader("X-Sharer-User-Id") int userId,
+//                                                     @PathVariable int itemId) {
+//        return itemService.getItemWithNextAndLastBookings(userId, itemId);
+//    }
+
+
 }
+
+
+
+
+
+

@@ -36,3 +36,5 @@ build/
 
 /src/main/java/ru/practicum/shareit/booking/repository/BookingRepositoryFirstAttempt.java
 /src/main/java/ru/practicum/shareit/booking/BookingControllerFirstAttempt.java
+/src/main/resources/queries.sql
+/src/main/java/ru/practicum/shareit/item/old/

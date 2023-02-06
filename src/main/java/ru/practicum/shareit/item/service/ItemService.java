@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemLastNextBookingDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
@@ -13,7 +14,8 @@ public interface ItemService {
 
     Item getItemById(int id);
 
-    List<Item> getAllItemsByUserId(int id);
+    List<ItemLastNextBookingDto> getAllItemsByUserId(int id);
 
     List<Item> getItemsByTextSearch(String text);
+
 }
