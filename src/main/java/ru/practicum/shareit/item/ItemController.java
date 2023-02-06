@@ -34,8 +34,8 @@ public class ItemController {
     }
 
     @GetMapping("{itemId}")
-    public ItemLastNextBookingDto getItemById(@PathVariable int itemId) {
-        return itemService.getItemById(itemId);
+    public ItemLastNextBookingDto getItemById(@RequestHeader("X-Sharer-User-Id") int userId, @PathVariable int itemId) {
+        return itemService.getItemById(userId, itemId);
     }
 
     @GetMapping

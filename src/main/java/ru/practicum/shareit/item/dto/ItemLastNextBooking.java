@@ -26,4 +26,6 @@ public interface ItemLastNextBooking {
     LocalDateTime getNextStart();
 
     LocalDateTime getNextEnd();
+
+    Integer getOwnerId();
 }

@@ -54,20 +54,21 @@ public class ItemServiceImpl implements ItemService {
         if (item.getDescription() == null) item.setDescription(editedItem.getDescription());
 
         if (item.getAvailable() == null) item.setAvailable(editedItem.getAvailable());
-        //item.setOwner(editedItem.getOwner());
+        item.setOwner(editedItem.getOwner());
 
         return itemRepository.save(item);
 
     }
 
     @Override
-//    public Item getItemById(int id) {
-//        return itemRepository.findById(id).orElseThrow(NotFoundException::new);
-//    }
-    public ItemLastNextBookingDto getItemById(int itemId) {
+    public ItemLastNextBookingDto getItemById(int userId, int itemId) {
         itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
         ItemLastNextBooking itemWithBooking = itemRepository.findByItemIdAndTime(itemId, LocalDateTime.now());
 
+        if (itemWithBooking.getOwnerId() == null || userId != itemWithBooking.getOwnerId()) {
+            return new ItemLastNextBookingDto(itemWithBooking.getId(), itemWithBooking.getName(),
+                    itemWithBooking.getDescription(), itemWithBooking.getAvailable(), null, null);
+        }
         return ItemMapper.toItemLastNextBookingDto(itemWithBooking);
     }
 

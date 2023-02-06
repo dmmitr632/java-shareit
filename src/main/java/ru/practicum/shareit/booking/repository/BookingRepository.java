@@ -13,7 +13,8 @@ import java.util.List;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
-    List<Booking> findAllByBookerIdOrderByStartDesc(int userId); // ALL
+    // Booking findFirstBy(int userId);
+        List<Booking> findAllByBookerIdOrderByStartDesc(int userId); // ALL
 
     List<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(int booker_id,
                                                                                  @NotNull LocalDateTime time1,
@@ -53,4 +54,5 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             ":status) order by b.start desc ")
     List<Booking> findAllByOwnerIdAndStatusEqualsOrderByStartDesc(@Param("userId") int userId,
                                                                   @NotNull BookingStatus status); // WAITING or REJECTED
+
 }
