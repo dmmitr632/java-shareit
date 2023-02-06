@@ -73,7 +73,13 @@ public class ItemServiceImpl implements ItemService {
         ItemLastNextBooking itemWithBooking = itemRepository.findByItemIdAndTime(itemId, LocalDateTime.now());
         List<Comment> comments = commentRepository.findAllByItem_id(itemId);
 
-        if (itemWithBooking.getOwnerId() == null || userId != itemWithBooking.getOwnerId()) {
+        if (itemWithBooking == null) {
+            Item item = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
+            return new ItemLastNextBookingDto(item.getId(), item.getName(),
+                    item.getDescription(), item.getAvailable(), null, null, comments);
+        }
+
+        if (userId != itemWithBooking.getOwnerId()) {
             return new ItemLastNextBookingDto(itemWithBooking.getId(), itemWithBooking.getName(),
                     itemWithBooking.getDescription(), itemWithBooking.getAvailable(), null, null, comments);
         }
