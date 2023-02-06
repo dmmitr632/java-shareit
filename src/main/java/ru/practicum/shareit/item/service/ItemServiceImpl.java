@@ -61,19 +61,24 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item getItemById(int id) {
-        return itemRepository.findById(id).orElseThrow(NotFoundException::new);
+//    public Item getItemById(int id) {
+//        return itemRepository.findById(id).orElseThrow(NotFoundException::new);
+//    }
+    public ItemLastNextBookingDto getItemById(int itemId) {
+        itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
+        ItemLastNextBooking itemWithBooking = itemRepository.findByItemIdAndTime(itemId, LocalDateTime.now());
+
+        return ItemMapper.toItemLastNextBookingDto(itemWithBooking);
     }
+
 
     @Override
     public List<ItemLastNextBookingDto> getAllItemsByUserId(int ownerId) {
-        List<ItemLastNextBooking> foundItems = itemRepository.findByUserIdAndTime(ownerId, LocalDateTime.now());
+        List<ItemLastNextBooking> foundItems = itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now());
         List<ItemLastNextBookingDto> itemDtoList = new ArrayList<>();
-
 
         foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemLastNextBookingDto(item)));
         return itemDtoList;
-
     }
 
     @Override

@@ -12,7 +12,7 @@ public interface ItemService {
 
     Item editItem(int userId, int itemId, ItemDto itemDto);
 
-    Item getItemById(int id);
+    ItemLastNextBookingDto getItemById(int itemId);
 
     List<ItemLastNextBookingDto> getAllItemsByUserId(int id);
 

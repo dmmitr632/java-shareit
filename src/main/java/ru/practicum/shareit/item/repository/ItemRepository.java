@@ -33,6 +33,27 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
             "or (i.owner_id = :userId and lastBooking.booking_id != nextBooking.booking_id and lastBooking.end_time < nextBooking.start_time and " +
             "nextBooking.start_time > :currentTime) order by i.item_id",
             nativeQuery = true)
-    List<ItemLastNextBooking> findByUserIdAndTime(@Param("userId") Integer userId,
-                                                  @Param("currentTime") LocalDateTime currentTime);
+    List<ItemLastNextBooking> findAllByUserIdAndTime(@Param("userId") Integer userId,
+                                                     @Param("currentTime") LocalDateTime currentTime);
+
+
+    @Query(value = "SELECT i.item_id as id, i.name as name, i.description as description, i.available as available, " +
+            "lastBooking.booking_id as lastBookingId, lastBooking.booker_id as lastBookingBookerId, " +
+            "lastBooking.start_time as lastStart, lastBooking.end_time as lastEnd, " +
+            "nextBooking.booking_id as nextBookingId, nextBooking.booker_id as nextBookingBookerId, " +
+            "nextBooking.start_time as nextStart, nextBooking.end_time as nextEnd " +
+
+            "from items as i " +
+            "left join bookings as lastBooking on i.item_id = lastBooking.item_id " +
+            "left join bookings as nextBooking on i.item_id = nextBooking.item_id " +
+            "where i.item_id = :itemId and ((lastBooking.booking_id is null or nextBooking.booking_id is null)  " +
+            "or (lastBooking.booking_id != nextBooking.booking_id and lastBooking.end_time < nextBooking.start_time and " +
+            "nextBooking.start_time > :currentTime)) order by i.item_id",
+            nativeQuery = true)
+    ItemLastNextBooking findByItemIdAndTime(@Param("itemId") Integer itemId,
+                                            @Param("currentTime") LocalDateTime currentTime);
+
+
+
+
 }
