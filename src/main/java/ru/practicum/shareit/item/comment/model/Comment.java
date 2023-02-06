@@ -1,7 +1,9 @@
 package ru.practicum.shareit.item.comment.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -13,23 +15,25 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "comments")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private Integer id;
     @NotBlank
-    String text;
+    private String text;
     @NotNull
     @ManyToOne
     @JoinColumn(name = "item_id")
-    Item item;
+    private Item item;
     @NotNull
     @ManyToOne
     @JoinColumn(name = "author_id")
-    User author;
+    private User author;
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime created;
 
 }
