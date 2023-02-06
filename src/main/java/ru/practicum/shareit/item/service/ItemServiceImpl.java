@@ -75,7 +75,7 @@ public class ItemServiceImpl implements ItemService {
         ItemLastNextBooking itemWithBooking = itemRepository.findByItemIdAndTime(itemId, LocalDateTime.now());
         List<Comment> comments = commentRepository.findAllByItem_id(itemId);
         List<CommentDto> commentsDto = new ArrayList<>();
-       comments.forEach(comment-> commentsDto.add(CommentMapper.toCommentDto(comment)));
+        comments.forEach(comment -> commentsDto.add(CommentMapper.toCommentDto(comment)));
 
         if (itemWithBooking == null) {
             Item item = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
@@ -95,7 +95,6 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemLastNextBookingDto> getAllItemsByUserId(int ownerId) {
         List<ItemLastNextBooking> foundItems = itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now());
         List<ItemLastNextBookingDto> itemDtoList = new ArrayList<>();
-
 
 
         foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemLastNextBookingDtoC(item,
