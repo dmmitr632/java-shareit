@@ -17,7 +17,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     // Booking findFirstBy(int userId);
     List<Booking> findAllByBookerIdOrderByStartDesc(int userId); // ALL
 
-    List<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(int booker_id,
+    List<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(int bookerId,
                                                                                  @NotNull LocalDateTime time1,
                                                                                  @NotNull LocalDateTime time2); //
     // CURRENT
@@ -56,5 +56,5 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> findAllByOwnerIdAndStatusEqualsOrderByStartDesc(@Param("userId") int userId,
                                                                   @NotNull BookingStatus status); // WAITING or REJECTED
 
-    Optional<Booking> findFirstByBooker_IdAndItem_Id(int booker_id, int item_id);
+    Optional<Booking> findFirstByBooker_IdAndItem_Id(int bookerId, int itemId);
 }
