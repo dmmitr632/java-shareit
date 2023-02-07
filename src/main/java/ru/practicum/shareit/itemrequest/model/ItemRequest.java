@@ -8,10 +8,12 @@ import javax.validation.constraints.NotNull;
 /**
  * TODO Sprint add-item-requests.
  */
-@Data
 @Builder
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ItemRequest {
     @EqualsAndHashCode.Exclude
     private Integer id;

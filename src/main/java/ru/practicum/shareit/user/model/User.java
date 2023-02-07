@@ -7,10 +7,12 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
-@Data
 @Builder
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "users", schema = "public")
 public class User {

@@ -57,7 +57,7 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") int userId,
                                  @PathVariable int itemId,
-                                 @RequestBody CommentDto commentDto) {
+                                 @RequestBody @Valid CommentDto commentDto) {
         LocalDateTime commentCreatedTime = LocalDateTime.now();
         return itemService.addComment(userId, itemId, commentDto, commentCreatedTime);
     }

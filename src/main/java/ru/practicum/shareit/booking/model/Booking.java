@@ -12,10 +12,12 @@ import java.time.LocalDateTime;
 /**
  * TODO Sprint add-bookings.
  */
-@Data
 @Builder
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "bookings", schema = "public")
 public class Booking {

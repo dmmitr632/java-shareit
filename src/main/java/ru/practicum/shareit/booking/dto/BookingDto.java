@@ -18,7 +18,7 @@ public class BookingDto {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime end;
-    @NotNull Integer itemId;
-    @NotNull Integer bookerId;
+    Integer itemId;
+    Integer bookerId;
     BookingStatus status;
 }
