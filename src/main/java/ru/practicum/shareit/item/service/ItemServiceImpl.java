@@ -71,14 +71,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemLastNextBookingDto getItemById(int userId, int itemId) {
-        itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
+        Item item = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
         ItemLastNextBooking itemWithBooking = itemRepository.findByItemIdAndTime(itemId, LocalDateTime.now());
         List<Comment> comments = commentRepository.findAllByItem_id(itemId);
         List<CommentDto> commentsDto = new ArrayList<>();
         comments.forEach(comment -> commentsDto.add(CommentMapper.toCommentDto(comment)));
 
         if (itemWithBooking == null) {
-            Item item = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
             return new ItemLastNextBookingDto(item.getId(), item.getName(),
                     item.getDescription(), item.getAvailable(), null, null, commentsDto);
         }

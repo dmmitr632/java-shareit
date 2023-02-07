@@ -61,12 +61,4 @@ public class ItemController {
         LocalDateTime commentCreatedTime = LocalDateTime.now();
         return itemService.addComment(userId, itemId, commentDto, commentCreatedTime);
     }
-
-
 }
-
-
-
-
-
-

@@ -6,10 +6,6 @@ import lombok.Value;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-//@Data
-//@Builder
-//@AllArgsConstructor
-//@NoArgsConstructor
 @Value
 public class UserDto {
     @EqualsAndHashCode.Exclude

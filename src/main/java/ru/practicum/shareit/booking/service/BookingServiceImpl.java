@@ -40,8 +40,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = BookingMapper.toBooking(bookingDto, booker, item);
         validateBooking(booking);
 
-        int itemId = item.getId();
-        if (!itemRepository.findById(itemId).orElseThrow(NotFoundException::new).isAvailable()) {
+        if (!item.isAvailable()) {
             throw new ValidationException("Item is not available");
         }
         booking.setBooker(booker);
