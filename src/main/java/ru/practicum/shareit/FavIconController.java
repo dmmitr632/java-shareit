@@ -9,5 +9,6 @@ public class FavIconController {
     @GetMapping("favicon.ico")
     @ResponseBody
     void returnNoFavicon() {
+        // disables favicon warning
     }
 }
