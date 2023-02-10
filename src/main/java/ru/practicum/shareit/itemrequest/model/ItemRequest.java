@@ -1,6 +1,7 @@
 package ru.practicum.shareit.itemrequest.model;
 
 import lombok.*;
+import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,5 +21,5 @@ public class ItemRequest {
     @NotBlank
     private String description;
     @NotNull
-    private Integer requester;
+    private User requester;
 }

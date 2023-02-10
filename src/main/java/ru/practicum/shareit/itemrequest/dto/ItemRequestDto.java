@@ -11,6 +11,6 @@ public class ItemRequestDto {
     @EqualsAndHashCode.Exclude
     Integer id;
     @NotBlank String description;
-    @NotNull Integer requester;
+    @NotNull Integer requesterId;
 
 }
