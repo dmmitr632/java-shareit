@@ -1,28 +1,26 @@
-package ru.practicum.shareit.itemrequest;
+package ru.practicum.shareit.request;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.shareit.item.mapper.ItemMapper;
-import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.itemrequest.dto.ItemRequestDto;
-import ru.practicum.shareit.itemrequest.mapper.ItemRequestMapper;
-import ru.practicum.shareit.itemrequest.service.ItemRequestService;
+import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.mapper.RequestMapper;
+import ru.practicum.shareit.request.service.RequestService;
 
 @RestController
 @RequestMapping(path = "/requests")
 @Slf4j
-public class ItemRequestController {
-    private final ItemRequestService itemRequestService;
+public class RequestController {
+    private final RequestService requestService;
 
-    public ItemRequestController(ItemRequestService itemRequestService) {
-        this.itemRequestService = itemRequestService;
+    public RequestController(RequestService requestService) {
+        this.requestService = requestService;
     }
 
     @PostMapping
-    public ItemRequestDto addItemRequest(ItemRequestDto itemRequestDto) {
-        return ItemRequestMapper.toItemRequestDto(itemRequestService.addItemRequest(itemRequestDto));
+    public RequestDto addRequest(RequestDto requestDto) {
+        return RequestMapper.toRequestDto(requestService.addRequest(requestDto));
     }
 
 
