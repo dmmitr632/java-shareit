@@ -16,6 +16,8 @@ import ru.practicum.shareit.item.dto.ItemLastNextBookingDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.model.Request;
+import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -30,27 +32,31 @@ public class ItemServiceImpl implements ItemService {
     public final UserRepository userRepository;
     public final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final RequestRepository requestRepository;
 
     public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository,
                            BookingRepository bookingRepository,
-                           CommentRepository commentRepository) {
+                           CommentRepository commentRepository, RequestRepository requestRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.bookingRepository = bookingRepository;
         this.commentRepository = commentRepository;
+        this.requestRepository = requestRepository;
     }
 
     @Override
     public Item addItem(int userId, ItemDto itemDto) {
         User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
-        Item item = ItemMapper.toItem(itemDto, owner);
+        Request request = requestRepository.findById(itemDto.getRequestId()).orElse(null);
+        Item item = ItemMapper.toItem(itemDto, owner, request);
         return itemRepository.save(item);
     }
 
     @Override
     public Item editItem(int userId, int itemId, ItemDto itemDto) {
         User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
-        Item item = ItemMapper.toItem(itemDto, owner);
+        Request request = requestRepository.findById(itemDto.getRequestId()).orElse(null);
+        Item item = ItemMapper.toItem(itemDto, owner, request);
         Item editedItem = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
 
         if (editedItem.getOwner() == null && item.getOwner() != null) throw new NotFoundException("неверный id");
@@ -63,6 +69,7 @@ public class ItemServiceImpl implements ItemService {
         if (item.getDescription() == null) item.setDescription(editedItem.getDescription());
 
         if (item.getAvailable() == null) item.setAvailable(editedItem.getAvailable());
+        if (item.getRequest() == null) item.setRequest(editedItem.getRequest());
         item.setOwner(editedItem.getOwner());
 
         return itemRepository.save(item);

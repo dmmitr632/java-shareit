@@ -12,11 +12,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RequestMapper {
-    public static Request toRequest(RequestDto requestDto, User requester, User owner) {
-        Set<Item> items = requestDto.getItems().stream().
-                map((itemDto) -> ItemMapper.toItem(itemDto, owner)).collect(Collectors.toSet());
+    public static Request toRequest(RequestDto requestDto, User requester, User owner, Set<Item> items) {
+        return new Request(requestDto.getId(), requestDto.getDescription(), requester,
+                requestDto.getCreated(),
+                items);
 
-        return new Request(requestDto.getId(), requestDto.getDescription(), requester, requestDto.getCreated(), items);
     }
 
     public static Request toRequestWithoutItems(RequestDto requestDto, User requester) {

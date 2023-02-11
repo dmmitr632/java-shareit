@@ -9,6 +9,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemLastNextBooking;
 import ru.practicum.shareit.item.dto.ItemLastNextBookingDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
@@ -21,17 +22,19 @@ public class ItemMapper {
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.getAvailable()
+                item.getAvailable(),
+                item.getRequest().getId()
         );
     }
 
 
-    public static Item toItem(ItemDto itemDto, User owner) {
+    public static Item toItem(ItemDto itemDto, User owner, Request request) {
         return new Item(itemDto.getId(),
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
-                owner);
+                owner,
+                request);
     }
 
     public static ItemLastNextBookingDto toItemLastNextBookingDtoC(ItemLastNextBooking item, List<Comment> comments) {

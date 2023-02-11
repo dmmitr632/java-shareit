@@ -1,5 +1,9 @@
 package ru.practicum.shareit.request.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.dto.RequestDto;
@@ -29,18 +33,19 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<Request> getRequestsByOwnerId(int userId, int requestId) {
-        return null;
+    public List<Request> getRequestsByUserId(int userId, int requestId) {
+        return requestRepository.findAllByRequesterIdOrderByCreatedDesc(userId);
     }
 
     @Override
-    public List<Request> getRequestsOfOtherUsers(int userId, int from, int size) {
-        return null;
+    public Page<Request> getRequestsOfOtherUsers(int userId, int from, int size) {
+        Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "created"));
+        return requestRepository.findAllByRequesterIdNotOrderByCreatedDesc(userId, pageable);
     }
 
     @Override
-    public Request getRequestById(int userId, int requestId) {
-        return null;
+    public Request getRequestById(int requestId) {
+        return requestRepository.findById(requestId).orElseThrow(NotFoundException::new);
     }
 
 

@@ -13,5 +13,6 @@ public class ItemDto {
     @NotBlank String name;
     @NotBlank String description;
     Boolean available;
+    Integer requestId;
 
 }
