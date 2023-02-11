@@ -9,6 +9,8 @@ import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.util.List;
+
 @Service
 public class RequestServiceImpl implements RequestService {
     private final RequestRepository requestRepository;
@@ -20,8 +22,26 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request addRequest(RequestDto requestDto){
-        User requester = userRepository.findById(requestDto.getRequesterId()).orElseThrow(NotFoundException::new);
-        return requestRepository.save(RequestMapper.toRequest(requestDto, requester));
+    public Request addRequest(RequestDto requestDto, int requesterId) {
+        User requester = userRepository.findById(requesterId).orElseThrow(NotFoundException::new);
+        return requestRepository.save(RequestMapper.toRequestWithoutItems(requestDto, requester));
+
     }
+
+    @Override
+    public List<Request> getRequestsByOwnerId(int userId, int requestId) {
+        return null;
+    }
+
+    @Override
+    public List<Request> getRequestsOfOtherUsers(int userId, int from, int size) {
+        return null;
+    }
+
+    @Override
+    public Request getRequestById(int userId, int requestId) {
+        return null;
+    }
+
+
 }

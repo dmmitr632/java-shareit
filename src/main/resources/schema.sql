@@ -11,6 +11,19 @@ CREATE TABLE users
     email   varchar(80)                                  NOT NULL UNIQUE
 );
 
+
+
+
+CREATE TABLE requests
+(
+    request_id   int GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+    description  varchar(80),
+    requester_id int REFERENCES users (user_id)               NOT NULL,
+    created timestamp without time zone
+);
+
+
+
 CREATE TABLE items
 (
     item_id     int GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
@@ -18,7 +31,7 @@ CREATE TABLE items
     description varchar(500),
     available   boolean                                      NOT NULL,
     owner_id    int REFERENCES users (user_id),
-    request_id  int
+    request_id  int REFERENCES requests (request_id)
 );
 
 CREATE TABLE bookings
@@ -31,12 +44,6 @@ CREATE TABLE bookings
     status     varchar(20)                                  NOT NULL
 );
 
-CREATE TABLE requests
-(
-    request_id   int GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
-    description  varchar(80),
-    requester_id int REFERENCES users (user_id)               NOT NULL
-);
 
 CREATE TABLE comments
 (
