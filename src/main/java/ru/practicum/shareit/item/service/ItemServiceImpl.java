@@ -47,7 +47,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item addItem(int userId, ItemDto itemDto) {
         User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
-        Request request = requestRepository.findById(itemDto.getRequestId()).orElse(null);
+        Request request = null;
+        if (itemDto.getRequestId() != null) {
+            request = requestRepository.findById(itemDto.getRequestId()).orElseThrow(NotFoundException::new);
+        }
         Item item = ItemMapper.toItem(itemDto, owner, request);
         return itemRepository.save(item);
     }
@@ -55,7 +58,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item editItem(int userId, int itemId, ItemDto itemDto) {
         User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
-        Request request = requestRepository.findById(itemDto.getRequestId()).orElse(null);
+        Request request = null;
+        if (itemDto.getRequestId() != null) {
+            request = requestRepository.findById(itemDto.getRequestId()).orElseThrow(NotFoundException::new);
+        }
         Item item = ItemMapper.toItem(itemDto, owner, request);
         Item editedItem = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
 
@@ -126,9 +132,7 @@ public class ItemServiceImpl implements ItemService {
             throw new ValidationException("Lease is not over");
         }
         Comment comment = CommentMapper.toComment(commentDto, item, author);
-        // comment.setCreated(LocalDateTime.now());
         comment.setCreated(createdTime);
-        // comment.setAuthor(author);
         commentRepository.save(comment);
         return CommentMapper.toCommentDto(comment);
     }

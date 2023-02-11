@@ -34,7 +34,7 @@ public class Item {
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "request_id")
     private Request request;
 

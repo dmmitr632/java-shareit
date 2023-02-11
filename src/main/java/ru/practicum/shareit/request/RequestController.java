@@ -10,7 +10,6 @@ import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.request.service.RequestService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +43,9 @@ public class RequestController {
         Page<Request> requests = requestService.getRequestsOfOtherUsers(userId, from, size);
         List<RequestDto> requestDtoList =
                 requests.stream().map(RequestMapper::toRequestDto).collect(Collectors.toList());
+//        if (requestDtoList.isEmpty()) {
+//            requestDtoList = new ArrayList<>();
+//        }
         return new PageImpl<>(requestDtoList);
     }
 

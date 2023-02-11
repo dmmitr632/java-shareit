@@ -13,6 +13,7 @@ import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,12 +29,14 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Request addRequest(RequestDto requestDto, int requesterId) {
         User requester = userRepository.findById(requesterId).orElseThrow(NotFoundException::new);
-        return requestRepository.save(RequestMapper.toRequestWithoutItems(requestDto, requester));
-
+        Request request =  requestRepository.save(RequestMapper.toRequestWithoutItems(requestDto, requester));
+        request.setCreated(LocalDateTime.now());
+        return request;
     }
 
     @Override
     public List<Request> getRequestsByUserId(int userId) {
+        userRepository.findById(userId).orElseThrow(NotFoundException::new);
         return requestRepository.findAllByRequesterIdOrderByCreatedDesc(userId);
     }
 
