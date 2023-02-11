@@ -37,7 +37,7 @@ public class ItemMapper {
                 request);
     }
 
-    public static ItemLastNextBookingDto toItemLastNextBookingDtoC(ItemLastNextBooking item, List<Comment> comments) {
+    public static ItemLastNextBookingDto toItemLastNextBookingDtoComments(ItemLastNextBooking item, List<Comment> comments) {
         BookingShort lastBooking;
         BookingShort nextBooking;
         if (item.getLastBookingId() != null) {
@@ -59,7 +59,7 @@ public class ItemMapper {
                 lastBooking, nextBooking, commentDtos);
     }
 
-    public static ItemLastNextBookingDto toItemLastNextBookingDto(ItemLastNextBooking item, List<CommentDto> comments) {
+    public static ItemLastNextBookingDto toItemLastNextBookingDtoCommentsDto(ItemLastNextBooking item, List<CommentDto> comments) {
         BookingShort lastBooking;
         BookingShort nextBooking;
         if (item.getLastBookingId() != null) {

@@ -1,13 +1,18 @@
 package ru.practicum.shareit.request;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.mapper.RequestMapper;
+import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.request.service.RequestService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/requests")
@@ -27,23 +32,25 @@ public class RequestController {
 
     @GetMapping()
     public List<RequestDto> getRequestsByOwnerId(@RequestHeader("X-Sharer-User-Id") int ownerId) {
-        //return RequestMapper.toRequestDto(requestService.getRequestsByOwnerId(requestDto));
-        return null;
+        //Set<ItemDto> itemsDto = request.getItems().stream().map(ItemMapper::toItemDto).collect(Collectors.toSet());
+        List<Request> requests = requestService.getRequestsByUserId(ownerId);
+        return requests.stream().map(RequestMapper::toRequestDto).collect(Collectors.toList());
     }
 
     @GetMapping("all")
-    public List<RequestDto> getAllRequestsCreatedByOtherUsers(@RequestHeader("X-Sharer-User-Id") int userId,
+    public Page<RequestDto> getAllRequestsCreatedByOtherUsers(@RequestHeader("X-Sharer-User-Id") int userId,
                                                               @RequestParam(defaultValue = "0") int from,
                                                               @RequestParam(defaultValue = "50") int size) {
-        //return RequestMapper.toRequestDto(requestService.getRequestsOfOtherUsers(userId, from, size));
-        return null;
+        Page<Request> requests = requestService.getRequestsOfOtherUsers(userId, from, size);
+        List<RequestDto> requestDtoList =
+                requests.stream().map(RequestMapper::toRequestDto).collect(Collectors.toList());
+        return new PageImpl<>(requestDtoList);
     }
 
 
     @GetMapping("{requestId}")
     public RequestDto getRequest(@RequestHeader("X-Sharer-User-Id") int userId, @PathVariable int requestId) {
-        //return requestService.getRequestById(userId, requestId);
-        return null;
+        return RequestMapper.toRequestDto(requestService.getRequestById(requestId));
     }
 
 

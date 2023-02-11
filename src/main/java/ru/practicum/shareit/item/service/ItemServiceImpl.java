@@ -93,7 +93,7 @@ public class ItemServiceImpl implements ItemService {
             return new ItemLastNextBookingDto(itemWithBooking.getId(), itemWithBooking.getName(),
                     itemWithBooking.getDescription(), itemWithBooking.getAvailable(), null, null, commentsDto);
         }
-        return ItemMapper.toItemLastNextBookingDto(itemWithBooking, commentsDto);
+        return ItemMapper.toItemLastNextBookingDtoCommentsDto(itemWithBooking, commentsDto);
     }
 
 
@@ -103,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
         List<ItemLastNextBookingDto> itemDtoList = new ArrayList<>();
 
 
-        foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemLastNextBookingDtoC(item,
+        foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemLastNextBookingDtoComments(item,
                 commentRepository.findAllByItem_id(item.getId()))));
         return itemDtoList;
     }

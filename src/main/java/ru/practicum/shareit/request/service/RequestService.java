@@ -9,7 +9,7 @@ import java.util.List;
 public interface RequestService {
     Request addRequest(RequestDto requestDto, int requesterId);
 
-    List<Request> getRequestsByUserId(int userId, int requestId);
+    List<Request> getRequestsByUserId(int userId);
 
     Page<Request> getRequestsOfOtherUsers(int userId, int from, int size);
 

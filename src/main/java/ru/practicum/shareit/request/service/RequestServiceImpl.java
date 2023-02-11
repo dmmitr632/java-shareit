@@ -33,7 +33,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<Request> getRequestsByUserId(int userId, int requestId) {
+    public List<Request> getRequestsByUserId(int userId) {
         return requestRepository.findAllByRequesterIdOrderByCreatedDesc(userId);
     }
 
