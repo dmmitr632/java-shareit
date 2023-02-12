@@ -13,13 +13,12 @@ CREATE TABLE users
 
 
 
-
 CREATE TABLE requests
 (
     request_id   int GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
     description  varchar(80),
     requester_id int REFERENCES users (user_id)               NOT NULL,
-    created timestamp without time zone
+    created      timestamp without time zone
 );
 
 

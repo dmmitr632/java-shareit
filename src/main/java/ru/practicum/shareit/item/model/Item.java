@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.model;
 
 import lombok.*;
-
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
@@ -39,11 +38,9 @@ public class Item {
     private Request request;
 
 
-
     public Boolean isAvailable() {
         return this.getAvailable();
     }
-
 
 
     public Item(int id, String name, String description, Boolean available, User owner) {

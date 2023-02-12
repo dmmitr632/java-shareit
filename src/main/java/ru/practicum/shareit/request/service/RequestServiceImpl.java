@@ -1,9 +1,6 @@
 package ru.practicum.shareit.request.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.dto.RequestDto;
@@ -13,8 +10,8 @@ import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class RequestServiceImpl implements RequestService {
@@ -29,25 +26,33 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Request addRequest(RequestDto requestDto, int requesterId) {
         User requester = userRepository.findById(requesterId).orElseThrow(NotFoundException::new);
-        Request request =  requestRepository.save(RequestMapper.toRequestWithoutItems(requestDto, requester));
-        request.setCreated(LocalDateTime.now());
-        return request;
+        return requestRepository.save(RequestMapper.toRequestWithoutItems(requestDto, requester));
     }
 
     @Override
-    public List<Request> getRequestsByUserId(int userId) {
+    public Collection<Request> getRequestsByUserId(int userId) {
         userRepository.findById(userId).orElseThrow(NotFoundException::new);
         return requestRepository.findAllByRequesterIdOrderByCreatedDesc(userId);
     }
 
     @Override
-    public Page<Request> getRequestsOfOtherUsers(int userId, int from, int size) {
-        Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "created"));
-        return requestRepository.findAllByRequesterIdNotOrderByCreatedDesc(userId, pageable);
+    public Collection<Request> getRequestsOfOtherUsers(int userId, Integer from, Integer size) {
+        userRepository.findById(userId).orElseThrow(NotFoundException::new);
+        if (size == null) {
+            size = Integer.MAX_VALUE;
+        }
+        //Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "created"));
+        //return requestRepository.findAllByRequesterIdNotOrderByCreatedDesc(userId, pageable);
+        return requestRepository.findAllByRequesterIdNotOrderByCreatedDesc(
+                        userId, Pageable.ofSize(from + size)).stream()
+                .skip(from).collect(Collectors.toList());
+
+
     }
 
     @Override
-    public Request getRequestById(int requestId) {
+    public Request getRequestById(int userId, int requestId) {
+        userRepository.findById(userId).orElseThrow(NotFoundException::new);
         return requestRepository.findById(requestId).orElseThrow(NotFoundException::new);
     }
 

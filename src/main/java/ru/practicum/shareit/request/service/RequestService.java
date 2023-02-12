@@ -1,17 +1,16 @@
 package ru.practicum.shareit.request.service;
 
-import org.springframework.data.domain.Page;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.model.Request;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface RequestService {
     Request addRequest(RequestDto requestDto, int requesterId);
 
-    List<Request> getRequestsByUserId(int userId);
+    Collection<Request> getRequestsByUserId(int userId);
 
-    Page<Request> getRequestsOfOtherUsers(int userId, int from, int size);
+    Collection<Request> getRequestsOfOtherUsers(int userId, Integer from, Integer size);
 
-    Request getRequestById(int requestId);
+    Request getRequestById(int userId, int requestId);
 }

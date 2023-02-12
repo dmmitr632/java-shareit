@@ -7,12 +7,13 @@ import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RequestMapper {
-    public static Request toRequest(RequestDto requestDto, User requester, User owner, Set<Item> items) {
+    public static Request toRequest(RequestDto requestDto, User requester, Set<Item> items) {
         return new Request(requestDto.getId(), requestDto.getDescription(), requester,
                 requestDto.getCreated(),
                 items);
@@ -20,8 +21,13 @@ public class RequestMapper {
     }
 
     public static Request toRequestWithoutItems(RequestDto requestDto, User requester) {
-        return new Request(requestDto.getId(), requestDto.getDescription(), requester, requestDto.getCreated(),
-                new HashSet<>());
+        if (requestDto.getCreated() != null) {
+            return new Request(requestDto.getId(), requestDto.getDescription(), requester, requestDto.getCreated(),
+                    new HashSet<>());
+        } else {
+            return new Request(requestDto.getId(), requestDto.getDescription(), requester, LocalDateTime.now(),
+                    new HashSet<>());
+        }
     }
 
 

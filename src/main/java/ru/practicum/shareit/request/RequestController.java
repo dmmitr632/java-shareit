@@ -10,6 +10,7 @@ import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.request.service.RequestService;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,27 +33,25 @@ public class RequestController {
     @GetMapping()
     public List<RequestDto> getRequestsByOwnerId(@RequestHeader("X-Sharer-User-Id") int ownerId) {
         //Set<ItemDto> itemsDto = request.getItems().stream().map(ItemMapper::toItemDto).collect(Collectors.toSet());
-        List<Request> requests = requestService.getRequestsByUserId(ownerId);
+        Collection<Request> requests = requestService.getRequestsByUserId(ownerId);
         return requests.stream().map(RequestMapper::toRequestDto).collect(Collectors.toList());
     }
 
     @GetMapping("all")
     public Page<RequestDto> getAllRequestsCreatedByOtherUsers(@RequestHeader("X-Sharer-User-Id") int userId,
-                                                              @RequestParam(defaultValue = "0") int from,
-                                                              @RequestParam(defaultValue = "50") int size) {
-        Page<Request> requests = requestService.getRequestsOfOtherUsers(userId, from, size);
+                                                              @RequestParam(defaultValue = "0", required = false) Integer from,
+                                                              @RequestParam(required = false) Integer size) {
+        Collection<Request> requests = requestService.getRequestsOfOtherUsers(userId, from, size);
         List<RequestDto> requestDtoList =
                 requests.stream().map(RequestMapper::toRequestDto).collect(Collectors.toList());
-//        if (requestDtoList.isEmpty()) {
-//            requestDtoList = new ArrayList<>();
-//        }
+
         return new PageImpl<>(requestDtoList);
     }
 
 
     @GetMapping("{requestId}")
     public RequestDto getRequest(@RequestHeader("X-Sharer-User-Id") int userId, @PathVariable int requestId) {
-        return RequestMapper.toRequestDto(requestService.getRequestById(requestId));
+        return RequestMapper.toRequestDto(requestService.getRequestById(userId, requestId));
     }
 
 
