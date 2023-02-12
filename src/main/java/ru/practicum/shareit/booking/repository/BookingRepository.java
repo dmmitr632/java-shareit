@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,52 +11,61 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
-    List<Booking> findAllByBookerIdOrderByStartDesc(int userId); // ALL
+    Page<Booking> findAllByBookerIdOrderByStartDesc(int userId,
+                                                    Pageable pageable); // ALL
 
-    List<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(int bookerId,
+    Page<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(int bookerId,
                                                                                  @NotNull LocalDateTime time1,
-                                                                                 @NotNull LocalDateTime time2); //
+                                                                                 @NotNull LocalDateTime time2,
+                                                                                 Pageable pageable); //
     // CURRENT
 
-    List<Booking> findAllByBookerIdAndEndIsBeforeOrderByStartDesc(int userId, LocalDateTime dateTime); // PAST
+    Page<Booking> findAllByBookerIdAndEndIsBeforeOrderByStartDesc(int userId, LocalDateTime dateTime,
+                                                                  Pageable pageable); // PAST
 
-    List<Booking> findAllByBookerIdAndStartIsAfterOrderByStartDesc(int userId, LocalDateTime dateTime); // FUTURE
+    Page<Booking> findAllByBookerIdAndStartIsAfterOrderByStartDesc(int userId, LocalDateTime dateTime,
+                                                                   Pageable pageable); // FUTURE
 
-    List<Booking> findAllByBookerIdAndStatusOrderByStartDesc(int userId, @NotNull BookingStatus status);
+    Page<Booking> findAllByBookerIdAndStatusOrderByStartDesc(int userId, @NotNull BookingStatus status,
+                                                             Pageable pageable);
     // WAITING or
     // REJECTED
 
 
     @Query("select b from Booking b join b.item i where i.owner.id = :userId order by b.start desc")
-    List<Booking> findAllByOwnerId(@Param("userId") int userId); // ALL
+    Page<Booking> findAllByOwnerId(@Param("userId") int userId,
+                                   Pageable pageable); // ALL
 
     @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.start < :dateTime1 and b.end > " +
             ":dateTime2) order by b" +
             ".start desc ")
-    List<Booking> findAllByOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(@Param("userId") int userId,
-                                                                                LocalDateTime dateTime1, LocalDateTime dateTime2); //
+    Page<Booking> findAllByOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(@Param("userId") int userId,
+                                                                                LocalDateTime dateTime1, LocalDateTime dateTime2,
+                                                                                Pageable pageable); //
     // CURRENT
 
     @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.end < :dateTime) order by b" +
             ".start desc ")
-    List<Booking> findAllByOwnerIdAndEndIsBeforeOrderByStartDesc(@Param("userId") int userId,
-                                                                 LocalDateTime dateTime); // PAST
+    Page<Booking> findAllByOwnerIdAndEndIsBeforeOrderByStartDesc(@Param("userId") int userId,
+                                                                 LocalDateTime dateTime,
+                                                                 Pageable pageable); // PAST
 
     @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.start > :dateTime) order by b" +
             ".start desc ")
-    List<Booking> findAllByOwnerIdAndStartIsAfterOrderByStartDesc(@Param("userId") int userId,
-                                                                  LocalDateTime dateTime); // FUTURE
+    Page<Booking> findAllByOwnerIdAndStartIsAfterOrderByStartDesc(@Param("userId") int userId,
+                                                                  LocalDateTime dateTime,
+                                                                  Pageable pageable); // FUTURE
 
     @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.status = " +
             ":status) order by b.start desc ")
-    List<Booking> findAllByOwnerIdAndStatusEqualsOrderByStartDesc(@Param("userId") int userId,
-                                                                  @NotNull BookingStatus status); // WAITING or REJECTED
+    Page<Booking> findAllByOwnerIdAndStatusEqualsOrderByStartDesc(@Param("userId") int userId,
+                                                                  @NotNull BookingStatus status,
+                                                                  Pageable pageable); // WAITING or REJECTED
 
     Optional<Booking> findFirstByBooker_IdAndItem_Id(int bookerId, int itemId);
 }
