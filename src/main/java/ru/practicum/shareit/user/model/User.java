@@ -20,7 +20,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private int id;
+    private Integer id;
     @NotBlank
     @NotEmpty
     private String name;
@@ -28,4 +28,10 @@ public class User {
     @NotEmpty
     @Email(message = "wrong email")
     private String email;
+
+    public User(int id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
 }
