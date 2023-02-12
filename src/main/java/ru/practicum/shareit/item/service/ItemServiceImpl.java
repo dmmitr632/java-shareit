@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -24,6 +26,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Qualifier("ItemServiceDb")
@@ -104,8 +107,14 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public List<ItemLastNextBookingDto> getAllItemsByUserId(int ownerId) {
-        List<ItemLastNextBooking> foundItems = itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now());
+    public List<ItemLastNextBookingDto> getAllItemsByUserId(int ownerId, Integer from, Integer size) {
+        if (size == null) {
+            size = Integer.MAX_VALUE;
+        }
+        Pageable pageable = PageRequest.of(from, size);
+
+        List<ItemLastNextBooking> foundItems = (itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now(),
+                pageable)).stream().collect(Collectors.toList());
         List<ItemLastNextBookingDto> itemDtoList = new ArrayList<>();
 
 
@@ -115,11 +124,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getItemsByTextSearch(String text) {
+    public List<Item> getItemsByTextSearch(String text, Integer from, Integer size) {
+        if (size == null) {
+            size = Integer.MAX_VALUE;
+        }
+        Pageable pageable = PageRequest.of(from, size);
         if (text.isBlank()) {
             return new ArrayList<>();
         }
-        return itemRepository.search(text);
+        return itemRepository.search(text, pageable).stream().collect(Collectors.toList());
     }
 
     @Override

@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.repository;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +11,6 @@ import ru.practicum.shareit.item.dto.ItemLastNextBooking;
 import ru.practicum.shareit.item.model.Item;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Repository
 @Qualifier("ItemRepositoryInDb")
@@ -18,7 +19,8 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
             "where upper(i.name) like upper(concat('%', ?1, '%')) " +
             " or upper(i.description) like upper(concat('%', ?1, '%'))" +
             "and i.available = true")
-    List<Item> search(String text);
+    Page<Item> search(String text,
+                      Pageable pageable);
 
     @Query(value = "SELECT i.item_id as id, i.name as name, i.description as description, i.available as available, " +
             "lastBooking.booking_id as lastBookingId, lastBooking.booker_id as lastBookingBookerId, " +
@@ -33,8 +35,9 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
             "or (i.owner_id = :userId and lastBooking.booking_id != nextBooking.booking_id and lastBooking.end_time < nextBooking.start_time and " +
             "nextBooking.start_time > :currentTime) order by i.item_id",
             nativeQuery = true)
-    List<ItemLastNextBooking> findAllByUserIdAndTime(@Param("userId") Integer userId,
-                                                     @Param("currentTime") LocalDateTime currentTime);
+    Page<ItemLastNextBooking> findAllByUserIdAndTime(@Param("userId") Integer userId,
+                                                     @Param("currentTime") LocalDateTime currentTime,
+                                                     Pageable pageable);
 
 
     @Query(value = "SELECT i.item_id as id, i.name as name, i.description as description, i.available as available, " +

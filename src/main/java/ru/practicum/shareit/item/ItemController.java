@@ -41,13 +41,17 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemLastNextBookingDto> getAllItemsByUserId(@RequestHeader("X-Sharer-User-Id") int userId) {
-        return itemService.getAllItemsByUserId(userId);
+    public List<ItemLastNextBookingDto> getAllItemsByUserId(@RequestHeader("X-Sharer-User-Id") int userId,
+                                                            @RequestParam(defaultValue = "0", required = false) Integer from,
+                                                            @RequestParam(required = false) Integer size) {
+        return itemService.getAllItemsByUserId(userId, from, size);
     }
 
     @GetMapping("search")
-    public List<ItemDto> getItemsByTextSearch(@RequestParam String text) {
-        List<Item> itemList = itemService.getItemsByTextSearch(text);
+    public List<ItemDto> getItemsByTextSearch(@RequestParam String text, @RequestParam(defaultValue = "0", required =
+            false) Integer from,
+                                              @RequestParam(required = false) Integer size) {
+        List<Item> itemList = itemService.getItemsByTextSearch(text, from, size);
         List<ItemDto> itemDtoList = new ArrayList<>();
         itemList.forEach(item -> itemDtoList.add(ItemMapper.toItemDto(item)));
         return itemDtoList;
