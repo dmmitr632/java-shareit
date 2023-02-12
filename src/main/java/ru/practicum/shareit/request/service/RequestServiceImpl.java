@@ -10,7 +10,7 @@ import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,23 +30,21 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Collection<Request> getRequestsByUserId(int userId) {
+    public List<Request> getRequestsByUserId(int userId) {
         userRepository.findById(userId).orElseThrow(NotFoundException::new);
         return requestRepository.findAllByRequesterIdOrderByCreatedDesc(userId);
     }
 
     @Override
-    public Collection<Request> getRequestsOfOtherUsers(int userId, Integer from, Integer size) {
+    public List<Request> getRequestsOfOtherUsers(int userId, Integer from, Integer size) {
         userRepository.findById(userId).orElseThrow(NotFoundException::new);
         if (size == null) {
             size = Integer.MAX_VALUE;
         }
-        //Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "created"));
-        //return requestRepository.findAllByRequesterIdNotOrderByCreatedDesc(userId, pageable);
+
         return requestRepository.findAllByRequesterIdNotOrderByCreatedDesc(
                         userId, Pageable.ofSize(from + size)).stream()
                 .skip(from).collect(Collectors.toList());
-
 
     }
 

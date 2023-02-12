@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
-    // Booking findFirstBy(int userId);
+
     List<Booking> findAllByBookerIdOrderByStartDesc(int userId); // ALL
 
     List<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(int bookerId,
