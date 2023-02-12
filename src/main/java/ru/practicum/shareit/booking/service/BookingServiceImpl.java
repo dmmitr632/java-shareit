@@ -135,7 +135,7 @@ public class BookingServiceImpl implements BookingService {
 
     public void validateBooking(Booking booking) {
         LocalDateTime currentTime = LocalDateTime.now();
-        if (Objects.equals(booking.getBooker().getId(), booking.getItem().getOwner().getId())) {
+        if (booking.getBooker().getId().intValue() == booking.getItem().getOwner().getId().intValue()) {
             throw new NotFoundException("Booker and owner cannot be the same person");
         }
         if (booking.getEnd().isBefore(currentTime) || booking.getStart().isBefore(currentTime)) {
