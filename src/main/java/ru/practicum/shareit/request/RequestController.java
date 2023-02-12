@@ -1,8 +1,6 @@
 package ru.practicum.shareit.request;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.mapper.RequestMapper;
@@ -38,14 +36,12 @@ public class RequestController {
     }
 
     @GetMapping("all")
-    public Page<RequestDto> getAllRequestsCreatedByOtherUsers(@RequestHeader("X-Sharer-User-Id") int userId,
+    public Collection<RequestDto> getAllRequestsCreatedByOtherUsers(@RequestHeader("X-Sharer-User-Id") int userId,
                                                               @RequestParam(defaultValue = "0", required = false) Integer from,
                                                               @RequestParam(required = false) Integer size) {
         Collection<Request> requests = requestService.getRequestsOfOtherUsers(userId, from, size);
-        List<RequestDto> requestDtoList =
-                requests.stream().map(RequestMapper::toRequestDto).collect(Collectors.toList());
 
-        return new PageImpl<>(requestDtoList);
+        return (requests.stream().map(RequestMapper::toRequestDto).collect(Collectors.toList()));
     }
 
 
