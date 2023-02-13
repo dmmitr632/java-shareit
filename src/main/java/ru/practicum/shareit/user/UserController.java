@@ -11,12 +11,10 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @RestController
 @RequestMapping(path = "/users")
 @Slf4j
 public class UserController {
-
 
     private final UserService userService;
 
@@ -51,7 +49,6 @@ public class UserController {
     public void deleteUser(@PathVariable int userId) {
         userService.deleteUser(userId);
     }
-
 
 }
 

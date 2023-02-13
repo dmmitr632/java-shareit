@@ -54,5 +54,4 @@ public class RequestServiceImpl implements RequestService {
         return requestRepository.findById(requestId).orElseThrow(NotFoundException::new);
     }
 
-
 }

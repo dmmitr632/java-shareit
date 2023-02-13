@@ -35,7 +35,8 @@ public class RequestController {
 
     @GetMapping("all")
     public List<RequestDto> getAllRequestsCreatedByOtherUsers(@RequestHeader("X-Sharer-User-Id") int userId,
-                                                              @RequestParam(defaultValue = "0", required = false) Integer from,
+                                                              @RequestParam(defaultValue = "0", required =
+                                                                      false) Integer from,
                                                               @RequestParam(required = false) Integer size) {
         List<Request> requests = requestService.getRequestsOfOtherUsers(userId, from, size);
 

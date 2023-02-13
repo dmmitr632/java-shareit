@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-
 @Builder
 @Getter
 @Setter
@@ -37,11 +36,9 @@ public class Item {
     @JoinColumn(name = "request_id")
     private Request request;
 
-
     public Boolean isAvailable() {
         return this.getAvailable();
     }
-
 
     public Item(int id, String name, String description, Boolean available, User owner) {
         this.id = id;

@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-
 @DataJpaTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -53,7 +52,6 @@ public class BookingRepositoryTest {
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     Pageable pageable = PageRequest.of(0, 100);
 
-
     @BeforeEach
     void beforeEachTest() {
         testEntityManager.persist(booker);
@@ -64,17 +62,24 @@ public class BookingRepositoryTest {
 
     @Test
     void findByBooker() {
-        Booking bookingSaved = Booking.builder().id(1).start(LocalDateTime.parse(booking.getStart().format(dateFormatter), dateFormatter)).end(LocalDateTime.parse(booking.getEnd().format(dateFormatter), dateFormatter)).build();
+        Booking bookingSaved = Booking.builder()
+                .id(1)
+                .start(LocalDateTime.parse(booking.getStart().format(dateFormatter), dateFormatter))
+                .end(LocalDateTime.parse(booking.getEnd().format(dateFormatter), dateFormatter))
+                .build();
         Booking booking2 = bookingRepository.findFirstByBooker_IdAndItem_Id(1, 1).get();
         Assertions.assertEquals(bookingSaved, booking2);
     }
 
     @Test
     void findByOwner() {
-        Booking bookingSaved = Booking.builder().id(1).
-                start(LocalDateTime.parse(booking.getStart().format(dateFormatter), dateFormatter)).
-                end(LocalDateTime.parse(booking.getEnd().format(dateFormatter), dateFormatter)).build();
-        Booking booking2 = bookingRepository.findAllByOwnerId(2, pageable).stream().collect(Collectors.toList()).get(0);
+        Booking bookingSaved = Booking.builder().id(1)
+                .start(LocalDateTime.parse(booking.getStart().format(dateFormatter), dateFormatter))
+                .end(LocalDateTime.parse(booking.getEnd().format(dateFormatter), dateFormatter)).build();
+        Booking booking2 = bookingRepository.findAllByOwnerId(2, pageable)
+                .stream()
+                .collect(Collectors.toList())
+                .get(0);
         Assertions.assertEquals(bookingSaved, booking2);
     }
 
@@ -84,7 +89,8 @@ public class BookingRepositoryTest {
         userRepository.save(owner);
         itemRepository.save(item);
         bookingRepository.save(booking);
-        assertThat(bookingRepository.findFirstByBooker_IdAndItem_Id(booker.getId(), item.getId()).get(), equalTo(booking));
+        assertThat(bookingRepository.findFirstByBooker_IdAndItem_Id(booker.getId(), item.getId()).get(),
+                equalTo(booking));
     }
 
     @Test
@@ -93,7 +99,10 @@ public class BookingRepositoryTest {
         userRepository.save(owner);
         itemRepository.save(item);
         bookingRepository.save(booking);
-        assertThat(bookingRepository.findAllByBookerIdOrderByStartDesc(booker.getId(), pageable).stream().findFirst().get(),
+        assertThat(bookingRepository.findAllByBookerIdOrderByStartDesc(booker.getId(), pageable)
+                        .stream()
+                        .findFirst()
+                        .get(),
                 equalTo(booking));
     }
 
@@ -115,8 +124,10 @@ public class BookingRepositoryTest {
         itemRepository.save(item);
         booking.setStatus(BookingStatus.APPROVED);
         bookingRepository.save(booking);
-        assertThat(bookingRepository.findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(booker.getId(),
-                currentTime.plusWeeks(1), nextWeek.minusWeeks(1), pageable).stream().findFirst().get(), equalTo(booking));
+        assertThat(bookingRepository.findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(
+                        booker.getId(),
+                        currentTime.plusWeeks(1), nextWeek.minusWeeks(1), pageable).stream().findFirst().get(),
+                equalTo(booking));
     }
 
     @Test
@@ -159,8 +170,12 @@ public class BookingRepositoryTest {
         itemRepository.save(item);
         booking.setStatus(BookingStatus.APPROVED);
         bookingRepository.save(booking);
-        assertThat(bookingRepository.findAllByOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(owner.getId(),
-                        currentTime.plusWeeks(1), nextWeek.minusWeeks(1), pageable).stream().findFirst().get(),
+        assertThat(
+                bookingRepository.findAllByOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(owner.getId(),
+                                currentTime.plusWeeks(1), nextWeek.minusWeeks(1), pageable)
+                        .stream()
+                        .findFirst()
+                        .get(),
                 equalTo(booking));
     }
 
@@ -196,6 +211,5 @@ public class BookingRepositoryTest {
         assertThat(bookingRepository.findAllByOwnerIdAndStatusEqualsOrderByStartDesc(owner.getId(),
                 BookingStatus.APPROVED, pageable).stream().findFirst().get(), equalTo(booking));
     }
-
 
 }

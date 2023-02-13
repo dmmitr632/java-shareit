@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -37,7 +38,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking requestBooking(int userId, BookingShortDto bookingShortDto) {
+    public BookingDto requestBooking(int userId, BookingShortDto bookingShortDto) {
         Item item = itemRepository.findById(bookingShortDto.getItemId()).orElseThrow(NotFoundException::new);
         User booker = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         Booking booking = BookingMapper.toBooking(bookingShortDto, booker, item);
@@ -49,11 +50,11 @@ public class BookingServiceImpl implements BookingService {
         booking.setBooker(booker);
         booking.setStatus(BookingStatus.WAITING);
 
-        return bookingRepository.save(booking);
+        return BookingMapper.toBookingDto(bookingRepository.save(booking));
     }
 
     @Override
-    public Booking approveOrRejectBooking(int userId, int bookingId, Boolean approvedOrNot) {
+    public BookingDto approveOrRejectBooking(int userId, int bookingId, Boolean approvedOrNot) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
         if (booking.getStatus() == BookingStatus.APPROVED) {
             throw new ValidationException("Already approved");
@@ -66,22 +67,21 @@ public class BookingServiceImpl implements BookingService {
         } else {
             booking.setStatus(BookingStatus.REJECTED);
         }
-        return bookingRepository.save(booking);
+        return BookingMapper.toBookingDto(bookingRepository.save(booking));
     }
 
-
     @Override
-    public Booking getBookingById(int userId, int bookingId) {
+    public BookingDto getBookingById(int userId, int bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
         if (userId != booking.getBooker().getId() && userId != booking.getItem().getOwner().getId()) {
             throw new NotFoundException("user is not booker or item owner");
         } else {
-            return booking;
+            return BookingMapper.toBookingDto(booking);
         }
     }
 
     @Override
-    public List<Booking> getBookingByBookerId(int userId, String state, Integer from, Integer size) {
+    public List<BookingDto> getBookingByBookerId(int userId, String state, Integer from, Integer size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("user not found");
         }
@@ -90,25 +90,43 @@ public class BookingServiceImpl implements BookingService {
         }
         Pageable pageable = PageRequest.of(from, size);
         if (Objects.equals(state, "ALL")) {
-            return bookingRepository.findAllByBookerIdOrderByStartDesc(userId, pageable).stream().collect(Collectors.toList());
+            return bookingRepository.findAllByBookerIdOrderByStartDesc(userId, pageable)
+                    .stream()
+                    .map(BookingMapper::toBookingDto).collect(Collectors.toList());
         } else if (Objects.equals(state, "CURRENT")) {
             return bookingRepository.findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(userId,
-                    LocalDateTime.now(), LocalDateTime.now(), pageable).stream().collect(Collectors.toList());
+                            LocalDateTime.now(), LocalDateTime.now(), pageable)
+                    .stream()
+                    .map(BookingMapper::toBookingDto)
+                    .collect(Collectors.toList());
         } else if (Objects.equals(state, "PAST")) {
-            return bookingRepository.findAllByBookerIdAndEndIsBeforeOrderByStartDesc(userId, LocalDateTime.now(), pageable).stream().collect(Collectors.toList());
+            return bookingRepository.findAllByBookerIdAndEndIsBeforeOrderByStartDesc(userId,
+                            LocalDateTime.now(), pageable)
+                    .stream()
+                    .map(BookingMapper::toBookingDto)
+                    .collect(Collectors.toList());
         } else if (Objects.equals(state, "FUTURE")) {
-            return bookingRepository.findAllByBookerIdAndStartIsAfterOrderByStartDesc(userId, LocalDateTime.now(), pageable).stream().collect(Collectors.toList());
+            return bookingRepository.findAllByBookerIdAndStartIsAfterOrderByStartDesc(userId,
+                            LocalDateTime.now(), pageable)
+                    .stream()
+                    .map(BookingMapper::toBookingDto)
+                    .collect(Collectors.toList());
         } else if (Objects.equals(state, "WAITING")) {
-            return bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.WAITING, pageable).stream().collect(Collectors.toList());
+            return bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.WAITING,
+                    pageable).stream().map(BookingMapper::toBookingDto).collect(Collectors.toList());
         } else if (Objects.equals(state, "REJECTED")) {
-            return bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED, pageable).stream().collect(Collectors.toList());
+            return bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(userId,
+                            BookingStatus.REJECTED, pageable)
+                    .stream()
+                    .map(BookingMapper::toBookingDto)
+                    .collect(Collectors.toList());
         } else {
             throw new WrongStateException("Unknown state: " + state);
         }
     }
 
     @Override
-    public List<Booking> getBookingByOwnerId(int userId, String state, Integer from, Integer size) {
+    public List<BookingDto> getBookingByOwnerId(int userId, String state, Integer from, Integer size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("owner not found");
         }
@@ -117,17 +135,34 @@ public class BookingServiceImpl implements BookingService {
         }
         Pageable pageable = PageRequest.of(from, size);
         if (Objects.equals(state, "ALL")) {
-            return bookingRepository.findAllByOwnerId(userId, pageable).stream().collect(Collectors.toList());
+            return bookingRepository.findAllByOwnerId(userId, pageable)
+                    .stream()
+                    .map(BookingMapper::toBookingDto)
+                    .collect(Collectors.toList());
         } else if (Objects.equals(state, "CURRENT")) {
             return bookingRepository.findAllByOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(userId,
-                    LocalDateTime.now(), LocalDateTime.now(), pageable).stream().collect(Collectors.toList());
+                            LocalDateTime.now(), LocalDateTime.now(), pageable)
+                    .stream()
+                    .map(BookingMapper::toBookingDto)
+                    .collect(Collectors.toList());
         } else if (Objects.equals(state, "PAST")) {
-            return bookingRepository.findAllByOwnerIdAndEndIsBeforeOrderByStartDesc(userId, LocalDateTime.now(), pageable).stream().collect(Collectors.toList());
+            return bookingRepository.findAllByOwnerIdAndEndIsBeforeOrderByStartDesc(userId,
+                            LocalDateTime.now(), pageable)
+                    .stream()
+                    .map(BookingMapper::toBookingDto)
+                    .collect(Collectors.toList());
         } else if (Objects.equals(state, "FUTURE")) {
-            return bookingRepository.findAllByOwnerIdAndStartIsAfterOrderByStartDesc(userId, LocalDateTime.now(), pageable).stream().collect(Collectors.toList());
+            return bookingRepository.findAllByOwnerIdAndStartIsAfterOrderByStartDesc(userId,
+                            LocalDateTime.now(), pageable)
+                    .stream()
+                    .map(BookingMapper::toBookingDto)
+                    .collect(Collectors.toList());
         } else if (Objects.equals(state, "WAITING") || Objects.equals(state, "REJECTED")) {
             return bookingRepository.findAllByOwnerIdAndStatusEqualsOrderByStartDesc(userId,
-                    BookingStatus.valueOf(state), pageable).stream().collect(Collectors.toList());
+                            BookingStatus.valueOf(state), pageable)
+                    .stream()
+                    .map(BookingMapper::toBookingDto)
+                    .collect(Collectors.toList());
         } else {
             throw new WrongStateException("Unknown state: " + state);
         }

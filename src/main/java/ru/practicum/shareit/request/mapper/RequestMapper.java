@@ -22,20 +22,23 @@ public class RequestMapper {
 
     public static Request toRequestWithoutItems(RequestDto requestDto, User requester) {
         if (requestDto.getCreated() != null) {
-            return new Request(requestDto.getId(), requestDto.getDescription(), requester, requestDto.getCreated(),
+            return new Request(requestDto.getId(), requestDto.getDescription(), requester,
+                    requestDto.getCreated(),
                     new HashSet<>());
         } else {
-            return new Request(requestDto.getId(), requestDto.getDescription(), requester, LocalDateTime.now(),
+            return new Request(requestDto.getId(), requestDto.getDescription(), requester,
+                    LocalDateTime.now(),
                     new HashSet<>());
         }
     }
 
-
     public static RequestDto toRequestDto(Request request) {
-        Set<ItemShortDto> itemsDto = request.getItems().stream().map(ItemMapper::toItemShortDto).collect(Collectors.toSet());
+        Set<ItemShortDto> itemsDto = request.getItems()
+                .stream()
+                .map(ItemMapper::toItemShortDto)
+                .collect(Collectors.toSet());
 
         return new RequestDto(request.getId(), request.getDescription(), request.getCreated(), itemsDto);
     }
-
 
 }

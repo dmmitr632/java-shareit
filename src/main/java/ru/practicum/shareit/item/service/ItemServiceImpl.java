@@ -52,7 +52,8 @@ public class ItemServiceImpl implements ItemService {
         User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         Request request = null;
         if (itemShortDto.getRequestId() != null) {
-            request = requestRepository.findById(itemShortDto.getRequestId()).orElseThrow(NotFoundException::new);
+            request = requestRepository.findById(itemShortDto.getRequestId())
+                    .orElseThrow(NotFoundException::new);
         }
         Item item = ItemMapper.toItem(itemShortDto, owner, request);
         return itemRepository.save(item);
@@ -63,22 +64,34 @@ public class ItemServiceImpl implements ItemService {
         User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         Request request = null;
         if (itemShortDto.getRequestId() != null) {
-            request = requestRepository.findById(itemShortDto.getRequestId()).orElseThrow(NotFoundException::new);
+            request = requestRepository.findById(itemShortDto.getRequestId())
+                    .orElseThrow(NotFoundException::new);
         }
         Item item = ItemMapper.toItem(itemShortDto, owner, request);
         Item editedItem = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
 
-        if (editedItem.getOwner() == null && item.getOwner() != null) throw new NotFoundException("неверный id");
-        else if (editedItem.getOwner() != null && userId != editedItem.getOwner().getId()) {
+        if (editedItem.getOwner() == null && item.getOwner() != null) {
+            throw new NotFoundException("неверный id");
+        } else if (editedItem.getOwner() != null && userId != editedItem.getOwner().getId()) {
             throw new NotFoundException("неверный id");
         }
 
-        if (item.getId() == null) item.setId(editedItem.getId());
-        if (item.getName() == null) item.setName(editedItem.getName());
-        if (item.getDescription() == null) item.setDescription(editedItem.getDescription());
+        if (item.getId() == null) {
+            item.setId(editedItem.getId());
+        }
+        if (item.getName() == null) {
+            item.setName(editedItem.getName());
+        }
+        if (item.getDescription() == null) {
+            item.setDescription(editedItem.getDescription());
+        }
 
-        if (item.getAvailable() == null) item.setAvailable(editedItem.getAvailable());
-        if (item.getRequest() == null) item.setRequest(editedItem.getRequest());
+        if (item.getAvailable() == null) {
+            item.setAvailable(editedItem.getAvailable());
+        }
+        if (item.getRequest() == null) {
+            item.setRequest(editedItem.getRequest());
+        }
         item.setOwner(editedItem.getOwner());
 
         return itemRepository.save(item);
@@ -100,13 +113,12 @@ public class ItemServiceImpl implements ItemService {
 
         if (userId != itemWithBooking.getOwnerId()) {
             return new ItemDto(itemWithBooking.getId(), itemWithBooking.getName(),
-                    itemWithBooking.getDescription(), itemWithBooking.getAvailable(), null, null, null, commentsDto);
+                    itemWithBooking.getDescription(), itemWithBooking.getAvailable(), null, null, null,
+                    commentsDto);
         }
         return ItemMapper.toItemLastNextBookingDtoCommentsDto(itemWithBooking, commentsDto);
 
-
     }
-
 
     @Override
     public List<ItemDto> getAllItemsByUserId(int ownerId, Integer from, Integer size) {
@@ -115,10 +127,10 @@ public class ItemServiceImpl implements ItemService {
         }
         Pageable pageable = PageRequest.of(from, size);
 
-        List<ItemLastNextBooking> foundItems = (itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now(),
+        List<ItemLastNextBooking> foundItems = (itemRepository.findAllByUserIdAndTime(ownerId,
+                LocalDateTime.now(),
                 pageable)).stream().collect(Collectors.toList());
         List<ItemDto> itemDtoList = new ArrayList<>();
-
 
         foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemLastNextBookingDtoComments(item,
                 commentRepository.findAllByItem_id(item.getId()))));
@@ -151,6 +163,5 @@ public class ItemServiceImpl implements ItemService {
         commentRepository.save(comment);
         return CommentMapper.toCommentDto(comment);
     }
-
 
 }

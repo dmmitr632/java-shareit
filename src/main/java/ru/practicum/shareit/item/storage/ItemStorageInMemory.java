@@ -16,10 +16,8 @@ import java.util.Map;
 @Qualifier("ItemStorageInMemory")
 public class ItemStorageInMemory implements ItemStorage {
 
-
     private final Map<Integer, Item> items = new HashMap<>();
     private int id = 0;
-
 
     @Override
     public Item addItem(Item item, int userId) {
@@ -35,8 +33,9 @@ public class ItemStorageInMemory implements ItemStorage {
         if (items.containsKey(itemId)) {
             items.put(item.getId(), item);
             return item;
-        } else throw new NotFoundException();
-
+        } else {
+            throw new NotFoundException();
+        }
 
     }
 
@@ -44,7 +43,9 @@ public class ItemStorageInMemory implements ItemStorage {
     public Item getItemById(int itemId) {
         if (items.containsKey(itemId)) {
             return items.get(itemId);
-        } else throw new NotFoundException();
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     @Override

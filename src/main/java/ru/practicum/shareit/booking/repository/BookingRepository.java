@@ -36,26 +36,29 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     // WAITING or
     // REJECTED
 
-
     @Query("select b from Booking b join b.item i where i.owner.id = :userId order by b.start desc")
     Page<Booking> findAllByOwnerId(@Param("userId") int userId,
                                    Pageable pageable); // ALL
 
-    @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.start < :dateTime1 and b.end > " +
+    @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.start < :dateTime1 and" +
+            " b.end > " +
             ":dateTime2) order by b" +
             ".start desc ")
     Page<Booking> findAllByOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(@Param("userId") int userId,
-                                                                                LocalDateTime dateTime1, LocalDateTime dateTime2,
+                                                                                LocalDateTime dateTime1,
+                                                                                LocalDateTime dateTime2,
                                                                                 Pageable pageable); //
     // CURRENT
 
-    @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.end < :dateTime) order by b" +
+    @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.end < :dateTime) order" +
+            " by b" +
             ".start desc ")
     Page<Booking> findAllByOwnerIdAndEndIsBeforeOrderByStartDesc(@Param("userId") int userId,
                                                                  LocalDateTime dateTime,
                                                                  Pageable pageable); // PAST
 
-    @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.start > :dateTime) order by b" +
+    @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.start > :dateTime) " +
+            "order by b" +
             ".start desc ")
     Page<Booking> findAllByOwnerIdAndStartIsAfterOrderByStartDesc(@Param("userId") int userId,
                                                                   LocalDateTime dateTime,

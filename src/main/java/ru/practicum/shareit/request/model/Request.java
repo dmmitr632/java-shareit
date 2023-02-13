@@ -42,7 +42,9 @@ public class Request {
 //        if (this == o) return true;
 //        if (o == null || getClass() != o.getClass()) return false;
 //        Request request = (Request) o;
-//        return Objects.equals(id, request.id) && Objects.equals(description, request.description) && Objects.equals(requester, request.requester) && Objects.equals(created, request.created) && Objects.equals(items, request.items);
+//        return Objects.equals(id, request.id) && Objects.equals(description, request.description) &&
+//        Objects.equals(requester, request.requester) && Objects.equals(created, request.created) &&
+//        Objects.equals(items, request.items);
 //    }
 //
 //    @Override

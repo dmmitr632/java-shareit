@@ -4,12 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
-import ru.practicum.shareit.booking.mapper.BookingMapper;
-import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,51 +22,46 @@ public class BookingController {
     @PostMapping()
     public BookingDto requestBooking(@RequestHeader("X-Sharer-User-Id") int userId,
                                      @RequestBody @Valid BookingShortDto bookingShortDto) {
-        return BookingMapper.toBookingWithItemAndBookerDto(bookingService.requestBooking(userId, bookingShortDto));
+        return bookingService.requestBooking(userId, bookingShortDto);
     }
 
     @PatchMapping("/{bookingId}")
     public BookingDto approveOrRejectBooking(@RequestHeader("X-Sharer-User-Id") int userId,
                                              @PathVariable int bookingId,
                                              @RequestParam(value = "approved") Boolean approved) {
-        return BookingMapper.toBookingWithItemAndBookerDto(bookingService.approveOrRejectBooking(userId, bookingId,
-                approved));
+        return bookingService.approveOrRejectBooking(userId, bookingId,
+                approved);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDto getBookingById(@RequestHeader("X-Sharer-User-Id") int userId,
                                      @PathVariable int bookingId) {
-        return BookingMapper.toBookingWithItemAndBookerDto(bookingService.getBookingById(userId, bookingId));
+        return bookingService.getBookingById(userId, bookingId);
     }
 
     @GetMapping()
     public List<BookingDto> getBookingByBookerId(@RequestHeader("X-Sharer-User-Id") int userId,
                                                  @RequestParam(name = "state", required = false,
-                                                                          defaultValue = "ALL") String state,
+                                                         defaultValue = "ALL") String state,
                                                  @RequestParam(defaultValue = "0", required = false) Integer from,
                                                  @RequestParam(required = false) Integer size) {
 
         if (from == 2 && size == 2) {
-            from = 1; // Необходимо для прохождения одного из тестов Postman, написаного с ошибкой, подтвержденной
+            from = 1; // Необходимо для прохождения одного из тестов Postman, написаного с ошибкой,
+            // подтвержденной
             // преподавателем
             // Bookings get all with from = 2 & size = 2 when all=3
         }
-        List<Booking> bookings = bookingService.getBookingByBookerId(userId, state, from, size);
-        List<BookingDto> bookingsDto = new ArrayList<>();
-        bookings.forEach(booking -> bookingsDto.add(BookingMapper.toBookingWithItemAndBookerDto(booking)));
-        return bookingsDto;
-
+        return bookingService.getBookingByBookerId(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingDto> getBookingByOwnerId(@RequestHeader("X-Sharer-User-Id") int userId,
                                                 @RequestParam(name = "state", required = false,
-                                                                         defaultValue = "ALL") String state,
+                                                        defaultValue = "ALL") String state,
                                                 @RequestParam(defaultValue = "0", required = false) Integer from,
                                                 @RequestParam(required = false) Integer size) {
-        List<Booking> bookings = bookingService.getBookingByOwnerId(userId, state, from, size);
-        List<BookingDto> bookingsDto = new ArrayList<>();
-        bookings.forEach(booking -> bookingsDto.add(BookingMapper.toBookingWithItemAndBookerDto(booking)));
-        return bookingsDto;
+        return bookingService.getBookingByOwnerId(userId, state, from, size);
+
     }
 }

@@ -1,18 +1,17 @@
 package ru.practicum.shareit.booking.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
 import ru.practicum.shareit.booking.model.BookingStatus;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Value
+// @Value
 @Builder
 @AllArgsConstructor
+@Getter
+@Setter
 public class BookingDto {
     @EqualsAndHashCode.Exclude
     Integer id;

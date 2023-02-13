@@ -27,6 +27,17 @@ public class ItemMapper {
                 .build();
     }
 
+    public static ItemShortDto toItemShortDto(ItemDto itemDto) {
+        Integer requestId = itemDto.getRequestId() != null ? itemDto.getRequestId() : null;
+        return ItemShortDto.builder()
+                .id(itemDto.getId())
+                .name(itemDto.getName())
+                .description(itemDto.getDescription())
+                .available(itemDto.getAvailable())
+                .requestId(requestId)
+                .build();
+    }
+
     public static ItemDto toItemDto(Item item) {
         Integer requestId = item.getRequest() != null ? item.getRequest().getId() : null;
         return ItemDto.builder()
@@ -38,8 +49,6 @@ public class ItemMapper {
                 .comments(new ArrayList<>())
                 .build();
     }
-
-
 
     public static Item toItem(ItemShortDto itemShortDto, User owner, Request request) {
         return new Item(itemShortDto.getId(),
@@ -72,7 +81,8 @@ public class ItemMapper {
                 lastBooking, nextBooking, commentDtos);
     }
 
-    public static ItemDto toItemLastNextBookingDtoCommentsDto(ItemLastNextBooking item, List<CommentDto> comments) {
+    public static ItemDto toItemLastNextBookingDtoCommentsDto(ItemLastNextBooking item,
+                                                              List<CommentDto> comments) {
         BookingShort lastBooking;
         BookingShort nextBooking;
         if (item.getLastBookingId() != null) {
@@ -88,10 +98,8 @@ public class ItemMapper {
             nextBooking = null;
         }
 
-
         return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable(), null,
                 lastBooking, nextBooking, comments);
     }
-
 
 }

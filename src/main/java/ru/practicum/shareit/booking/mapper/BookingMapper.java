@@ -5,12 +5,14 @@ import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.dto.ItemShort;
 import ru.practicum.shareit.booking.dto.UserShort;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.item.dto.BookingShort;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
-
 public class BookingMapper {
-    public static BookingShortDto toBookingDto(Booking booking) {
+    public static BookingShortDto toBookingShortDto(Booking booking) {
         return new BookingShortDto(booking.getId(),
                 booking.getStart(),
                 booking.getEnd(),
@@ -28,15 +30,23 @@ public class BookingMapper {
                 bookingShortDto.getStatus());
     }
 
-    public static BookingDto toBookingWithItemAndBookerDto(Booking booking) {
+    public static BookingDto toBookingDto(Booking booking) {
         UserShort bookerShort = new UserShort(booking.getBooker().getId());
         ItemShort itemShort = new ItemShort(booking.getItem().getId(), booking.getItem().getName());
         return new BookingDto(booking.getId(),
                 booking.getStart(), booking.getEnd(), itemShort, bookerShort, booking.getStatus());
     }
 
-    public static ru.practicum.shareit.item.dto.BookingShort toBookingShort(Booking booking) {
-        return new ru.practicum.shareit.item.dto.BookingShort(booking.getId(), booking.getStart(), booking.getEnd(), booking.getBooker().getId());
+    public static BookingShort toBookingShort(Booking booking) {
+        return new BookingShort(booking.getId(), booking.getStart(), booking.getEnd(),
+                booking.getBooker().getId());
     }
 
+    public static ItemShort toItemShort(ItemDto itemDto) {
+        return new ItemShort(itemDto.getId(), itemDto.getName());
+    }
+
+    public static UserShort toUserShort(UserDto userDto) {
+        return new UserShort(userDto.getId());
+    }
 }

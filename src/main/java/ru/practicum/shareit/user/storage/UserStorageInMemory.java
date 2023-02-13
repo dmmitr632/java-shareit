@@ -32,18 +32,26 @@ public class UserStorageInMemory implements UserStorage {
         if (users.containsKey(id)) {
             checkIfEditedEmailIsDuplicated(user.getEmail(), id);
             user.setId(id);
-            if (user.getName() == null) user.setName(users.get(id).getName());
-            if (user.getEmail() == null) user.setEmail(users.get(id).getEmail());
+            if (user.getName() == null) {
+                user.setName(users.get(id).getName());
+            }
+            if (user.getEmail() == null) {
+                user.setEmail(users.get(id).getEmail());
+            }
             users.put(id, user);
             return user;
-        } else throw new ValidationException();
+        } else {
+            throw new ValidationException();
+        }
     }
 
     @Override
     public User getUserById(int id) {
         if (users.containsKey(id)) {
             return users.get(id);
-        } else throw new NotFoundException("user not found");
+        } else {
+            throw new NotFoundException("user not found");
+        }
 
     }
 
@@ -63,7 +71,6 @@ public class UserStorageInMemory implements UserStorage {
             throw new ValidationException();
         }
     }
-
 
     public void checkIfEmailIsDuplicated(String email) {
         Optional<User> user = users.values().stream().filter(u -> u.getEmail().equals(email)).findFirst();

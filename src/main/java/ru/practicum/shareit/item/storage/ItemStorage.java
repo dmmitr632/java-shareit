@@ -4,7 +4,6 @@ import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
-
 public interface ItemStorage {
     Item addItem(Item item, int id);
 
