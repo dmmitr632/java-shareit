@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
@@ -37,10 +37,10 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking requestBooking(int userId, BookingDto bookingDto) {
-        Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(NotFoundException::new);
+    public Booking requestBooking(int userId, BookingShortDto bookingShortDto) {
+        Item item = itemRepository.findById(bookingShortDto.getItemId()).orElseThrow(NotFoundException::new);
         User booker = userRepository.findById(userId).orElseThrow(NotFoundException::new);
-        Booking booking = BookingMapper.toBooking(bookingDto, booker, item);
+        Booking booking = BookingMapper.toBooking(bookingShortDto, booker, item);
         validateBooking(booking);
 
         if (!item.isAvailable()) {

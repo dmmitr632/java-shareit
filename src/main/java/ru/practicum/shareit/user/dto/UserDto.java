@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @Value
 public class UserDto {
     @EqualsAndHashCode.Exclude
-    int id;
+    Integer id;
     @NotBlank
     String name;
     @NotBlank
