@@ -9,6 +9,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Qualifier("UserServiceDb")
@@ -20,12 +21,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(UserDto userDto) {
-        return userRepository.save(UserMapper.toUser(userDto));
+    public UserDto addUser(UserDto userDto) {
+        return UserMapper.toUserDto(userRepository.save(UserMapper.toUser(userDto)));
     }
 
     @Override
-    public User editUser(int userId, UserDto userDto) {
+    public UserDto editUser(int userId, UserDto userDto) {
         User user = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         if (userDto.getName() != null) {
             user.setName(userDto.getName());
@@ -33,12 +34,12 @@ public class UserServiceImpl implements UserService {
         if (userDto.getEmail() != null) {
             user.setEmail(userDto.getEmail());
         }
-        return userRepository.save(user);
+        return UserMapper.toUserDto(userRepository.save(user));
     }
 
     @Override
-    public User getUserById(int userId) {
-        return userRepository.findById(userId).orElseThrow(NotFoundException::new);
+    public UserDto getUserById(int userId) {
+        return UserMapper.toUserDto(userRepository.findById(userId).orElseThrow(NotFoundException::new));
     }
 
     @Override
@@ -47,8 +48,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getAllUsers() {
+        return userRepository.findAll().stream().map(UserMapper::toUserDto).collect(Collectors.toList());
     }
 
 }
