@@ -81,7 +81,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookingByBookerId(int userId, String state, Integer from, Integer size) {
+    public List<BookingDto> getBookingByBookerId(Integer userId, String state, Integer from, Integer size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("user not found");
         }
@@ -126,7 +126,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookingByOwnerId(int userId, String state, Integer from, Integer size) {
+    public List<BookingDto> getBookingByOwnerId(Integer userId, String state, Integer from, Integer size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("owner not found");
         }
