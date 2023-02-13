@@ -32,7 +32,7 @@ public class RequestMapper {
 
 
     public static RequestDto toRequestDto(Request request) {
-        Set<ItemShortDto> itemsDto = request.getItems().stream().map(ItemMapper::toItemDto).collect(Collectors.toSet());
+        Set<ItemShortDto> itemsDto = request.getItems().stream().map(ItemMapper::toItemShortDto).collect(Collectors.toSet());
 
         return new RequestDto(request.getId(), request.getDescription(), request.getCreated(), itemsDto);
     }

@@ -22,6 +22,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     Page<Item> search(String text,
                       Pageable pageable);
 
+
     @Query(value = "SELECT i.item_id as id, i.name as name, i.description as description, i.available as available, " +
             "lastBooking.booking_id as lastBookingId, lastBooking.booker_id as lastBookingBookerId, " +
             "lastBooking.start_time as lastStart, lastBooking.end_time as lastEnd, " +
@@ -57,6 +58,6 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
             nativeQuery = true)
     ItemLastNextBooking findByItemIdAndTime(@Param("itemId") Integer itemId,
                                             @Param("currentTime") LocalDateTime currentTime);
-//
+
 
 }

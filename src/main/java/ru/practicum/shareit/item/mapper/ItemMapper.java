@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.mapper;
 
-
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.mapper.CommentMapper;
 import ru.practicum.shareit.item.comment.model.Comment;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class ItemMapper {
 
-    public static ItemShortDto toItemDto(Item item) {
+    public static ItemShortDto toItemShortDto(Item item) {
         Integer requestId = item.getRequest() != null ? item.getRequest().getId() : null;
         return ItemShortDto.builder()
                 .id(item.getId())
@@ -27,6 +26,19 @@ public class ItemMapper {
                 .requestId(requestId)
                 .build();
     }
+
+    public static ItemDto toItemDto(Item item) {
+        Integer requestId = item.getRequest() != null ? item.getRequest().getId() : null;
+        return ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .requestId(requestId)
+                .comments(new ArrayList<>())
+                .build();
+    }
+
 
 
     public static Item toItem(ItemShortDto itemShortDto, User owner, Request request) {

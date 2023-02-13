@@ -105,11 +105,6 @@ public class ItemServiceImpl implements ItemService {
         return ItemMapper.toItemLastNextBookingDtoCommentsDto(itemWithBooking, commentsDto);
 
 
-//        Item item = itemRepository.findById(itemId)
-//                .orElseThrow(() -> new NotFoundException("Не найдена вещь с id: " + id));
-//        ItemShortDto itemDto = ItemMapper.toItemDto(item);
-
-
     }
 
 

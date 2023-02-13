@@ -68,4 +68,5 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
                                                                   Pageable pageable); // WAITING or REJECTED
 
     Optional<Booking> findFirstByBooker_IdAndItem_Id(int bookerId, int itemId);
+
 }

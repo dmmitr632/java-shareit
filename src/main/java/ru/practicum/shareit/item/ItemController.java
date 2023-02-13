@@ -26,13 +26,13 @@ public class ItemController {
 
     @PostMapping
     public ItemShortDto addItem(@RequestHeader("X-Sharer-User-Id") int userId, @Valid @RequestBody ItemShortDto itemShortDto) {
-        return ItemMapper.toItemDto(itemService.addItem(userId, itemShortDto));
+        return ItemMapper.toItemShortDto(itemService.addItem(userId, itemShortDto));
     }
 
     @PatchMapping("{itemId}")
     public ItemShortDto editItem(@RequestHeader("X-Sharer-User-Id") int userId, @PathVariable int itemId,
                                  @RequestBody ItemShortDto itemShortDto) {
-        return ItemMapper.toItemDto(itemService.editItem(userId, itemId, itemShortDto));
+        return ItemMapper.toItemShortDto(itemService.editItem(userId, itemId, itemShortDto));
     }
 
     @GetMapping("{itemId}")
@@ -53,7 +53,7 @@ public class ItemController {
                                                    @RequestParam(required = false) Integer size) {
         List<Item> itemList = itemService.getItemsByTextSearch(text, from, size);
         List<ItemShortDto> itemShortDtoList = new ArrayList<>();
-        itemList.forEach(item -> itemShortDtoList.add(ItemMapper.toItemDto(item)));
+        itemList.forEach(item -> itemShortDtoList.add(ItemMapper.toItemShortDto(item)));
         return itemShortDtoList;
     }
 
