@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.mapper.RequestMapper;
-import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -24,19 +23,24 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request addRequest(RequestDto requestDto, int requesterId) {
+    public RequestDto addRequest(RequestDto requestDto, int requesterId) {
         User requester = userRepository.findById(requesterId).orElseThrow(NotFoundException::new);
-        return requestRepository.save(RequestMapper.toRequestWithoutItems(requestDto, requester));
+        return RequestMapper.toRequestDto(
+                requestRepository.save(RequestMapper.toRequestWithoutItems(requestDto,
+                        requester)));
     }
 
     @Override
-    public List<Request> getRequestsByUserId(int userId) {
+    public List<RequestDto> getRequestsByUserId(int userId) {
         userRepository.findById(userId).orElseThrow(NotFoundException::new);
-        return requestRepository.findAllByRequesterIdOrderByCreatedDesc(userId);
+        return requestRepository.findAllByRequesterIdOrderByCreatedDesc(userId)
+                .stream()
+                .map(RequestMapper::toRequestDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Request> getRequestsOfOtherUsers(int userId, Integer from, Integer size) {
+    public List<RequestDto> getRequestsOfOtherUsers(int userId, Integer from, Integer size) {
         userRepository.findById(userId).orElseThrow(NotFoundException::new);
         if (size == null) {
             size = Integer.MAX_VALUE;
@@ -44,14 +48,15 @@ public class RequestServiceImpl implements RequestService {
 
         return requestRepository.findAllByRequesterIdNotOrderByCreatedDesc(
                         userId, Pageable.ofSize(from + size)).stream()
-                .skip(from).collect(Collectors.toList());
+                .skip(from).map(RequestMapper::toRequestDto).collect(Collectors.toList());
 
     }
 
     @Override
-    public Request getRequestById(int userId, int requestId) {
+    public RequestDto getRequestById(int userId, int requestId) {
         userRepository.findById(userId).orElseThrow(NotFoundException::new);
-        return requestRepository.findById(requestId).orElseThrow(NotFoundException::new);
+        return RequestMapper.toRequestDto(
+                requestRepository.findById(requestId).orElseThrow(NotFoundException::new));
     }
 
 }
