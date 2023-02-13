@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Sql(scripts = "classpath:schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class BookingJpaTest {
+public class BookingRepositoryTest {
     @Autowired
     private TestEntityManager testEntityManager;
     @Autowired
@@ -34,8 +34,7 @@ public class BookingJpaTest {
     User user1 = new User(null, "User1", "user1@google.com");
     User user2 = new User(null, "User2", "user2@google.com");
     Item item = new Item(null, "Item", "item_description", true, user2, null);
-    Booking booking = new Booking(null, LocalDateTime.now(), LocalDateTime.now().plusWeeks(1), item, user1,
-            BookingStatus.APPROVED);
+    Booking booking = new Booking(null, LocalDateTime.now(), LocalDateTime.now().plusWeeks(1), item, user1, BookingStatus.APPROVED);
 
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     Pageable pageable = PageRequest.of(0, 100);

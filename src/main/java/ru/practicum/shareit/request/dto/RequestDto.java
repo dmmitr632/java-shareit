@@ -2,7 +2,7 @@ package ru.practicum.shareit.request.dto;
 
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemShortDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -15,5 +15,5 @@ public class RequestDto {
     Integer id;
     @NotBlank @NotNull String description;
     LocalDateTime created;
-    Set<ItemDto> items;
+    Set<ItemShortDto> items;
 }

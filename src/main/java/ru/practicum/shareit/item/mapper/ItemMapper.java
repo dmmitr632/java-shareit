@@ -7,7 +7,7 @@ import ru.practicum.shareit.item.comment.model.Comment;
 import ru.practicum.shareit.item.dto.BookingShort;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemLastNextBooking;
-import ru.practicum.shareit.item.dto.ItemLastNextBookingDto;
+import ru.practicum.shareit.item.dto.ItemShortDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
@@ -17,27 +17,28 @@ import java.util.List;
 
 public class ItemMapper {
 
-    public static ItemDto toItemDto(Item item) {
-        return new ItemDto(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                item.getRequest() != null ? item.getRequest().getId() : null
-        );
+    public static ItemShortDto toItemDto(Item item) {
+        Integer requestId = item.getRequest() != null ? item.getRequest().getId() : null;
+        return ItemShortDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .requestId(requestId)
+                .build();
     }
 
 
-    public static Item toItem(ItemDto itemDto, User owner, Request request) {
-        return new Item(itemDto.getId(),
-                itemDto.getName(),
-                itemDto.getDescription(),
-                itemDto.getAvailable(),
+    public static Item toItem(ItemShortDto itemShortDto, User owner, Request request) {
+        return new Item(itemShortDto.getId(),
+                itemShortDto.getName(),
+                itemShortDto.getDescription(),
+                itemShortDto.getAvailable(),
                 owner,
                 request);
     }
 
-    public static ItemLastNextBookingDto toItemLastNextBookingDtoComments(ItemLastNextBooking item, List<Comment> comments) {
+    public static ItemDto toItemLastNextBookingDtoComments(ItemLastNextBooking item, List<Comment> comments) {
         BookingShort lastBooking;
         BookingShort nextBooking;
         if (item.getLastBookingId() != null) {
@@ -55,11 +56,11 @@ public class ItemMapper {
         List<CommentDto> commentDtos = new ArrayList<>();
         comments.forEach(comment -> commentDtos.add(CommentMapper.toCommentDto(comment)));
 
-        return new ItemLastNextBookingDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable(),
+        return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable(), null,
                 lastBooking, nextBooking, commentDtos);
     }
 
-    public static ItemLastNextBookingDto toItemLastNextBookingDtoCommentsDto(ItemLastNextBooking item, List<CommentDto> comments) {
+    public static ItemDto toItemLastNextBookingDtoCommentsDto(ItemLastNextBooking item, List<CommentDto> comments) {
         BookingShort lastBooking;
         BookingShort nextBooking;
         if (item.getLastBookingId() != null) {
@@ -76,7 +77,7 @@ public class ItemMapper {
         }
 
 
-        return new ItemLastNextBookingDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable(),
+        return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable(), null,
                 lastBooking, nextBooking, comments);
     }
 

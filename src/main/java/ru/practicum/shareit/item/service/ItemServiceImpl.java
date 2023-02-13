@@ -14,7 +14,7 @@ import ru.practicum.shareit.item.comment.model.Comment;
 import ru.practicum.shareit.item.comment.repository.CommentRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemLastNextBooking;
-import ru.practicum.shareit.item.dto.ItemLastNextBookingDto;
+import ru.practicum.shareit.item.dto.ItemShortDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -48,24 +48,24 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item addItem(int userId, ItemDto itemDto) {
+    public Item addItem(int userId, ItemShortDto itemShortDto) {
         User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         Request request = null;
-        if (itemDto.getRequestId() != null) {
-            request = requestRepository.findById(itemDto.getRequestId()).orElseThrow(NotFoundException::new);
+        if (itemShortDto.getRequestId() != null) {
+            request = requestRepository.findById(itemShortDto.getRequestId()).orElseThrow(NotFoundException::new);
         }
-        Item item = ItemMapper.toItem(itemDto, owner, request);
+        Item item = ItemMapper.toItem(itemShortDto, owner, request);
         return itemRepository.save(item);
     }
 
     @Override
-    public Item editItem(int userId, int itemId, ItemDto itemDto) {
+    public Item editItem(int userId, int itemId, ItemShortDto itemShortDto) {
         User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         Request request = null;
-        if (itemDto.getRequestId() != null) {
-            request = requestRepository.findById(itemDto.getRequestId()).orElseThrow(NotFoundException::new);
+        if (itemShortDto.getRequestId() != null) {
+            request = requestRepository.findById(itemShortDto.getRequestId()).orElseThrow(NotFoundException::new);
         }
-        Item item = ItemMapper.toItem(itemDto, owner, request);
+        Item item = ItemMapper.toItem(itemShortDto, owner, request);
         Item editedItem = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
 
         if (editedItem.getOwner() == null && item.getOwner() != null) throw new NotFoundException("неверный id");
@@ -86,7 +86,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemLastNextBookingDto getItemById(int userId, int itemId) {
+    public ItemDto getItemById(int userId, int itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
         ItemLastNextBooking itemWithBooking = itemRepository.findByItemIdAndTime(itemId, LocalDateTime.now());
         List<Comment> comments = commentRepository.findAllByItem_id(itemId);
@@ -94,20 +94,27 @@ public class ItemServiceImpl implements ItemService {
         comments.forEach(comment -> commentsDto.add(CommentMapper.toCommentDto(comment)));
 
         if (itemWithBooking == null) {
-            return new ItemLastNextBookingDto(item.getId(), item.getName(),
-                    item.getDescription(), item.getAvailable(), null, null, commentsDto);
+            return new ItemDto(item.getId(), item.getName(),
+                    item.getDescription(), item.getAvailable(), null, null, null, commentsDto);
         }
 
         if (userId != itemWithBooking.getOwnerId()) {
-            return new ItemLastNextBookingDto(itemWithBooking.getId(), itemWithBooking.getName(),
-                    itemWithBooking.getDescription(), itemWithBooking.getAvailable(), null, null, commentsDto);
+            return new ItemDto(itemWithBooking.getId(), itemWithBooking.getName(),
+                    itemWithBooking.getDescription(), itemWithBooking.getAvailable(), null, null, null, commentsDto);
         }
         return ItemMapper.toItemLastNextBookingDtoCommentsDto(itemWithBooking, commentsDto);
+
+
+//        Item item = itemRepository.findById(itemId)
+//                .orElseThrow(() -> new NotFoundException("Не найдена вещь с id: " + id));
+//        ItemShortDto itemDto = ItemMapper.toItemDto(item);
+
+
     }
 
 
     @Override
-    public List<ItemLastNextBookingDto> getAllItemsByUserId(int ownerId, Integer from, Integer size) {
+    public List<ItemDto> getAllItemsByUserId(int ownerId, Integer from, Integer size) {
         if (size == null) {
             size = Integer.MAX_VALUE;
         }
@@ -115,7 +122,7 @@ public class ItemServiceImpl implements ItemService {
 
         List<ItemLastNextBooking> foundItems = (itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now(),
                 pageable)).stream().collect(Collectors.toList());
-        List<ItemLastNextBookingDto> itemDtoList = new ArrayList<>();
+        List<ItemDto> itemDtoList = new ArrayList<>();
 
 
         foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemLastNextBookingDtoComments(item,

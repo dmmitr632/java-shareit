@@ -1,6 +1,6 @@
 package ru.practicum.shareit.request.mapper;
 
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemShortDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.dto.RequestDto;
@@ -32,7 +32,7 @@ public class RequestMapper {
 
 
     public static RequestDto toRequestDto(Request request) {
-        Set<ItemDto> itemsDto = request.getItems().stream().map(ItemMapper::toItemDto).collect(Collectors.toSet());
+        Set<ItemShortDto> itemsDto = request.getItems().stream().map(ItemMapper::toItemDto).collect(Collectors.toSet());
 
         return new RequestDto(request.getId(), request.getDescription(), request.getCreated(), itemsDto);
     }
