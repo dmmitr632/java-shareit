@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.item.dto.ItemLastNextBooking;
+import ru.practicum.shareit.item.dto.ItemQueueInfo;
 import ru.practicum.shareit.item.model.Item;
 
 import java.time.LocalDateTime;
@@ -32,9 +32,9 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
             "or (i.owner_id = :userId and lastBooking.booking_id != nextBooking.booking_id and " +
             "lastBooking.end_time < nextBooking.start_time and " +
             "nextBooking.start_time > :currentTime) order by i.item_id", nativeQuery = true)
-    Page<ItemLastNextBooking> findAllByUserIdAndTime(@Param("userId") Integer userId,
-                                                     @Param("currentTime") LocalDateTime currentTime,
-                                                     Pageable pageable);
+    Page<ItemQueueInfo> findAllByUserIdAndTime(@Param("userId") Integer userId,
+                                               @Param("currentTime") LocalDateTime currentTime,
+                                               Pageable pageable);
 
     @Query(value = "SELECT i.item_id as id, i.name as name, i.description as description, i.available as " +
             "available, " +
@@ -50,7 +50,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
             "or (lastBooking.booking_id != nextBooking.booking_id and lastBooking.end_time <" +
             " nextBooking.start_time and " +
             "nextBooking.start_time > :currentTime)) order by i.item_id limit 1", nativeQuery = true)
-    ItemLastNextBooking findByItemIdAndTime(@Param("itemId") Integer itemId,
-                                            @Param("currentTime") LocalDateTime currentTime);
+    ItemQueueInfo findByItemIdAndTime(@Param("itemId") Integer itemId,
+                                      @Param("currentTime") LocalDateTime currentTime);
 
 }

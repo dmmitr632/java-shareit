@@ -14,14 +14,14 @@ import java.time.LocalDateTime;
 @Setter
 public class BookingDto {
     @EqualsAndHashCode.Exclude
-    Integer id;
+    private Integer id;
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    LocalDateTime start;
+    private LocalDateTime start;
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    LocalDateTime end;
-    ItemShort item;
-    UserShort booker;
-    BookingStatus status;
+    private LocalDateTime end;
+    private ItemShort item;
+    private UserShort booker;
+    private BookingStatus status;
 }

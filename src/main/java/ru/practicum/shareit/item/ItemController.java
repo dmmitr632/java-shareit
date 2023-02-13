@@ -5,13 +5,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemShortDto;
-import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/items")
@@ -24,15 +22,15 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemShortDto addItem(@RequestHeader("X-Sharer-User-Id") int userId,
-                                @Valid @RequestBody ItemShortDto itemShortDto) {
-        return ItemMapper.toItemShortDto(itemService.addItem(userId, itemShortDto));
+    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") int userId,
+                           @Valid @RequestBody ItemShortDto itemShortDto) {
+        return itemService.addItem(userId, itemShortDto);
     }
 
     @PatchMapping("{itemId}")
-    public ItemShortDto editItem(@RequestHeader("X-Sharer-User-Id") int userId, @PathVariable int itemId,
-                                 @RequestBody ItemShortDto itemShortDto) {
-        return ItemMapper.toItemShortDto(itemService.editItem(userId, itemId, itemShortDto));
+    public ItemDto editItem(@RequestHeader("X-Sharer-User-Id") int userId, @PathVariable int itemId,
+                            @RequestBody ItemShortDto itemShortDto) {
+        return itemService.editItem(userId, itemId, itemShortDto);
     }
 
     @GetMapping("{itemId}")
@@ -48,15 +46,11 @@ public class ItemController {
     }
 
     @GetMapping("search")
-    public List<ItemShortDto> getItemsByTextSearch(@RequestParam String text,
-                                                   @RequestParam(defaultValue = "0", required =
-                                                           false) Integer from,
-                                                   @RequestParam(required = false) Integer size) {
-        return itemService.getItemsByTextSearch(text, from, size)
-                .stream()
-                .map(ItemMapper::toItemShortDto)
-                .collect(
-                        Collectors.toList());
+    public List<ItemDto> getItemsByTextSearch(@RequestParam String text,
+                                              @RequestParam(defaultValue = "0", required =
+                                                      false) Integer from,
+                                              @RequestParam(required = false) Integer size) {
+        return itemService.getItemsByTextSearch(text, from, size);
     }
 
     @PostMapping("/{itemId}/comment")

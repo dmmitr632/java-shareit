@@ -5,7 +5,7 @@ import ru.practicum.shareit.item.comment.mapper.CommentMapper;
 import ru.practicum.shareit.item.comment.model.Comment;
 import ru.practicum.shareit.item.dto.BookingShort;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemLastNextBooking;
+import ru.practicum.shareit.item.dto.ItemQueueInfo;
 import ru.practicum.shareit.item.dto.ItemShortDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.model.Request;
@@ -51,15 +51,11 @@ public class ItemMapper {
     }
 
     public static Item toItem(ItemShortDto itemShortDto, User owner, Request request) {
-        return new Item(itemShortDto.getId(),
-                itemShortDto.getName(),
-                itemShortDto.getDescription(),
-                itemShortDto.getAvailable(),
-                owner,
-                request);
+        return new Item(itemShortDto.getId(), itemShortDto.getName(), itemShortDto.getDescription(),
+                itemShortDto.getAvailable(), owner, request);
     }
 
-    public static ItemDto toItemLastNextBookingDtoComments(ItemLastNextBooking item, List<Comment> comments) {
+    public static ItemDto toItemDtoFromQueueAndComments(ItemQueueInfo item, List<Comment> comments) {
         BookingShort lastBooking;
         BookingShort nextBooking;
         if (item.getLastBookingId() != null) {
@@ -81,8 +77,7 @@ public class ItemMapper {
                 lastBooking, nextBooking, commentDtos);
     }
 
-    public static ItemDto toItemLastNextBookingDtoCommentsDto(ItemLastNextBooking item,
-                                                              List<CommentDto> comments) {
+    public static ItemDto toItemDtoFromQueueAndCommentsDto(ItemQueueInfo item, List<CommentDto> comments) {
         BookingShort lastBooking;
         BookingShort nextBooking;
         if (item.getLastBookingId() != null) {

@@ -60,28 +60,6 @@ public class BookingRepositoryTest {
         testEntityManager.persist(booking);
     }
 
-    @Test
-    void findByBooker() {
-        Booking bookingSaved = Booking.builder()
-                .id(1)
-                .start(LocalDateTime.parse(booking.getStart().format(dateFormatter), dateFormatter))
-                .end(LocalDateTime.parse(booking.getEnd().format(dateFormatter), dateFormatter))
-                .build();
-        Booking booking2 = bookingRepository.findFirstByBooker_IdAndItem_Id(1, 1).get();
-        Assertions.assertEquals(bookingSaved, booking2);
-    }
-
-    @Test
-    void findByOwner() {
-        Booking bookingSaved = Booking.builder().id(1)
-                .start(LocalDateTime.parse(booking.getStart().format(dateFormatter), dateFormatter))
-                .end(LocalDateTime.parse(booking.getEnd().format(dateFormatter), dateFormatter)).build();
-        Booking booking2 = bookingRepository.findAllByOwnerId(2, pageable)
-                .stream()
-                .collect(Collectors.toList())
-                .get(0);
-        Assertions.assertEquals(bookingSaved, booking2);
-    }
 
     @Test
     void findFirstByBooker_IdAndItem_Id() {
@@ -211,5 +189,29 @@ public class BookingRepositoryTest {
         assertThat(bookingRepository.findAllByOwnerIdAndStatusEqualsOrderByStartDesc(owner.getId(),
                 BookingStatus.APPROVED, pageable).stream().findFirst().get(), equalTo(booking));
     }
+
+    @Test
+    void findByBooker() {
+        Booking bookingSaved = Booking.builder()
+                .id(1)
+                .start(LocalDateTime.parse(booking.getStart().format(dateFormatter), dateFormatter))
+                .end(LocalDateTime.parse(booking.getEnd().format(dateFormatter), dateFormatter))
+                .build();
+        Booking booking2 = bookingRepository.findFirstByBooker_IdAndItem_Id(1, 1).get();
+        Assertions.assertEquals(bookingSaved, booking2);
+    }
+
+    @Test
+    void findByOwner() {
+        Booking bookingSaved = Booking.builder().id(1)
+                .start(LocalDateTime.parse(booking.getStart().format(dateFormatter), dateFormatter))
+                .end(LocalDateTime.parse(booking.getEnd().format(dateFormatter), dateFormatter)).build();
+        Booking booking2 = bookingRepository.findAllByOwnerId(2, pageable)
+                .stream()
+                .collect(Collectors.toList())
+                .get(0);
+        Assertions.assertEquals(bookingSaved, booking2);
+    }
+
 
 }

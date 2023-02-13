@@ -13,7 +13,7 @@ import ru.practicum.shareit.item.comment.mapper.CommentMapper;
 import ru.practicum.shareit.item.comment.model.Comment;
 import ru.practicum.shareit.item.comment.repository.CommentRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemLastNextBooking;
+import ru.practicum.shareit.item.dto.ItemQueueInfo;
 import ru.practicum.shareit.item.dto.ItemShortDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
@@ -101,7 +101,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto getItemById(int userId, int itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
-        ItemLastNextBooking itemWithBooking = itemRepository.findByItemIdAndTime(itemId, LocalDateTime.now());
+        ItemQueueInfo itemWithBooking = itemRepository.findByItemIdAndTime(itemId, LocalDateTime.now());
         List<Comment> comments = commentRepository.findAllByItem_id(itemId);
         List<CommentDto> commentsDto = new ArrayList<>();
         comments.forEach(comment -> commentsDto.add(CommentMapper.toCommentDto(comment)));
@@ -116,7 +116,7 @@ public class ItemServiceImpl implements ItemService {
                     itemWithBooking.getDescription(), itemWithBooking.getAvailable(), null, null, null,
                     commentsDto);
         }
-        return ItemMapper.toItemLastNextBookingDtoCommentsDto(itemWithBooking, commentsDto);
+        return ItemMapper.toItemDtoFromQueueAndCommentsDto(itemWithBooking, commentsDto);
 
     }
 
@@ -127,12 +127,12 @@ public class ItemServiceImpl implements ItemService {
         }
         Pageable pageable = PageRequest.of(from, size);
 
-        List<ItemLastNextBooking> foundItems = (itemRepository.findAllByUserIdAndTime(ownerId,
+        List<ItemQueueInfo> foundItems = (itemRepository.findAllByUserIdAndTime(ownerId,
                 LocalDateTime.now(),
                 pageable)).stream().collect(Collectors.toList());
         List<ItemDto> itemDtoList = new ArrayList<>();
 
-        foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemLastNextBookingDtoComments(item,
+        foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemDtoFromQueueAndComments(item,
                 commentRepository.findAllByItem_id(item.getId()))));
         return itemDtoList;
     }
