@@ -13,11 +13,16 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 
 @DataJpaTest
@@ -29,12 +34,21 @@ public class BookingRepositoryTest {
     @Autowired
     private TestEntityManager testEntityManager;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private BookingRepository bookingRepository;
+    @Autowired
+    private ItemRepository itemRepository;
 
-    User user1 = new User(null, "User1", "user1@google.com");
-    User user2 = new User(null, "User2", "user2@google.com");
-    Item item = new Item(null, "Item", "item_description", true, user2, null);
-    Booking booking = new Booking(null, LocalDateTime.now(), LocalDateTime.now().plusWeeks(1), item, user1, BookingStatus.APPROVED);
+    User booker = new User(null, "Booker", "booker@google.com");
+    User owner = new User(null, "Owner", "owner@google.com");
+    Item item = new Item(null, "Item", "item_description", true, owner, null);
+
+    LocalDateTime currentTime = LocalDateTime.now();
+    LocalDateTime nextWeek = LocalDateTime.now().plusWeeks(1);
+
+    Booking booking = new Booking(null, currentTime, nextWeek, item, booker,
+            BookingStatus.WAITING);
 
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     Pageable pageable = PageRequest.of(0, 100);
@@ -42,8 +56,8 @@ public class BookingRepositoryTest {
 
     @BeforeEach
     void beforeEachTest() {
-        testEntityManager.persist(user1);
-        testEntityManager.persist(user2);
+        testEntityManager.persist(booker);
+        testEntityManager.persist(owner);
         testEntityManager.persist(item);
         testEntityManager.persist(booking);
     }
@@ -51,15 +65,137 @@ public class BookingRepositoryTest {
     @Test
     void findByBooker() {
         Booking bookingSaved = Booking.builder().id(1).start(LocalDateTime.parse(booking.getStart().format(dateFormatter), dateFormatter)).end(LocalDateTime.parse(booking.getEnd().format(dateFormatter), dateFormatter)).build();
-        Booking booking = bookingRepository.findFirstByBooker_IdAndItem_Id(1, 1).get();
-        Assertions.assertEquals(bookingSaved, booking);
+        Booking booking2 = bookingRepository.findFirstByBooker_IdAndItem_Id(1, 1).get();
+        Assertions.assertEquals(bookingSaved, booking2);
     }
 
     @Test
     void findByOwner() {
-        Booking bookingSaved = Booking.builder().id(1).start(LocalDateTime.parse(booking.getStart().format(dateFormatter), dateFormatter)).end(LocalDateTime.parse(booking.getEnd().format(dateFormatter), dateFormatter)).build();
-        Booking booking = bookingRepository.findAllByOwnerId(2, pageable).stream().collect(Collectors.toList()).get(0);
-        Assertions.assertEquals(bookingSaved, booking);
+        Booking bookingSaved = Booking.builder().id(1).
+                start(LocalDateTime.parse(booking.getStart().format(dateFormatter), dateFormatter)).
+                end(LocalDateTime.parse(booking.getEnd().format(dateFormatter), dateFormatter)).build();
+        Booking booking2 = bookingRepository.findAllByOwnerId(2, pageable).stream().collect(Collectors.toList()).get(0);
+        Assertions.assertEquals(bookingSaved, booking2);
     }
+
+    @Test
+    void findFirstByBooker_IdAndItem_Id() {
+        userRepository.save(booker);
+        userRepository.save(owner);
+        itemRepository.save(item);
+        bookingRepository.save(booking);
+        assertThat(bookingRepository.findFirstByBooker_IdAndItem_Id(booker.getId(), item.getId()).get(), equalTo(booking));
+    }
+
+    @Test
+    void findAllByBookerIdOrderByStartDesc() {
+        userRepository.save(booker);
+        userRepository.save(owner);
+        itemRepository.save(item);
+        bookingRepository.save(booking);
+        assertThat(bookingRepository.findAllByBookerIdOrderByStartDesc(booker.getId(), pageable).stream().findFirst().get(),
+                equalTo(booking));
+    }
+
+    @Test
+    void findAllByBookerIdAndEndIsBeforeOrderByStartDesc() {
+        userRepository.save(booker);
+        userRepository.save(owner);
+        itemRepository.save(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        bookingRepository.save(booking);
+        assertThat(bookingRepository.findAllByBookerIdAndEndIsBeforeOrderByStartDesc(booker.getId(),
+                nextWeek.plusWeeks(1), pageable).stream().findFirst().get(), equalTo(booking));
+    }
+
+    @Test
+    void findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc() {
+        userRepository.save(booker);
+        userRepository.save(owner);
+        itemRepository.save(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        bookingRepository.save(booking);
+        assertThat(bookingRepository.findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(booker.getId(),
+                currentTime.plusWeeks(1), nextWeek.minusWeeks(1), pageable).stream().findFirst().get(), equalTo(booking));
+    }
+
+    @Test
+    void findAllByBookerIdAndStartIsAfterOrderByStartDesc() {
+        userRepository.save(booker);
+        userRepository.save(owner);
+        itemRepository.save(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        bookingRepository.save(booking);
+        assertThat(bookingRepository.findAllByBookerIdAndStartIsAfterOrderByStartDesc(booker.getId(),
+                currentTime.minusWeeks(1), pageable).stream().findFirst().get(), equalTo(booking));
+    }
+
+    @Test
+    void findAllByBookerIdAndStatusOrderByStartDesc() {
+        userRepository.save(booker);
+        userRepository.save(owner);
+        itemRepository.save(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        bookingRepository.save(booking);
+        assertThat(bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(booker.getId(),
+                BookingStatus.APPROVED, pageable).stream().findFirst().get(), equalTo(booking));
+    }
+
+    @Test
+    void findAllByOwnerId() {
+        userRepository.save(booker);
+        userRepository.save(owner);
+        itemRepository.save(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        bookingRepository.save(booking);
+        assertThat(bookingRepository.findAllByOwnerId(owner.getId(), pageable).stream().findFirst().get(),
+                equalTo(booking));
+    }
+
+    @Test
+    void findAllByOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc() {
+        userRepository.save(booker);
+        userRepository.save(owner);
+        itemRepository.save(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        bookingRepository.save(booking);
+        assertThat(bookingRepository.findAllByOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(owner.getId(),
+                        currentTime.plusWeeks(1), nextWeek.minusWeeks(1), pageable).stream().findFirst().get(),
+                equalTo(booking));
+    }
+
+    @Test
+    void findAllByOwnerIdAndEndIsBeforeOrderByStartDesc() {
+        userRepository.save(booker);
+        userRepository.save(owner);
+        itemRepository.save(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        bookingRepository.save(booking);
+        assertThat(bookingRepository.findAllByOwnerIdAndEndIsBeforeOrderByStartDesc(owner.getId(),
+                nextWeek.plusWeeks(1), pageable).stream().findFirst().get(), equalTo(booking));
+    }
+
+    @Test
+    void findAllByOwnerIdAndStartIsAfterOrderByStartDesc() {
+        userRepository.save(booker);
+        userRepository.save(owner);
+        itemRepository.save(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        bookingRepository.save(booking);
+        assertThat(bookingRepository.findAllByOwnerIdAndStartIsAfterOrderByStartDesc(owner.getId(),
+                currentTime.minusWeeks(1), pageable).stream().findFirst().get(), equalTo(booking));
+    }
+
+    @Test
+    void findAllByOwnerIdAndStatusEqualsOrderByStartDesc() {
+        userRepository.save(booker);
+        userRepository.save(owner);
+        itemRepository.save(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        bookingRepository.save(booking);
+        assertThat(bookingRepository.findAllByOwnerIdAndStatusEqualsOrderByStartDesc(owner.getId(),
+                BookingStatus.APPROVED, pageable).stream().findFirst().get(), equalTo(booking));
+    }
+
 
 }
