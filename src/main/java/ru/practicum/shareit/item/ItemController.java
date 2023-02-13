@@ -6,13 +6,12 @@ import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemShortDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/items")
@@ -53,10 +52,11 @@ public class ItemController {
                                                    @RequestParam(defaultValue = "0", required =
                                                            false) Integer from,
                                                    @RequestParam(required = false) Integer size) {
-        List<Item> itemList = itemService.getItemsByTextSearch(text, from, size);
-        List<ItemShortDto> itemShortDtoList = new ArrayList<>();
-        itemList.forEach(item -> itemShortDtoList.add(ItemMapper.toItemShortDto(item)));
-        return itemShortDtoList;
+        return itemService.getItemsByTextSearch(text, from, size)
+                .stream()
+                .map(ItemMapper::toItemShortDto)
+                .collect(
+                        Collectors.toList());
     }
 
     @PostMapping("/{itemId}/comment")

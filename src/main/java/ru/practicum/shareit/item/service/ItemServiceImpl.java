@@ -48,7 +48,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item addItem(int userId, ItemShortDto itemShortDto) {
+    public ItemDto addItem(int userId, ItemShortDto itemShortDto) {
         User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         Request request = null;
         if (itemShortDto.getRequestId() != null) {
@@ -56,11 +56,11 @@ public class ItemServiceImpl implements ItemService {
                     .orElseThrow(NotFoundException::new);
         }
         Item item = ItemMapper.toItem(itemShortDto, owner, request);
-        return itemRepository.save(item);
+        return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
     @Override
-    public Item editItem(int userId, int itemId, ItemShortDto itemShortDto) {
+    public ItemDto editItem(int userId, int itemId, ItemShortDto itemShortDto) {
         User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         Request request = null;
         if (itemShortDto.getRequestId() != null) {
@@ -94,7 +94,7 @@ public class ItemServiceImpl implements ItemService {
         }
         item.setOwner(editedItem.getOwner());
 
-        return itemRepository.save(item);
+        return ItemMapper.toItemDto(itemRepository.save(item));
 
     }
 
@@ -138,7 +138,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getItemsByTextSearch(String text, Integer from, Integer size) {
+    public List<ItemDto> getItemsByTextSearch(String text, Integer from, Integer size) {
         if (size == null) {
             size = Integer.MAX_VALUE;
         }
@@ -146,7 +146,10 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank()) {
             return new ArrayList<>();
         }
-        return itemRepository.search(text, pageable).stream().collect(Collectors.toList());
+        return itemRepository.search(text, pageable)
+                .stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 
     @Override
