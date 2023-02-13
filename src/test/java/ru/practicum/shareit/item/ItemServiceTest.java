@@ -16,9 +16,9 @@ import ru.practicum.shareit.user.dto.UserDto;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -38,19 +38,14 @@ public class ItemServiceTest {
     private MockMvc mvc;
 
     private ItemDto itemDto;
+    CommentDto commentDto;
 
     @BeforeEach
     void init() {
         UserDto userDto = UserDto.builder().id(2).name("user 1").email("user@user.ru").build();
         itemDto = ItemDto.builder().id(1).name("item").description("description").available(true).build();
-        CommentDto commentDto = CommentDto.builder()
-                .id(1)
-                .text("comment")
-                .created(LocalDateTime.now())
-                .build();
+        commentDto = CommentDto.builder().id(1).text("comment").created(LocalDateTime.now()).build();
     }
-
-
 
     @Test
     void addItem() throws Exception {
@@ -79,13 +74,41 @@ public class ItemServiceTest {
     @Test
     void getItemById() throws Exception {
         when(itemService.getItemById(anyInt(), anyInt())).thenReturn(itemDto);
-        mvc.perform(get("/items/1")
-                        .header("X-Sharer-User-Id", 1)
+        mvc.perform(get("/items/1").header("X-Sharer-User-Id", 1)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(itemDto)));
+    }
+
+    @Test
+    void getAllItemsByUserId() throws Exception {
+        when(itemService.getAllItemsByUserId(anyInt(), eq(0), eq(100))).thenReturn(List.of(itemDto));
+        mvc.perform(get("/items").characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("X-Sharer-User-Id", 1)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+    }
+
+    @Test
+    void getItemsByTextSearch() throws Exception {
+        when(itemService.getItemsByTextSearch(anyString(), anyInt(), anyInt())).thenReturn(List.of(itemDto));
+        mvc.perform(get("/items/search?text=name").header("X-Sharer-User-Id", 1)
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+    }
+
+    @Test
+    void addComment() throws Exception {
+        when(itemService.addComment(anyInt(), anyInt(), any(), eq(LocalDateTime.now()))).thenReturn(
+                commentDto);
+        mvc.perform(post("/items/1/comment").header("X-Sharer-User-Id", 1)
+                .content(mapper.writeValueAsString(commentDto))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
     }
 
 }
