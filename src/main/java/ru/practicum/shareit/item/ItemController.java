@@ -11,6 +11,8 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.practicum.shareit.Constants.MAX_INTEGER_AS_STRING;
+
 @RestController
 @RequestMapping("/items")
 @Slf4j
@@ -41,7 +43,8 @@ public class ItemController {
     @GetMapping
     public List<ItemDto> getAllItemsByUserId(@RequestHeader("X-Sharer-User-Id") int userId,
                                              @RequestParam(defaultValue = "0", required = false) Integer from,
-                                             @RequestParam(required = false) Integer size) {
+                                             @RequestParam(defaultValue = MAX_INTEGER_AS_STRING,
+                                                     required = false) Integer size) {
         return itemService.getAllItemsByUserId(userId, from, size);
     }
 
@@ -49,7 +52,8 @@ public class ItemController {
     public List<ItemDto> getItemsByTextSearch(@RequestParam String text,
                                               @RequestParam(defaultValue = "0", required =
                                                       false) Integer from,
-                                              @RequestParam(required = false) Integer size) {
+                                              @RequestParam(defaultValue = MAX_INTEGER_AS_STRING,
+                                                      required = false) Integer size) {
         return itemService.getItemsByTextSearch(text, from, size);
     }
 

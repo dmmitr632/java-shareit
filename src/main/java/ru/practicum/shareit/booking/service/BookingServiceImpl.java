@@ -30,8 +30,8 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
-    public BookingServiceImpl(BookingRepository bookingRepository,
-                              UserRepository userRepository, ItemRepository itemRepository) {
+    public BookingServiceImpl(BookingRepository bookingRepository, UserRepository userRepository,
+                              ItemRepository itemRepository) {
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
@@ -85,14 +85,12 @@ public class BookingServiceImpl implements BookingService {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("user not found");
         }
-        if (size == null) {
-            size = Integer.MAX_VALUE;
-        }
         Pageable pageable = PageRequest.of(from, size);
         if (Objects.equals(state, "ALL")) {
             return bookingRepository.findAllByBookerIdOrderByStartDesc(userId, pageable)
                     .stream()
-                    .map(BookingMapper::toBookingDto).collect(Collectors.toList());
+                    .map(BookingMapper::toBookingDto)
+                    .collect(Collectors.toList());
         } else if (Objects.equals(state, "CURRENT")) {
             return bookingRepository.findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(userId,
                             LocalDateTime.now(), LocalDateTime.now(), pageable)
@@ -129,9 +127,6 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getBookingByOwnerId(Integer userId, String state, Integer from, Integer size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("owner not found");
-        }
-        if (size == null) {
-            size = Integer.MAX_VALUE;
         }
         Pageable pageable = PageRequest.of(from, size);
         if (Objects.equals(state, "ALL")) {

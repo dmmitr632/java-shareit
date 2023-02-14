@@ -122,9 +122,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getAllItemsByUserId(int ownerId, Integer from, Integer size) {
-        if (size == null) {
-            size = Integer.MAX_VALUE;
-        }
         Pageable pageable = PageRequest.of(from, size);
 
         List<ItemQueueInfo> foundItems = (itemRepository.findAllByUserIdAndTime(ownerId,
@@ -139,9 +136,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getItemsByTextSearch(String text, Integer from, Integer size) {
-        if (size == null) {
-            size = Integer.MAX_VALUE;
-        }
         Pageable pageable = PageRequest.of(from, size);
         if (text.isBlank()) {
             return new ArrayList<>();

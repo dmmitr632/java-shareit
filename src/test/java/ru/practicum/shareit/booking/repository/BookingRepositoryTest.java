@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.booking.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.*;
@@ -11,7 +11,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -39,18 +38,18 @@ public class BookingRepositoryTest {
     @Autowired
     private ItemRepository itemRepository;
 
-    User booker = new User(null, "Booker", "booker@google.com");
-    User owner = new User(null, "Owner", "owner@google.com");
-    Item item = new Item(null, "Item", "item_description", true, owner, null);
+    private final User booker = new User(null, "Booker", "booker@google.com");
+    private final User owner = new User(null, "Owner", "owner@google.com");
+    private final Item item = new Item(null, "Item", "item_description", true, owner, null);
 
-    LocalDateTime currentTime = LocalDateTime.now();
-    LocalDateTime nextWeek = LocalDateTime.now().plusWeeks(1);
+    private final LocalDateTime currentTime = LocalDateTime.now();
+    private final LocalDateTime nextWeek = LocalDateTime.now().plusWeeks(1);
 
-    Booking booking = new Booking(null, currentTime, nextWeek, item, booker,
+    private final Booking booking = new Booking(null, currentTime, nextWeek, item, booker,
             BookingStatus.WAITING);
 
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-    Pageable pageable = PageRequest.of(0, 100);
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    private final Pageable pageable = PageRequest.of(0, 100);
 
     @BeforeEach
     void beforeEachTest() {
@@ -59,7 +58,6 @@ public class BookingRepositoryTest {
         testEntityManager.persist(item);
         testEntityManager.persist(booking);
     }
-
 
     @Test
     void findFirstByBooker_IdAndItem_Id() {
@@ -212,6 +210,5 @@ public class BookingRepositoryTest {
                 .get(0);
         Assertions.assertEquals(bookingSaved, booking2);
     }
-
 
 }

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request.service;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -42,12 +43,9 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<RequestDto> getRequestsOfOtherUsers(int userId, Integer from, Integer size) {
         userRepository.findById(userId).orElseThrow(NotFoundException::new);
-        if (size == null) {
-            size = Integer.MAX_VALUE;
-        }
-
+        Pageable pageable = PageRequest.of(from, size);
         return requestRepository.findAllByRequesterIdNotOrderByCreatedDesc(
-                        userId, Pageable.ofSize(from + size)).stream()
+                        userId, pageable).stream()
                 .skip(from).map(RequestMapper::toRequestDto).collect(Collectors.toList());
 
     }

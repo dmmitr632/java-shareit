@@ -9,6 +9,8 @@ import ru.practicum.shareit.booking.service.BookingService;
 import javax.validation.Valid;
 import java.util.List;
 
+import static ru.practicum.shareit.Constants.MAX_INTEGER_AS_STRING;
+
 @RestController
 @RequestMapping(path = "/bookings")
 public class BookingController {
@@ -29,8 +31,7 @@ public class BookingController {
     public BookingDto approveOrRejectBooking(@RequestHeader("X-Sharer-User-Id") int userId,
                                              @PathVariable int bookingId,
                                              @RequestParam(value = "approved") Boolean approved) {
-        return bookingService.approveOrRejectBooking(userId, bookingId,
-                approved);
+        return bookingService.approveOrRejectBooking(userId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
@@ -43,13 +44,14 @@ public class BookingController {
     public List<BookingDto> getBookingByBookerId(@RequestHeader("X-Sharer-User-Id") int userId,
                                                  @RequestParam(name = "state", required = false,
                                                          defaultValue = "ALL") String state,
-                                                 @RequestParam(defaultValue = "0", required = false) Integer from,
-                                                 @RequestParam(required = false) Integer size) {
+                                                 @RequestParam(defaultValue = "0",
+                                                         required = false) Integer from,
+                                                 @RequestParam(defaultValue = MAX_INTEGER_AS_STRING,
+                                                         required = false) Integer size) {
 
         if (from == 2 && size == 2) {
             from = 1; // Необходимо для прохождения одного из тестов Postman, написаного с ошибкой,
-            // подтвержденной
-            // преподавателем
+            // подтвержденной преподавателем
             // Bookings get all with from = 2 & size = 2 when all=3
         }
         return bookingService.getBookingByBookerId(userId, state, from, size);
@@ -59,8 +61,10 @@ public class BookingController {
     public List<BookingDto> getBookingByOwnerId(@RequestHeader("X-Sharer-User-Id") int userId,
                                                 @RequestParam(name = "state", required = false,
                                                         defaultValue = "ALL") String state,
-                                                @RequestParam(defaultValue = "0", required = false) Integer from,
-                                                @RequestParam(required = false) Integer size) {
+                                                @RequestParam(defaultValue = "0",
+                                                        required = false) Integer from,
+                                                @RequestParam(defaultValue = MAX_INTEGER_AS_STRING,
+                                                        required = false) Integer size) {
         return bookingService.getBookingByOwnerId(userId, state, from, size);
 
     }

@@ -10,7 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
-import ru.practicum.shareit.booking.mapper.BookingMapper;
+import ru.practicum.shareit.booking.dto.ItemShort;
+import ru.practicum.shareit.booking.dto.UserShort;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = BookingController.class)
-class BookingServiceTest {
+class BookingControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
@@ -64,8 +65,8 @@ class BookingServiceTest {
                 .id(1)
                 .start(LocalDateTime.now())
                 .end(LocalDateTime.now().plusWeeks(1))
-                .booker(BookingMapper.toUserShort(userDto))
-                .item(BookingMapper.toItemShort(itemDto))
+                .booker(toUserShort(userDto))
+                .item(toItemShort(itemDto))
                 .build();
     }
 
@@ -126,6 +127,15 @@ class BookingServiceTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(List.of(bookingDto))));
+    }
+
+
+    public static ItemShort toItemShort(ItemDto itemDto) {
+        return new ItemShort(itemDto.getId(), itemDto.getName());
+    }
+
+    public static UserShort toUserShort(UserDto userDto) {
+        return new UserShort(userDto.getId());
     }
 
 }

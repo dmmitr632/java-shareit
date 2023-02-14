@@ -8,6 +8,8 @@ import ru.practicum.shareit.request.service.RequestService;
 import javax.validation.Valid;
 import java.util.List;
 
+import static ru.practicum.shareit.Constants.MAX_INTEGER_AS_STRING;
+
 @RestController
 @RequestMapping(path = "/requests")
 @Slf4j
@@ -33,7 +35,9 @@ public class RequestController {
     public List<RequestDto> getAllRequestsCreatedByOtherUsers(@RequestHeader("X-Sharer-User-Id") int userId,
                                                               @RequestParam(defaultValue = "0", required =
                                                                       false) Integer from,
-                                                              @RequestParam(required = false) Integer size) {
+                                                              @RequestParam(defaultValue =
+                                                                      MAX_INTEGER_AS_STRING,
+                                                                      required = false) Integer size) {
         return requestService.getRequestsOfOtherUsers(userId, from, size);
     }
 

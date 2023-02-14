@@ -27,17 +27,6 @@ public class ItemMapper {
                 .build();
     }
 
-    public static ItemShortDto toItemShortDto(ItemDto itemDto) {
-        Integer requestId = itemDto.getRequestId() != null ? itemDto.getRequestId() : null;
-        return ItemShortDto.builder()
-                .id(itemDto.getId())
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .requestId(requestId)
-                .build();
-    }
-
     public static ItemDto toItemDto(Item item) {
         Integer requestId = item.getRequest() != null ? item.getRequest().getId() : null;
         return ItemDto.builder()

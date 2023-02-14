@@ -2,7 +2,6 @@ package ru.practicum.shareit.request.mapper;
 
 import ru.practicum.shareit.item.dto.ItemShortDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
@@ -13,12 +12,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RequestMapper {
-    public static Request toRequest(RequestDto requestDto, User requester, Set<Item> items) {
-        return new Request(requestDto.getId(), requestDto.getDescription(), requester,
-                requestDto.getCreated(),
-                items);
-
-    }
 
     public static Request toRequestWithoutItems(RequestDto requestDto, User requester) {
         if (requestDto.getCreated() != null) {

@@ -40,12 +40,4 @@ public class Item {
         return this.getAvailable();
     }
 
-    public Item(int id, String name, String description, Boolean available, User owner) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-        this.owner = owner;
-    }
-
 }
