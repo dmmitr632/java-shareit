@@ -4,7 +4,6 @@ import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemShortDto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ItemService {
@@ -18,5 +17,5 @@ public interface ItemService {
 
     List<ItemDto> getItemsByTextSearch(String text, Integer from, Integer size);
 
-    CommentDto addComment(int userId, int itemId, CommentDto commentDto, LocalDateTime createdTime);
+    CommentDto addComment(int userId, int itemId, CommentDto commentDto);
 }

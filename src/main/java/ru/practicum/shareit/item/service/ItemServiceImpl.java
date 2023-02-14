@@ -147,16 +147,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public CommentDto addComment(int userId, int itemId, CommentDto commentDto, LocalDateTime createdTime) {
+    public CommentDto addComment(int userId, int itemId, CommentDto commentDto) {
         Item item = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
         User author = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         Booking booking = bookingRepository.findFirstByBooker_IdAndItem_Id(userId, itemId)
                 .orElseThrow(ValidationException::new);
-        if (createdTime.isBefore(booking.getEnd())) {
+
+        Comment comment = CommentMapper.toComment(commentDto, item, author);
+        comment.setCreated(LocalDateTime.now());
+        if (comment.getCreated().isBefore(booking.getEnd())) {
             throw new ValidationException("Lease is not over");
         }
-        Comment comment = CommentMapper.toComment(commentDto, item, author);
-        comment.setCreated(createdTime);
         commentRepository.save(comment);
         return CommentMapper.toCommentDto(comment);
     }

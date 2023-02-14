@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Builder
 @AllArgsConstructor
+@ToString
 public class ItemShortDto {
     @EqualsAndHashCode.Exclude
     Integer id;

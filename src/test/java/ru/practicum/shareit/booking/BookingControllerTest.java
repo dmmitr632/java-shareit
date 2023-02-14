@@ -78,7 +78,6 @@ class BookingControllerTest {
                 .build();
     }
 
-
     @Test
     void requestBooking() throws Exception {
         when(bookingService.requestBooking(anyInt(), any())).thenReturn(bookingDto);

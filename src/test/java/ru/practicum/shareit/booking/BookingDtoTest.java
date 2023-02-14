@@ -9,21 +9,20 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
 class BookingDtoTest {
     @Autowired
-    JacksonTester<BookingDto> json;
+    private JacksonTester<BookingDto> json;
     private final LocalDateTime week =
             LocalDateTime.of(2024, 2, 15, 12, 0, 15);
     private final LocalDateTime nextWeek = week.plusWeeks(1);
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     @Test
-    void testBookingDto() throws Exception {
+    void bookingDto() throws Exception {
         dateTimeFormatter.format(week);
         dateTimeFormatter.format(nextWeek);
         BookingDto bookingDto = BookingDto.builder().id(1).start(week).end(nextWeek).build();

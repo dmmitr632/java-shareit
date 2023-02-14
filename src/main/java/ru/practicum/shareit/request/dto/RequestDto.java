@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
 import ru.practicum.shareit.item.dto.ItemShortDto;
 
 import javax.validation.constraints.NotBlank;
@@ -9,7 +8,11 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Value
+@Builder
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class RequestDto {
     @EqualsAndHashCode.Exclude
     Integer id;

@@ -8,7 +8,6 @@ import ru.practicum.shareit.item.dto.ItemShortDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static ru.practicum.shareit.Constants.MAX_INTEGER_AS_STRING;
@@ -61,7 +60,7 @@ public class ItemController {
     public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") int userId,
                                  @PathVariable int itemId,
                                  @RequestBody @Valid CommentDto commentDto) {
-        LocalDateTime commentCreatedTime = LocalDateTime.now();
-        return itemService.addComment(userId, itemId, commentDto, commentCreatedTime);
+
+        return itemService.addComment(userId, itemId, commentDto);
     }
 }
