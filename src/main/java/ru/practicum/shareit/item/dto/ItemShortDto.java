@@ -1,13 +1,11 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
-@Value
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 public class ItemShortDto {

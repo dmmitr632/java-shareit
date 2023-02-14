@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ItemControllerTest {
     @Autowired
-    private ObjectMapper mapper;
+    ObjectMapper objectMapper = JsonMapper.builder()
+            .findAndAddModules()
+            .build();
 
     @MockBean
     private ItemService itemService;
@@ -41,7 +44,6 @@ public class ItemControllerTest {
 
     @BeforeEach
     void setUp() {
-        // UserDto userDto = UserDto.builder().id(2).name("user 1").email("user@user.ru").build();
         itemDto = ItemDto.builder().id(1).name("item").description("description").available(true).build();
         commentDto = CommentDto.builder().id(1).text("comment").created(LocalDateTime.now()).build();
     }
@@ -49,25 +51,25 @@ public class ItemControllerTest {
     @Test
     void addItem() throws Exception {
         when(itemService.addItem(anyInt(), any())).thenReturn(itemDto);
-        mvc.perform(post("/items").content(mapper.writeValueAsString(itemDto))
+        mvc.perform(post("/items").content(objectMapper.writeValueAsString(itemDto))
                         .header("X-Sharer-User-Id", 1)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(itemDto)));
+                .andExpect(content().json(objectMapper.writeValueAsString(itemDto)));
     }
 
     @Test
     void editItem() throws Exception {
         when(itemService.editItem(anyInt(), anyInt(), any())).thenReturn(itemDto);
-        mvc.perform(patch("/items/1").content(mapper.writeValueAsString(itemDto))
+        mvc.perform(patch("/items/1").content(objectMapper.writeValueAsString(itemDto))
                         .header("X-Sharer-User-Id", 1)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(itemDto)));
+                .andExpect(content().json(objectMapper.writeValueAsString(itemDto)));
     }
 
     @Test
@@ -78,16 +80,17 @@ public class ItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(itemDto)));
+                .andExpect(content().json(objectMapper.writeValueAsString(itemDto)));
     }
 
     @Test
     void getAllItemsByUserId() throws Exception {
-        when(itemService.getAllItemsByUserId(anyInt(), eq(0), eq(100))).thenReturn(List.of(itemDto));
+        when(itemService.getAllItemsByUserId(anyInt(), anyInt(), anyInt())).thenReturn(List.of(itemDto));
         mvc.perform(get("/items").characterEncoding(StandardCharsets.UTF_8)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("X-Sharer-User-Id", 1)
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(List.of(itemDto))));
     }
 
     @Test
@@ -96,18 +99,20 @@ public class ItemControllerTest {
         mvc.perform(get("/items/search?text=name").header("X-Sharer-User-Id", 1)
                 .characterEncoding(StandardCharsets.UTF_8)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(List.of(itemDto))));
     }
 
     @Test
     void addComment() throws Exception {
-        when(itemService.addComment(anyInt(), anyInt(), any(), eq(LocalDateTime.now()))).thenReturn(
+        when(itemService.addComment(anyInt(), anyInt(), any(), any())).thenReturn(
                 commentDto);
         mvc.perform(post("/items/1/comment").header("X-Sharer-User-Id", 1)
-                .content(mapper.writeValueAsString(commentDto))
+                .content(objectMapper.writeValueAsString(commentDto))
                 .characterEncoding(StandardCharsets.UTF_8)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(commentDto)));
     }
 
 }

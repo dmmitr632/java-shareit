@@ -7,11 +7,11 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-// @Value
 @Builder
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class BookingDto {
     @EqualsAndHashCode.Exclude
     private Integer id;

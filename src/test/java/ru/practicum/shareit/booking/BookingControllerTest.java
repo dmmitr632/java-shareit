@@ -1,8 +1,10 @@
 package ru.practicum.shareit.booking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,12 +28,14 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareit.Constants.MAX_INTEGER_AS_STRING;
 
 @WebMvcTest(controllers = BookingController.class)
 class BookingControllerTest {
     @Autowired
-    private ObjectMapper mapper;
-
+    ObjectMapper objectMapper = JsonMapper.builder()
+            .findAndAddModules()
+            .build();
     @MockBean
     private BookingService bookingService;
 
@@ -42,13 +46,13 @@ class BookingControllerTest {
 
     private BookingShortDto bookingShortDto;
 
-    private final LocalDateTime thisWeek = LocalDateTime.of(2023, 1, 1, 12, 0);
-    private final LocalDateTime nextWeek = thisWeek.plusWeeks(1);
-    private final LocalDateTime previousWeek = thisWeek.minusWeeks(1);
+    private final LocalDateTime week = LocalDateTime.of(2023, 3, 14, 22, 0, 15);
+    private final LocalDateTime nextWeek = week.plusWeeks(1);
 
     @BeforeEach
     void init() {
-        UserDto userDto = UserDto.builder().id(2).name("user 1").email("user@user.ru").build(); // booker;
+        UserDto ownerDto = UserDto.builder().id(1).name("user 1").email("user1@user.ru").build();
+        UserDto bookerDto = UserDto.builder().id(2).name("user 2").email("user2@user.ru").build();
 
         ItemDto itemDto = ItemDto.builder()
                 .id(1)
@@ -59,7 +63,7 @@ class BookingControllerTest {
 
         bookingShortDto = BookingShortDto.builder()
                 .id(1)
-                .start(thisWeek)
+                .start(week)
                 .end(nextWeek)
                 .itemId(1)
                 .bookerId(2)
@@ -67,78 +71,90 @@ class BookingControllerTest {
 
         bookingDto = BookingDto.builder()
                 .id(1)
-                .start(thisWeek)
+                .start(week)
                 .end(nextWeek)
-                .booker(toUserShort(userDto))
+                .booker(toUserShort(bookerDto))
                 .item(toItemShort(itemDto))
                 .build();
     }
 
+
     @Test
     void requestBooking() throws Exception {
         when(bookingService.requestBooking(anyInt(), any())).thenReturn(bookingDto);
-        mvc.perform(post("/bookings").content(mapper.writeValueAsString(bookingShortDto))
+        mvc.perform(post("/bookings").content(objectMapper.writeValueAsString(bookingShortDto))
                         .header("X-Sharer-User-Id", 1)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(bookingDto)));
+                .andExpect(content().json(objectMapper.writeValueAsString(bookingDto)));
+        Mockito.verify(bookingService, Mockito.times(1))
+                .requestBooking(1, bookingShortDto);
     }
 
     @Test
     void approveOrRejectBooking() throws Exception {
-        bookingDto.setStatus(BookingStatus.APPROVED);
+
         when(bookingService.approveOrRejectBooking(anyInt(), anyInt(), anyBoolean())).thenReturn(bookingDto);
         mvc.perform(patch("/bookings/1?approved=true").characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(bookingDto)));
+                .andExpect(content().json(objectMapper.writeValueAsString(bookingDto)));
+        Mockito.verify(bookingService, Mockito.times(1))
+                .approveOrRejectBooking(1, 1, true);
     }
 
     @Test
-    void getByIdTest() throws Exception {
+    void getBookingById() throws Exception {
         when(bookingService.getBookingById(anyInt(), anyInt())).thenReturn(bookingDto);
         mvc.perform(get("/bookings/1").characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(bookingDto)));
+                .andExpect(content().json(objectMapper.writeValueAsString(bookingDto)));
+        Mockito.verify(bookingService, Mockito.times(1))
+                .getBookingById(1, 1);
     }
 
     @Test
     void getBookingByOwnerId() throws Exception {
-        when(bookingService.getBookingByOwnerId(anyInt(), anyString(), anyInt(), eq(null))).thenReturn(
+        when(bookingService.getBookingByOwnerId(anyInt(), anyString(), anyInt(), anyInt())).thenReturn(
                 List.of(bookingDto));
         mvc.perform(get("/bookings/owner").characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(List.of(bookingDto))));
+                .andExpect(content().json(objectMapper.writeValueAsString(List.of(bookingDto))));
+        Mockito.verify(bookingService, Mockito.times(1))
+                .getBookingByOwnerId(1, "ALL", 0, Integer.valueOf(MAX_INTEGER_AS_STRING));
     }
 
     @Test
-    void getAllByUserTest() throws Exception {
-        when(bookingService.getBookingByBookerId(anyInt(), anyString(), anyInt(), eq(null))).thenReturn(
+    void getBookingByBookerId() throws Exception {
+        bookingDto.setStatus(BookingStatus.APPROVED);
+        when(bookingService.getBookingByBookerId(anyInt(), anyString(), anyInt(), anyInt())).thenReturn(
                 List.of(bookingDto));
         mvc.perform(get("/bookings").characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", 2)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(List.of(bookingDto))));
+                .andExpect(content().json(objectMapper.writeValueAsString(List.of(bookingDto))));
+        Mockito.verify(bookingService, Mockito.times(1))
+                .getBookingByBookerId(2, "ALL", 0, Integer.valueOf(MAX_INTEGER_AS_STRING));
     }
 
     public static ItemShort toItemShort(ItemDto itemDto) {
         return new ItemShort(itemDto.getId(), itemDto.getName());
     }
 
-    public static UserShort toUserShort(UserDto userDto) {
-        return new UserShort(userDto.getId());
+    public static UserShort toUserShort(UserDto bookerDto) {
+        return new UserShort(bookerDto.getId());
     }
-
 }
+
