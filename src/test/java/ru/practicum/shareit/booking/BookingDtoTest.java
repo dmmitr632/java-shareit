@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 class BookingDtoTest {
     @Autowired
-    private JacksonTester<BookingDto> json;
+    private JacksonTester<BookingDto> jacksonTester;
     private final LocalDateTime week =
             LocalDateTime.of(2024, 2, 15, 12, 0, 15);
     private final LocalDateTime nextWeek = week.plusWeeks(1);
@@ -26,7 +26,7 @@ class BookingDtoTest {
         dateTimeFormatter.format(week);
         dateTimeFormatter.format(nextWeek);
         BookingDto bookingDto = BookingDto.builder().id(1).start(week).end(nextWeek).build();
-        JsonContent<BookingDto> jsonContent = json.write(bookingDto);
+        JsonContent<BookingDto> jsonContent = jacksonTester.write(bookingDto);
         assertThat(jsonContent).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(jsonContent).extractingJsonPathStringValue("$.start")
                 .isEqualTo(LocalDateTime.of(2024, 2, 15, 12, 0, 15).toString());

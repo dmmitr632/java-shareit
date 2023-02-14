@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 public class ItemDtoTest {
     @Autowired
-    private JacksonTester<ItemDto> json;
+    private JacksonTester<ItemDto> jacksonTester;
 
     @Test
     void itemDto() throws Exception {
@@ -23,7 +23,7 @@ public class ItemDtoTest {
                 .description("description")
                 .build();
 
-        JsonContent<ItemDto> jsonContent = json.write(itemDto);
+        JsonContent<ItemDto> jsonContent = jacksonTester.write(itemDto);
         assertThat(jsonContent).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(jsonContent).extractingJsonPathStringValue("$.name").isEqualTo("item");
         assertThat(jsonContent).extractingJsonPathStringValue("$.description").isEqualTo("description");
