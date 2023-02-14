@@ -13,14 +13,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RequestDtoTest {
     @Autowired
     JacksonTester<RequestDto> jacksonTester;
+
     @Test
     void requestDto() throws Exception {
         RequestDto requestDto = RequestDto.builder().id(1).description("description").build();
-
         JsonContent<RequestDto> jsonContent = jacksonTester.write(requestDto);
-
         assertThat(jsonContent).extractingJsonPathNumberValue("$.id").isEqualTo(1);
-        assertThat(jsonContent).extractingJsonPathStringValue("$.description")
-                .isEqualTo("description");
+        assertThat(jsonContent).extractingJsonPathStringValue("$.description").isEqualTo("description");
     }
 }
