@@ -12,7 +12,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.user.dto.UserDto;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -27,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // @WebMvcTest(controllers =ItemController.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ItemServiceTest {
+public class ItemControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
@@ -41,8 +40,8 @@ public class ItemServiceTest {
     CommentDto commentDto;
 
     @BeforeEach
-    void init() {
-        UserDto userDto = UserDto.builder().id(2).name("user 1").email("user@user.ru").build();
+    void setUp() {
+        // UserDto userDto = UserDto.builder().id(2).name("user 1").email("user@user.ru").build();
         itemDto = ItemDto.builder().id(1).name("item").description("description").available(true).build();
         commentDto = CommentDto.builder().id(1).text("comment").created(LocalDateTime.now()).build();
     }

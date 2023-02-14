@@ -42,6 +42,10 @@ class BookingControllerTest {
 
     private BookingShortDto bookingShortDto;
 
+    private final LocalDateTime thisWeek = LocalDateTime.of(2023, 1, 1, 12, 0);
+    private final LocalDateTime nextWeek = thisWeek.plusWeeks(1);
+    private final LocalDateTime previousWeek = thisWeek.minusWeeks(1);
+
     @BeforeEach
     void init() {
         UserDto userDto = UserDto.builder().id(2).name("user 1").email("user@user.ru").build(); // booker;
@@ -55,16 +59,16 @@ class BookingControllerTest {
 
         bookingShortDto = BookingShortDto.builder()
                 .id(1)
-                .start(LocalDateTime.now())
-                .end(LocalDateTime.now().plusWeeks(1))
+                .start(thisWeek)
+                .end(nextWeek)
                 .itemId(1)
                 .bookerId(2)
                 .build();
 
         bookingDto = BookingDto.builder()
                 .id(1)
-                .start(LocalDateTime.now())
-                .end(LocalDateTime.now().plusWeeks(1))
+                .start(thisWeek)
+                .end(nextWeek)
                 .booker(toUserShort(userDto))
                 .item(toItemShort(itemDto))
                 .build();
@@ -128,7 +132,6 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(List.of(bookingDto))));
     }
-
 
     public static ItemShort toItemShort(ItemDto itemDto) {
         return new ItemShort(itemDto.getId(), itemDto.getName());

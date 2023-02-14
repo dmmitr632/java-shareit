@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemQueueInfo;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
@@ -53,7 +52,7 @@ class ItemRepositoryTest {
     Pageable pageable = PageRequest.of(0, 100);
 
     @BeforeEach
-    void beforeEachTest() {
+    void setUp() {
         testEntityManager.persist(user1);
         testEntityManager.persist(user2);
         testEntityManager.persist(request);
