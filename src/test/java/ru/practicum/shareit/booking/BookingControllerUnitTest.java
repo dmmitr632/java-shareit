@@ -179,8 +179,6 @@ public class BookingControllerUnitTest {
         ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
         UserDto user2 = userController.addUser(userDto2);
         BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
-        assertEquals(booking, booking);
-        assertEquals(bookingShortDto, bookingShortDto);
         assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "WAITING", 0, 100).size());
         assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "ALL", 0, 100).size());
         assertEquals(0, bookingController.getAllBookingsByBookerId(user2.getId(), "PAST", 0, 100).size());
@@ -226,4 +224,13 @@ public class BookingControllerUnitTest {
                 "UNKNOWN_STATE", 0, 100));
     }
 
+    @Test
+    void equalsHashcode() {
+        UserDto user1 = userController.addUser(userDto1);
+        ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
+        UserDto user2 = userController.addUser(userDto2);
+        BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
+        assertEquals(booking, booking);
+        assertEquals(bookingShortDto, bookingShortDto);
+    }
 }

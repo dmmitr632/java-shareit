@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,6 +52,7 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(userDto)));
+        Mockito.verify(userService, Mockito.times(1)).addUser(userDto);
     }
 
     @Test
@@ -63,6 +65,7 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(userDto)));
+        Mockito.verify(userService, Mockito.times(1)).editUser(1, userDto);
     }
 
     @Test
@@ -74,6 +77,7 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(userDto)));
+        Mockito.verify(userService, Mockito.times(1)).getUserById(1);
     }
 
     @Test
@@ -85,6 +89,7 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(userDto))));
+        Mockito.verify(userService, Mockito.times(1)).getAllUsers();
     }
 
     @Test

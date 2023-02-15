@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class UserDto {
     @EqualsAndHashCode.Exclude
     Integer id;
