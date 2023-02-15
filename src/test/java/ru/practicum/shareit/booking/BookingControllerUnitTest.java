@@ -167,8 +167,10 @@ public class BookingControllerUnitTest {
 
     @Test
     void getBookingByBookerIdWrongUserId() {
-        assertThrows(NotFoundException.class, () -> bookingController.getAllBookingsByBookerId(1, "ALL", 0, 100));
-        assertThrows(NotFoundException.class, () -> bookingController.getAllBookingsByOwnerId(1, "ALL", 0, 100));
+        assertThrows(NotFoundException.class,
+                () -> bookingController.getAllBookingsByBookerId(1, "ALL", 0, 100));
+        assertThrows(NotFoundException.class,
+                () -> bookingController.getAllBookingsByOwnerId(1, "ALL", 0, 100));
     }
 
     @Test
@@ -206,8 +208,9 @@ public class BookingControllerUnitTest {
         UserDto user2 = userController.addUser(userDto2);
         BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
         assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "WAITING", 0, 100).size());
-        assertThrows(WrongStateException.class, () -> bookingController.getAllBookingsByBookerId(user2.getId(),
-                "UNKNOWN_STATE", 0, 100));
+        assertThrows(WrongStateException.class,
+                () -> bookingController.getAllBookingsByBookerId(user2.getId(),
+                        "UNKNOWN_STATE", 0, 100));
     }
 
     @Test
@@ -220,6 +223,5 @@ public class BookingControllerUnitTest {
         assertThrows(WrongStateException.class, () -> bookingController.getAllBookingsByOwnerId(user1.getId(),
                 "UNKNOWN_STATE", 0, 100));
     }
-
 
 }

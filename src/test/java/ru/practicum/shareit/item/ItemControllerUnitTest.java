@@ -171,8 +171,6 @@ public class ItemControllerUnitTest {
         assertEquals(itemShortDto1.getDescription(), ("description1"));
     }
 
-
-
     @Test
     void editItemWrongRequestId() {
         userController.addUser(userDto);
@@ -193,7 +191,7 @@ public class ItemControllerUnitTest {
         itemController.addItem(1, itemShortDto);
         userDto.setEmail("user2@user.com");
         userController.addUser(userDto);
-        assertEquals("description", itemController.getItemById(1 , 1).getDescription());
+        assertEquals("description", itemController.getItemById(1, 1).getDescription());
     }
 
     @Test
@@ -204,7 +202,7 @@ public class ItemControllerUnitTest {
         userController.addUser(userDto);
         itemShortDto.setOwnerId(2);
         itemController.addItem(2, itemShortDto);
-        assertEquals("description", itemController.getItemById(1 , 1).getDescription());
+        assertEquals("description", itemController.getItemById(1, 1).getDescription());
     }
 
 }

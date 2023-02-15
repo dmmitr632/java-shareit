@@ -128,7 +128,9 @@ public class ItemServiceImpl implements ItemService {
         Pageable pageable = PageRequest.of(from, size);
         return (itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now(), pageable)).stream()
                 .collect(Collectors.toList())
-                .stream().map(item -> (ItemMapper.toItemDtoFromQueueAndComments(item,commentRepository.findAllByItem_id(item.getId()))))
+                .stream()
+                .map(item -> (ItemMapper.toItemDtoFromQueueAndComments(item,
+                        commentRepository.findAllByItem_id(item.getId()))))
                 .collect(Collectors.toList());
     }
 

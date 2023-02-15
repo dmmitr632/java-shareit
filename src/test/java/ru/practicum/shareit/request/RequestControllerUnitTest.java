@@ -34,7 +34,8 @@ public class RequestControllerUnitTest {
     }
 
     @Test
-    @Transactional // test fails without this annotation
+    @Transactional
+        // test fails without this annotation
     void addRequest() {
         UserDto user = userController.addUser(userDto);
         RequestDto request = requestController.addRequest(user.getId(), requestDto);
