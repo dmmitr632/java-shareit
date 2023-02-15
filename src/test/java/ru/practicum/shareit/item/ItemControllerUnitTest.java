@@ -12,6 +12,8 @@ import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemShortDto;
+import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.user.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -146,6 +148,13 @@ public class ItemControllerUnitTest {
     }
 
     @Test
+    void getAllItemsByUserId() {
+        UserDto user1 = userController.addUser(userDto);
+        ItemDto itemDto = itemController.addItem(1, itemShortDto);
+        assertEquals(itemDto, itemController.getAllItemsByUserId(user1.getId(), 0, 100).get(0));
+    }
+
+    @Test
     void getAllItemsByUserIdWrongFrom() {
         assertThrows(IllegalArgumentException.class, () -> itemController.getAllItemsByUserId(1, -100, 20));
     }
@@ -153,5 +162,12 @@ public class ItemControllerUnitTest {
     @Test
     void getAllItemsByUserIdWrongSize() {
         assertThrows(IllegalArgumentException.class, () -> itemController.getAllItemsByUserId(1, 0, -10));
+    }
+
+    @Test
+    void ItemMapperMethods() {
+        Item item = Item.builder().name("name1").description("description1").available(true).build();
+        ItemShortDto itemShortDto1 = ItemMapper.toItemShortDto(item);
+        assertEquals(itemShortDto1.getDescription(), ("description1"));
     }
 }

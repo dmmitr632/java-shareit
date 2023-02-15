@@ -12,6 +12,7 @@ import ru.practicum.shareit.item.dto.ItemShortDto;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JsonTest
 public class ItemDtoTest {
@@ -74,6 +75,15 @@ public class ItemDtoTest {
         assertThat(jsonContent).extractingJsonPathNumberValue("$.requestId").isEqualTo(1);
         assertThat(jsonContent).extractingJsonPathBooleanValue("$.available").isFalse();
         assertThat(jsonContent).extractingJsonPathNumberValue("$.ownerId").isEqualTo(123);
+    }
+
+    @Test
+    void itemDtoMethods() {
+        ItemDto itemDto1 = new ItemDto(null, "name", "description",
+                true, null, null, null, null);
+        ItemDto itemDto2 = new ItemDto(null, "name", "description",
+                true, null, null, null, null);
+        assertEquals(itemDto1, itemDto2);
     }
 
 }

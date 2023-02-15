@@ -126,15 +126,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getAllItemsByUserId(int ownerId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from, size);
-
-        List<ItemQueueInfo> foundItems = (itemRepository.findAllByUserIdAndTime(ownerId,
-                LocalDateTime.now(),
-                pageable)).stream().collect(Collectors.toList());
-        List<ItemDto> itemDtoList = new ArrayList<>();
-
-        foundItems.forEach(item -> itemDtoList.add(ItemMapper.toItemDtoFromQueueAndComments(item,
-                commentRepository.findAllByItem_id(item.getId()))));
-        return itemDtoList;
+        return (itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now(), pageable)).stream()
+                .collect(Collectors.toList())
+                .stream().map(item -> (ItemMapper.toItemDtoFromQueueAndComments(item,commentRepository.findAllByItem_id(item.getId()))))
+                .collect(Collectors.toList());
     }
 
     @Override

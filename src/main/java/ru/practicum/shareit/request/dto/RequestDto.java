@@ -26,22 +26,16 @@ public class RequestDto {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof RequestDto)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         RequestDto that = (RequestDto) o;
-
-        if (!Objects.equals(id, that.id)) {
-            return false;
-        }
-        return Objects.equals(description, that.description);
+        return Objects.equals(description, that.description) &&
+                Objects.equals(created, that.created);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
+        return Objects.hash(description, created);
     }
 }

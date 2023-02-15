@@ -18,25 +18,16 @@ public class ItemMapper {
 
     public static ItemShortDto toItemShortDto(Item item) {
         Integer requestId = item.getRequest() != null ? item.getRequest().getId() : null;
-        return ItemShortDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .requestId(requestId)
-                .build();
+        return ItemShortDto.builder().id(item.getId()).name(item.getName()).description(item.getDescription())
+                .available(item.getAvailable()).requestId(requestId).build();
     }
 
     public static ItemDto toItemDto(Item item) {
         Integer requestId = item.getRequest() != null ? item.getRequest().getId() : null;
-        return ItemDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .requestId(requestId)
-                .comments(new ArrayList<>())
-                .build();
+        return ItemDto.builder().id(item.getId())
+                .name(item.getName()).description(item.getDescription())
+                .available(item.getAvailable()).requestId(requestId)
+                .comments(new ArrayList<>()).build();
     }
 
     public static Item toItem(ItemShortDto itemShortDto, User owner, Request request) {

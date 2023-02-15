@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,47 +14,35 @@ import java.util.Objects;
 @Builder
 @Getter
 @Setter
+@AllArgsConstructor
 public class BookingShortDto {
-    Integer id;
+    private Integer id;
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    LocalDateTime start;
+    private LocalDateTime start;
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    LocalDateTime end;
-    Integer itemId;
-    Integer bookerId;
-    BookingStatus status;
+    private LocalDateTime end;
+    private Integer itemId;
+    private Integer bookerId;
+    private BookingStatus status;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof BookingShortDto)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         BookingShortDto that = (BookingShortDto) o;
-
-        if (!Objects.equals(start, that.start)) {
-            return false;
-        }
-        if (!Objects.equals(end, that.end)) {
-            return false;
-        }
-        if (!Objects.equals(itemId, that.itemId)) {
-            return false;
-        }
-        return Objects.equals(bookerId, that.bookerId);
+        return Objects.equals(start, that.start) && Objects.equals(end, that.end) &&
+                Objects.equals(itemId, that.itemId) &&
+                Objects.equals(bookerId, that.bookerId);
     }
 
     @Override
     public int hashCode() {
-        int result = start != null ? start.hashCode() : 0;
-        result = 31 * result + (end != null ? end.hashCode() : 0);
-        result = 31 * result + (itemId != null ? itemId.hashCode() : 0);
-        result = 31 * result + (bookerId != null ? bookerId.hashCode() : 0);
-        return result;
+        return Objects.hash(start, end, itemId, bookerId);
     }
 }
