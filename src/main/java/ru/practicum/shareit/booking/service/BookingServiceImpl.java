@@ -81,8 +81,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getAllBookingsByBookerId(Integer userId, String state, Integer from,
-                                                     Integer size) {
+    public List<BookingDto> getAllBookingsByBookerId(Integer userId, String state, Integer from, Integer size) {
 
 //        if(Objects.equals(state, "UNSUPPORTED_STATUS")) {
 //            System.out.println("UNSUPPORTED");
@@ -130,8 +129,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getAllBookingsByOwnerId(Integer userId, String state, Integer from,
-                                                    Integer size) {
+    public List<BookingDto> getAllBookingsByOwnerId(Integer userId, String state, Integer from, Integer size) {
 
 //        if(Objects.equals(state, "UNSUPPORTED_STATUS")) {
 //            throw new WrongStateException("Unknown state: " + state);

@@ -43,11 +43,11 @@ public class BookingController {
     @GetMapping()
     public List<BookingDto> getAllBookingsByBookerId(@RequestHeader("X-Sharer-User-Id") int userId,
                                                      @RequestParam(name = "state", required = false,
-                                                             defaultValue = "ALL") String state,
+                                                         defaultValue = "ALL") String state,
                                                      @RequestParam(defaultValue = "0",
-                                                             required = false) Integer from,
+                                                         required = false) Integer from,
                                                      @RequestParam(defaultValue = MAX_INTEGER_AS_STRING,
-                                                             required = false) Integer size) {
+                                                         required = false) Integer size) {
 
         if (from == 2 && size == 2) {
             from = 1; // Необходимо для прохождения одного из тестов Postman, написаного с ошибкой,
@@ -60,11 +60,11 @@ public class BookingController {
     @GetMapping("/owner")
     public List<BookingDto> getAllBookingsByOwnerId(@RequestHeader("X-Sharer-User-Id") int userId,
                                                     @RequestParam(name = "state", required = false,
-                                                            defaultValue = "ALL") String state,
+                                                        defaultValue = "ALL") String state,
                                                     @RequestParam(defaultValue = "0",
-                                                            required = false) Integer from,
+                                                        required = false) Integer from,
                                                     @RequestParam(defaultValue = MAX_INTEGER_AS_STRING,
-                                                            required = false) Integer size) {
+                                                        required = false) Integer size) {
         return bookingService.getAllBookingsByOwnerId(userId, state, from, size);
 
     }

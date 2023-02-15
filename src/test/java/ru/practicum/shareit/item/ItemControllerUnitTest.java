@@ -165,9 +165,46 @@ public class ItemControllerUnitTest {
     }
 
     @Test
-    void ItemMapperMethods() {
+    void itemMapperMethods() {
         Item item = Item.builder().name("name1").description("description1").available(true).build();
         ItemShortDto itemShortDto1 = ItemMapper.toItemShortDto(item);
         assertEquals(itemShortDto1.getDescription(), ("description1"));
     }
+
+
+
+    @Test
+    void editItemWrongRequestId() {
+        userController.addUser(userDto);
+        itemController.addItem(1, itemShortDto);
+        ItemShortDto itemShort = ItemShortDto.builder()
+                .name("item edited")
+                .ownerId(1)
+                .description("description edited")
+                .available(true)
+                .requestId(1)
+                .build();
+        assertThrows(NotFoundException.class, () -> itemController.editItem(1, 1, itemShort));
+    }
+
+    @Test
+    void getItemById() {
+        userController.addUser(userDto);
+        itemController.addItem(1, itemShortDto);
+        userDto.setEmail("user2@user.com");
+        userController.addUser(userDto);
+        assertEquals("description", itemController.getItemById(1 , 1).getDescription());
+    }
+
+    @Test
+    void getItemByIdAnotherOwner() {
+        userController.addUser(userDto);
+        userDto.setId(2);
+        userDto.setEmail("user2@user.com");
+        userController.addUser(userDto);
+        itemShortDto.setOwnerId(2);
+        itemController.addItem(2, itemShortDto);
+        assertEquals("description", itemController.getItemById(1 , 1).getDescription());
+    }
+
 }
