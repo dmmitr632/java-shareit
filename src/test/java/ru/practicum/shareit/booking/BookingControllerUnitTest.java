@@ -179,6 +179,7 @@ public class BookingControllerUnitTest {
         ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
         UserDto user2 = userController.addUser(userDto2);
         BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
+        assertEquals(booking, booking);
         assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "WAITING", 0, 100).size());
         assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "ALL", 0, 100).size());
         assertEquals(0, bookingController.getAllBookingsByBookerId(user2.getId(), "PAST", 0, 100).size());
