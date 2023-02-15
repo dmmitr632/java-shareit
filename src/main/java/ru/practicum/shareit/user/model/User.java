@@ -29,5 +29,4 @@ public class User {
     @Email(message = "wrong email")
     private String email;
 
-
 }

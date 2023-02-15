@@ -41,31 +41,31 @@ public class BookingController {
     }
 
     @GetMapping()
-    public List<BookingDto> getBookingByBookerId(@RequestHeader("X-Sharer-User-Id") int userId,
-                                                 @RequestParam(name = "state", required = false,
-                                                         defaultValue = "ALL") String state,
-                                                 @RequestParam(defaultValue = "0",
-                                                         required = false) Integer from,
-                                                 @RequestParam(defaultValue = MAX_INTEGER_AS_STRING,
-                                                         required = false) Integer size) {
+    public List<BookingDto> getAllBookingsByBookerId(@RequestHeader("X-Sharer-User-Id") int userId,
+                                                     @RequestParam(name = "state", required = false,
+                                                             defaultValue = "ALL") String state,
+                                                     @RequestParam(defaultValue = "0",
+                                                             required = false) Integer from,
+                                                     @RequestParam(defaultValue = MAX_INTEGER_AS_STRING,
+                                                             required = false) Integer size) {
 
         if (from == 2 && size == 2) {
             from = 1; // Необходимо для прохождения одного из тестов Postman, написаного с ошибкой,
             // подтвержденной преподавателем
             // Bookings get all with from = 2 & size = 2 when all=3
         }
-        return bookingService.getBookingByBookerId(userId, state, from, size);
+        return bookingService.getAllBookingsByBookerId(userId, state, from, size);
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> getBookingByOwnerId(@RequestHeader("X-Sharer-User-Id") int userId,
-                                                @RequestParam(name = "state", required = false,
-                                                        defaultValue = "ALL") String state,
-                                                @RequestParam(defaultValue = "0",
-                                                        required = false) Integer from,
-                                                @RequestParam(defaultValue = MAX_INTEGER_AS_STRING,
-                                                        required = false) Integer size) {
-        return bookingService.getBookingByOwnerId(userId, state, from, size);
+    public List<BookingDto> getAllBookingsByOwnerId(@RequestHeader("X-Sharer-User-Id") int userId,
+                                                    @RequestParam(name = "state", required = false,
+                                                            defaultValue = "ALL") String state,
+                                                    @RequestParam(defaultValue = "0",
+                                                            required = false) Integer from,
+                                                    @RequestParam(defaultValue = MAX_INTEGER_AS_STRING,
+                                                            required = false) Integer size) {
+        return bookingService.getAllBookingsByOwnerId(userId, state, from, size);
 
     }
 }

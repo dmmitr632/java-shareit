@@ -10,6 +10,7 @@ import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.exception.WrongStateException;
 import ru.practicum.shareit.item.ItemController;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemShortDto;
@@ -166,8 +167,10 @@ public class BookingControllerUnitTest {
 
     @Test
     void getBookingByBookerIdWrongUserId() {
-        assertThrows(NotFoundException.class, () -> bookingController.getBookingByBookerId(1, "ALL", 0, 100));
-        assertThrows(NotFoundException.class, () -> bookingController.getBookingByOwnerId(1, "ALL", 0, 100));
+        assertThrows(NotFoundException.class,
+                () -> bookingController.getAllBookingsByBookerId(1, "ALL", 0, 100));
+        assertThrows(NotFoundException.class,
+                () -> bookingController.getAllBookingsByOwnerId(1, "ALL", 0, 100));
     }
 
     @Test
@@ -176,26 +179,49 @@ public class BookingControllerUnitTest {
         ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
         UserDto user2 = userController.addUser(userDto2);
         BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
-        assertEquals(1, bookingController.getBookingByBookerId(user2.getId(), "WAITING", 0, 100).size());
-        assertEquals(1, bookingController.getBookingByBookerId(user2.getId(), "ALL", 0, 100).size());
-        assertEquals(0, bookingController.getBookingByBookerId(user2.getId(), "PAST", 0, 100).size());
-        assertEquals(0, bookingController.getBookingByBookerId(user2.getId(), "CURRENT", 0, 100).size());
-        assertEquals(1, bookingController.getBookingByBookerId(user2.getId(), "FUTURE", 0, 100).size());
-        assertEquals(0, bookingController.getBookingByBookerId(user2.getId(), "REJECTED", 0, 100).size());
+        assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "WAITING", 0, 100).size());
+        assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "ALL", 0, 100).size());
+        assertEquals(0, bookingController.getAllBookingsByBookerId(user2.getId(), "PAST", 0, 100).size());
+        assertEquals(0, bookingController.getAllBookingsByBookerId(user2.getId(), "CURRENT", 0, 100).size());
+        assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "FUTURE", 0, 100).size());
+        assertEquals(0, bookingController.getAllBookingsByBookerId(user2.getId(), "REJECTED", 0, 100).size());
         bookingController.approveOrRejectBooking(booking.getId(), user1.getId(), false);
-        assertEquals(0, bookingController.getBookingByOwnerId(user1.getId(), "CURRENT", 0, 100).size());
-        assertEquals(1, bookingController.getBookingByOwnerId(user1.getId(), "ALL", 0, 100).size());
-        assertEquals(0, bookingController.getBookingByOwnerId(user1.getId(), "WAITING", 0, 100).size());
-        assertEquals(1, bookingController.getBookingByOwnerId(user1.getId(), "FUTURE", 0, 100).size());
-        assertEquals(1, bookingController.getBookingByOwnerId(user1.getId(), "REJECTED", 0, 100).size());
-        assertEquals(0, bookingController.getBookingByOwnerId(user1.getId(), "PAST", 0, 100).size());
+        assertEquals(0, bookingController.getAllBookingsByOwnerId(user1.getId(), "CURRENT", 0, 100).size());
+        assertEquals(1, bookingController.getAllBookingsByOwnerId(user1.getId(), "ALL", 0, 100).size());
+        assertEquals(0, bookingController.getAllBookingsByOwnerId(user1.getId(), "WAITING", 0, 100).size());
+        assertEquals(1, bookingController.getAllBookingsByOwnerId(user1.getId(), "FUTURE", 0, 100).size());
+        assertEquals(1, bookingController.getAllBookingsByOwnerId(user1.getId(), "REJECTED", 0, 100).size());
+        assertEquals(0, bookingController.getAllBookingsByOwnerId(user1.getId(), "PAST", 0, 100).size());
         bookingController.approveOrRejectBooking(booking.getId(), user1.getId(), true);
-        assertEquals(0, bookingController.getBookingByOwnerId(user1.getId(), "CURRENT", 0, 100).size());
-        assertEquals(1, bookingController.getBookingByOwnerId(user1.getId(), "ALL", 0, 100).size());
-        assertEquals(0, bookingController.getBookingByOwnerId(user1.getId(), "WAITING", 0, 100).size());
-        assertEquals(1, bookingController.getBookingByOwnerId(user1.getId(), "FUTURE", 0, 100).size());
-        assertEquals(0, bookingController.getBookingByOwnerId(user1.getId(), "REJECTED", 0, 100).size());
-        assertEquals(0, bookingController.getBookingByOwnerId(user1.getId(), "PAST", 0, 100).size());
+        assertEquals(0, bookingController.getAllBookingsByOwnerId(user1.getId(), "CURRENT", 0, 100).size());
+        assertEquals(1, bookingController.getAllBookingsByOwnerId(user1.getId(), "ALL", 0, 100).size());
+        assertEquals(0, bookingController.getAllBookingsByOwnerId(user1.getId(), "WAITING", 0, 100).size());
+        assertEquals(1, bookingController.getAllBookingsByOwnerId(user1.getId(), "FUTURE", 0, 100).size());
+        assertEquals(0, bookingController.getAllBookingsByOwnerId(user1.getId(), "REJECTED", 0, 100).size());
+        assertEquals(0, bookingController.getAllBookingsByOwnerId(user1.getId(), "PAST", 0, 100).size());
+    }
+
+    @Test
+    void getBookingByBookerIdWrongState() {
+        UserDto user1 = userController.addUser(userDto1);
+        ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
+        UserDto user2 = userController.addUser(userDto2);
+        BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
+        assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "WAITING", 0, 100).size());
+        assertThrows(WrongStateException.class,
+                () -> bookingController.getAllBookingsByBookerId(user2.getId(),
+                        "UNKNOWN_STATE", 0, 100));
+    }
+
+    @Test
+    void getBookingByOwnerIdWrongState() {
+        UserDto user1 = userController.addUser(userDto1);
+        ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
+        UserDto user2 = userController.addUser(userDto2);
+        BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
+        assertEquals(1, bookingController.getAllBookingsByOwnerId(user1.getId(), "WAITING", 0, 100).size());
+        assertThrows(WrongStateException.class, () -> bookingController.getAllBookingsByOwnerId(user1.getId(),
+                "UNKNOWN_STATE", 0, 100));
     }
 
 }

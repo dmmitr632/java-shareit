@@ -49,6 +49,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto addItem(int userId, ItemShortDto itemShortDto) {
+        if (itemShortDto.getAvailable() == null) {
+            throw new ValidationException("no information about available status");
+        }
         User owner = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         Request request = null;
         if (itemShortDto.getRequestId() != null) {
@@ -151,7 +154,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId).orElseThrow(NotFoundException::new);
         User author = userRepository.findById(userId).orElseThrow(NotFoundException::new);
         Booking booking = bookingRepository.findFirstByBooker_IdAndItem_Id(userId, itemId)
-                .orElseThrow(ValidationException::new);
+                .orElseThrow(() -> new ValidationException("Bad request"));
 
         Comment comment = CommentMapper.toComment(commentDto, item, author);
         comment.setCreated(LocalDateTime.now());

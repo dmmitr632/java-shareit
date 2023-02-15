@@ -121,7 +121,7 @@ class BookingControllerTest {
 
     @Test
     void getBookingByOwnerId() throws Exception {
-        when(bookingService.getBookingByOwnerId(anyInt(), anyString(), anyInt(), anyInt())).thenReturn(
+        when(bookingService.getAllBookingsByOwnerId(anyInt(), anyString(), anyInt(), anyInt())).thenReturn(
                 List.of(bookingDto));
         mvc.perform(get("/bookings/owner").characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", 1)
@@ -130,13 +130,13 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(bookingDto))));
         Mockito.verify(bookingService, Mockito.times(1))
-                .getBookingByOwnerId(1, "ALL", 0, Integer.valueOf(MAX_INTEGER_AS_STRING));
+                .getAllBookingsByOwnerId(1, "ALL", 0, Integer.valueOf(MAX_INTEGER_AS_STRING));
     }
 
     @Test
     void getBookingByBookerId() throws Exception {
         bookingDto.setStatus(BookingStatus.APPROVED);
-        when(bookingService.getBookingByBookerId(anyInt(), anyString(), anyInt(), anyInt())).thenReturn(
+        when(bookingService.getAllBookingsByBookerId(anyInt(), anyString(), anyInt(), anyInt())).thenReturn(
                 List.of(bookingDto));
         mvc.perform(get("/bookings").characterEncoding(StandardCharsets.UTF_8)
                         .header("X-Sharer-User-Id", 2)
@@ -145,7 +145,7 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(bookingDto))));
         Mockito.verify(bookingService, Mockito.times(1))
-                .getBookingByBookerId(2, "ALL", 0, Integer.valueOf(MAX_INTEGER_AS_STRING));
+                .getAllBookingsByBookerId(2, "ALL", 0, Integer.valueOf(MAX_INTEGER_AS_STRING));
     }
 
     public static ItemShort toItemShort(ItemDto itemDto) {

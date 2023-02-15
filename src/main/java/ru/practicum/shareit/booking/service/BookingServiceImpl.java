@@ -81,7 +81,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookingByBookerId(Integer userId, String state, Integer from, Integer size) {
+    public List<BookingDto> getAllBookingsByBookerId(Integer userId, String state, Integer from,
+                                                     Integer size) {
+
+//        if(Objects.equals(state, "UNSUPPORTED_STATUS")) {
+//            System.out.println("UNSUPPORTED");
+//            throw new WrongStateException("Unknown state: " + state);
+//        }
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("user not found");
         }
@@ -124,7 +130,12 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookingByOwnerId(Integer userId, String state, Integer from, Integer size) {
+    public List<BookingDto> getAllBookingsByOwnerId(Integer userId, String state, Integer from,
+                                                    Integer size) {
+
+//        if(Objects.equals(state, "UNSUPPORTED_STATUS")) {
+//            throw new WrongStateException("Unknown state: " + state);
+//        }
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("owner not found");
         }

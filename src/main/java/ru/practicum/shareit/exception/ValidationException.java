@@ -3,12 +3,8 @@ package ru.practicum.shareit.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+@ResponseStatus(code = HttpStatus.BAD_REQUEST) //400
 public class ValidationException extends RuntimeException {
-    public ValidationException() {
-        super();
-    }
-
     public ValidationException(String message) {
         super(message);
     }
