@@ -207,7 +207,7 @@ public class ItemControllerUnitTest {
     }
 
     @Test
-    void itemMapper() {
+    void toItemDtoFromQueueAndComments() {
         UserDto user1 = userController.addUser(userDto);
         ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
 
@@ -278,6 +278,81 @@ public class ItemControllerUnitTest {
             }
         };
         ItemDto itemDto2 = ItemMapper.toItemDtoFromQueueAndComments(itemQueueInfo, new ArrayList<>());
+        assertEquals(itemDto2.getName(), "name");
+    }
+
+    @Test
+    void toItemDtoFromQueueAndCommentsDto() {
+        UserDto user1 = userController.addUser(userDto);
+        ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
+
+        ItemQueueInfo itemQueueInfo = new ItemQueueInfo() {
+            @Override
+            public Integer getId() {
+                return 1;
+            }
+
+            @Override
+            public String getName() {
+                return "name";
+            }
+
+            @Override
+            public String getDescription() {
+                return "description";
+            }
+
+            @Override
+            public Boolean getAvailable() {
+                return true;
+            }
+
+            @Override
+            public Integer getLastBookingId() {
+                return 1;
+            }
+
+            @Override
+            public Integer getLastBookingBookerId() {
+                return null;
+            }
+
+            @Override
+            public LocalDateTime getLastStart() {
+                return null;
+            }
+
+            @Override
+            public LocalDateTime getLastEnd() {
+                return null;
+            }
+
+            @Override
+            public Integer getNextBookingId() {
+                return 2;
+            }
+
+            @Override
+            public Integer getNextBookingBookerId() {
+                return null;
+            }
+
+            @Override
+            public LocalDateTime getNextStart() {
+                return null;
+            }
+
+            @Override
+            public LocalDateTime getNextEnd() {
+                return null;
+            }
+
+            @Override
+            public Integer getOwnerId() {
+                return null;
+            }
+        };
+        ItemDto itemDto2 = ItemMapper.toItemDtoFromQueueAndCommentsDto(itemQueueInfo, new ArrayList<>());
         assertEquals(itemDto2.getName(), "name");
     }
 
