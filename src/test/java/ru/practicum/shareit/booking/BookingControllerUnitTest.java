@@ -13,11 +13,14 @@ import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.exception.WrongStateException;
 import ru.practicum.shareit.item.ItemController;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemQueueInfo;
 import ru.practicum.shareit.item.dto.ItemShortDto;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.user.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -180,6 +183,7 @@ public class BookingControllerUnitTest {
         UserDto user2 = userController.addUser(userDto2);
         BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
         assertEquals(booking, booking);
+        assertEquals(bookingShortDto, bookingShortDto);
         assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "WAITING", 0, 100).size());
         assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "ALL", 0, 100).size());
         assertEquals(0, bookingController.getAllBookingsByBookerId(user2.getId(), "PAST", 0, 100).size());

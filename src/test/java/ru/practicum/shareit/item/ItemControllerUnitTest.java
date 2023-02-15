@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.booking.BookingController;
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemQueueInfo;
 import ru.practicum.shareit.item.dto.ItemShortDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
@@ -204,5 +206,81 @@ public class ItemControllerUnitTest {
         itemController.addItem(2, itemShortDto);
         assertEquals("description", itemController.getItemById(1, 1).getDescription());
     }
+
+    @Test
+    void itemMapper() {
+        UserDto user1 = userController.addUser(userDto);
+        ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
+
+        ItemQueueInfo itemQueueInfo = new ItemQueueInfo() {
+            @Override
+            public Integer getId() {
+                return 1;
+            }
+
+            @Override
+            public String getName() {
+                return "name";
+            }
+
+            @Override
+            public String getDescription() {
+                return "description";
+            }
+
+            @Override
+            public Boolean getAvailable() {
+                return true;
+            }
+
+            @Override
+            public Integer getLastBookingId() {
+                return 1;
+            }
+
+            @Override
+            public Integer getLastBookingBookerId() {
+                return null;
+            }
+
+            @Override
+            public LocalDateTime getLastStart() {
+                return null;
+            }
+
+            @Override
+            public LocalDateTime getLastEnd() {
+                return null;
+            }
+
+            @Override
+            public Integer getNextBookingId() {
+                return 2;
+            }
+
+            @Override
+            public Integer getNextBookingBookerId() {
+                return null;
+            }
+
+            @Override
+            public LocalDateTime getNextStart() {
+                return null;
+            }
+
+            @Override
+            public LocalDateTime getNextEnd() {
+                return null;
+            }
+
+            @Override
+            public Integer getOwnerId() {
+                return null;
+            }
+        };
+        ItemDto itemDto2 = ItemMapper.toItemDtoFromQueueAndComments(itemQueueInfo, new ArrayList<>());
+        assertEquals(itemDto2.getName(), "name");
+    }
+
 
 }
