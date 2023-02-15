@@ -37,7 +37,7 @@ public class ItemDtoTest {
     }
 
     @Test
-    void BookingShort() throws Exception {
+    void bookingShort() throws Exception {
         BookingShort bookingShort = BookingShort.builder()
                 .id(1)
                 .start(week)
@@ -57,7 +57,7 @@ public class ItemDtoTest {
     }
 
     @Test
-    void ItemShortDto() throws Exception {
+    void itemShortDto() throws Exception {
         ItemShortDto itemShortDto = ItemShortDto.builder()
                 .id(1)
                 .name("item")
