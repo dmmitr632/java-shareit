@@ -13,14 +13,11 @@ import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.exception.WrongStateException;
 import ru.practicum.shareit.item.ItemController;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemQueueInfo;
 import ru.practicum.shareit.item.dto.ItemShortDto;
-import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.user.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
