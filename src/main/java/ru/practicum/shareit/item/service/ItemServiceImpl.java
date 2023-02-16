@@ -39,8 +39,8 @@ public class ItemServiceImpl implements ItemService {
     private final RequestRepository requestRepository;
 
     public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository,
-                           BookingRepository bookingRepository,
-                           CommentRepository commentRepository, RequestRepository requestRepository) {
+                           BookingRepository bookingRepository, CommentRepository commentRepository,
+                           RequestRepository requestRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.bookingRepository = bookingRepository;
@@ -111,8 +111,8 @@ public class ItemServiceImpl implements ItemService {
         comments.forEach(comment -> commentsDto.add(CommentMapper.toCommentDto(comment)));
 
         if (itemWithBooking == null) {
-            return new ItemDto(item.getId(), item.getName(),
-                    item.getDescription(), item.getAvailable(), null, null, null, commentsDto);
+            return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable(), null,
+                    null, null, commentsDto);
         }
 
         if (userId != itemWithBooking.getOwnerId()) {
@@ -130,8 +130,16 @@ public class ItemServiceImpl implements ItemService {
         Page<ItemQueueInfo> items = itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now(),
                 pageable);
 
-        return items.stream().map(item -> (ItemMapper.toItemDtoFromQueueAndComments(item,
-                        commentRepository.findAllByItem_id(item.getId()))))
+        List<Integer> itemsIds = items.stream()
+                .collect(Collectors.toList())
+                .stream()
+                .map(ItemQueueInfo::getId)
+                .collect(Collectors.toList());
+        List<Comment> comments = commentRepository.findByIdIn(itemsIds);
+
+        return items.stream()
+                .map(item -> (ItemMapper.toItemDtoFromQueueAndComments(item,
+                        putCommentsInItem(comments, item.getId()))))
                 .collect(Collectors.toList());
     }
 
@@ -163,4 +171,15 @@ public class ItemServiceImpl implements ItemService {
         return CommentMapper.toCommentDto(comment);
     }
 
+    List<Comment> putCommentsInItem(List<Comment> comments, int itemId) {
+        List<Comment> commentsForThisItem = new ArrayList<>();
+        for (Comment comment : comments) {
+
+            if (comment.getItem().getId() == itemId) {
+                commentsForThisItem.add(comment);
+            }
+        }
+        return commentsForThisItem;
+    }
 }
+
