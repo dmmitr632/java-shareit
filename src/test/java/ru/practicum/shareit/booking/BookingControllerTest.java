@@ -33,7 +33,7 @@ import static ru.practicum.shareit.Constants.MAX_INTEGER_AS_STRING;
 @WebMvcTest(controllers = BookingController.class)
 class BookingControllerTest {
     @Autowired
-    ObjectMapper objectMapper = JsonMapper.builder()
+    private ObjectMapper objectMapper = JsonMapper.builder()
             .findAndAddModules()
             .build();
     @MockBean
@@ -51,7 +51,6 @@ class BookingControllerTest {
 
     @BeforeEach
     void init() {
-        UserDto ownerDto = UserDto.builder().id(1).name("user 1").email("user1@user.ru").build();
         UserDto bookerDto = UserDto.builder().id(2).name("user 2").email("user2@user.ru").build();
 
         ItemDto itemDto = ItemDto.builder()
