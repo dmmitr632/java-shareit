@@ -16,10 +16,10 @@ import java.util.Set;
 @ToString
 public class RequestDto {
     @EqualsAndHashCode.Exclude
-    Integer id;
-    @NotBlank @NotNull String description;
-    LocalDateTime created;
-    Set<ItemShortDto> items;
+    private Integer id;
+    @NotBlank @NotNull private String description;
+    private LocalDateTime created;
+    private Set<ItemShortDto> items;
 
     @Override
     public boolean equals(Object o) {

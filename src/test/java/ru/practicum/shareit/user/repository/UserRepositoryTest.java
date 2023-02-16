@@ -23,8 +23,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @Sql(scripts = "classpath:schema.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class UserRepositoryTest {
     @Autowired
-    UserRepository userRepository;
-    UserDto userDto;
+    private UserRepository userRepository;
+    private UserDto userDto;
 
     @BeforeEach
     void setUp() {
