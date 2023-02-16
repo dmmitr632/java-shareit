@@ -8,8 +8,13 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.mapper.RequestMapper;
+import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.mapper.UserMapper;
+
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -26,6 +31,7 @@ public class RequestControllerAssertTest {
     private RequestDto requestDto;
 
     private UserDto userDto;
+    private final LocalDateTime week = LocalDateTime.of(2024, 2, 14, 12, 0);
 
     @BeforeEach
     void setUp() {
@@ -105,6 +111,14 @@ public class RequestControllerAssertTest {
                 () -> requestController.getAllRequestsCreatedByOtherUsers(1, -100, 10));
     }
 
+    @Test
+    void requestMapperTest() {
+        requestDto.setCreated(week);
+        UserDto userDto1 = userController.addUser(userDto);
+        Request request = RequestMapper.toRequestWithoutItems(requestDto, UserMapper.toUser(userDto1)
+        );
+        assertEquals(request.getCreated(), week);
+    }
 }
 
 
