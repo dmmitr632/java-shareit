@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.practicum.shareit.Constants.MAX_INTEGER_AS_STRING;
 
 @WebMvcTest(controllers = RequestController.class)
-public class RequestControllerTest {
+public class RequestControllerMockTest {
     @Autowired
     private ObjectMapper objectMapper;
 

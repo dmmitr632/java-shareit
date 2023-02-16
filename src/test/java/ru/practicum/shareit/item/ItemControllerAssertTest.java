@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class ItemControllerUnitTest {
+public class ItemControllerAssertTest {
     @Autowired
     private ItemController itemController;
     @Autowired
@@ -40,12 +40,11 @@ public class ItemControllerUnitTest {
     private UserDto userDto;
 
     private final LocalDateTime week = LocalDateTime.of(2024, 2, 14, 12, 0);
-    private final LocalDateTime nextWeek = week.plusWeeks(1);
 
     @BeforeEach
     void setUp() {
         itemShortDto = ItemShortDto.builder().name("name").description("description").available(true).build();
-        RequestDto requestDto = RequestDto.builder().description("description").build();
+        RequestDto.builder().description("description").build();
         userDto = UserDto.builder().name("name").email("user1@user.com").build();
         comment = CommentDto.builder().text("comment").build();
     }
@@ -65,7 +64,7 @@ public class ItemControllerUnitTest {
     @Test
     void addUserWrongRequest() {
         itemShortDto.setRequestId(99);
-        UserDto user = userController.addUser(userDto);
+        userController.addUser(userDto);
         assertThrows(NotFoundException.class, () -> itemController.addItem(1, itemShortDto));
     }
 
@@ -118,7 +117,7 @@ public class ItemControllerUnitTest {
 
     @Test
     void addComment() throws InterruptedException {
-        UserDto user1 = userController.addUser(userDto);
+        userController.addUser(userDto);
         ItemDto item = itemController.addItem(1, itemShortDto);
         userDto.setEmail("user@user.com");
         LocalDateTime currentTime = LocalDateTime.now();
@@ -137,9 +136,9 @@ public class ItemControllerUnitTest {
 
     @Test
     void addCommentWrongItem() {
-        UserDto user = userController.addUser(userDto);
+        userController.addUser(userDto);
         assertThrows(NotFoundException.class, () -> itemController.addComment(1, 1, comment));
-        ItemDto item = itemController.addItem(1, itemShortDto);
+        itemController.addItem(1, itemShortDto);
         assertThrows(ValidationException.class, () -> itemController.addComment(1, 1, comment));
     }
 
@@ -209,7 +208,7 @@ public class ItemControllerUnitTest {
     @Test
     void toItemDtoFromQueueAndComments() {
         UserDto user1 = userController.addUser(userDto);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
+        itemController.addItem(user1.getId(), itemShortDto); //item id = 1
 
         ItemQueueInfo itemQueueInfo = new ItemQueueInfo() {
             @Override
@@ -284,7 +283,7 @@ public class ItemControllerUnitTest {
     @Test
     void toItemDtoFromQueueAndCommentsDto() {
         UserDto user1 = userController.addUser(userDto);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
+        itemController.addItem(user1.getId(), itemShortDto); //item id = 1
 
         ItemQueueInfo itemQueueInfo = new ItemQueueInfo() {
             @Override

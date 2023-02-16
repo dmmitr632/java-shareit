@@ -30,7 +30,7 @@ import static ru.practicum.shareit.Constants.MAX_INTEGER_AS_STRING;
 // @WebMvcTest(controllers =ItemController.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ItemControllerTest {
+public class ItemControllerMockTest {
     @Autowired
     private ObjectMapper objectMapper = JsonMapper.builder().findAndAddModules().build();
 
