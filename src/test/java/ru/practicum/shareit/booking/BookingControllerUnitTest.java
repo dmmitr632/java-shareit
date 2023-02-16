@@ -64,7 +64,7 @@ public class BookingControllerUnitTest {
     @Test
     void requestBooking() {
         UserDto user1 = userController.addUser(userDto1);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto);
+        itemController.addItem(user1.getId(), itemShortDto);
         UserDto user2 = userController.addUser(userDto2);
         BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
         assertEquals(1, bookingController.getBookingById(user2.getId(), booking.getId()).getId());
@@ -72,7 +72,7 @@ public class BookingControllerUnitTest {
 
     @Test
     void requestBookingWrongItem() {
-        UserDto user1 = userController.addUser(userDto1);
+        userController.addUser(userDto1);
         assertThrows(NotFoundException.class, () -> bookingController.requestBooking(1, bookingShortDto));
     }
 
@@ -84,7 +84,7 @@ public class BookingControllerUnitTest {
     @Test
     void requestBookingByOwner() {
         UserDto user1 = userController.addUser(userDto1);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto);
+        itemController.addItem(user1.getId(), itemShortDto);
         assertThrows(NotFoundException.class, () -> bookingController.requestBooking(1, bookingShortDto));
     }
 
@@ -92,15 +92,15 @@ public class BookingControllerUnitTest {
     void requestBookingItemNotAvailable() {
         UserDto user1 = userController.addUser(userDto1);
         itemShortDto.setAvailable(false);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto);
-        UserDto user2 = userController.addUser(userDto2);
+        itemController.addItem(user1.getId(), itemShortDto);
+        userController.addUser(userDto2);
         assertThrows(ValidationException.class, () -> bookingController.requestBooking(2, bookingShortDto));
     }
 
     @Test
     void requestBookingWrongEndDateTime() {
         UserDto user1 = userController.addUser(userDto1);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto);
+        itemController.addItem(user1.getId(), itemShortDto);
         UserDto user2 = userController.addUser(userDto2);
         bookingShortDto.setEnd(LocalDateTime.of(2022, 9, 24, 12, 30));
         assertThrows(ValidationException.class,
@@ -130,9 +130,9 @@ public class BookingControllerUnitTest {
     @Test
     void approveWrongUser() {
         UserDto user1 = userController.addUser(userDto1);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto);
+        itemController.addItem(user1.getId(), itemShortDto);
         UserDto user2 = userController.addUser(userDto2);
-        BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
+        bookingController.requestBooking(user2.getId(), bookingShortDto);
         assertThrows(NotFoundException.class, () -> bookingController.approveOrRejectBooking(1, 2, true));
     }
 
@@ -144,9 +144,9 @@ public class BookingControllerUnitTest {
     @Test
     void approveWrongStatus() {
         UserDto user1 = userController.addUser(userDto1);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto);
+        itemController.addItem(user1.getId(), itemShortDto);
         UserDto user2 = userController.addUser(userDto2); // id =2
-        BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
+        bookingController.requestBooking(user2.getId(), bookingShortDto);
         bookingController.approveOrRejectBooking(1, 1, true);
         assertThrows(ValidationException.class, () -> bookingController.approveOrRejectBooking(1, 1, true));
     }
@@ -159,9 +159,9 @@ public class BookingControllerUnitTest {
     @Test
     void getExistingBookingByIdWrongUserId() {
         UserDto user1 = userController.addUser(userDto1);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto);
+        itemController.addItem(user1.getId(), itemShortDto);
         UserDto user2 = userController.addUser(userDto2);
-        BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
+        bookingController.requestBooking(user2.getId(), bookingShortDto);
         assertThrows(NotFoundException.class, () -> bookingController.getBookingById(99, 1));
     }
 
@@ -176,7 +176,7 @@ public class BookingControllerUnitTest {
     @Test
     void getBookingByBookerId() {
         UserDto user1 = userController.addUser(userDto1);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
+        itemController.addItem(user1.getId(), itemShortDto); //item id = 1
         UserDto user2 = userController.addUser(userDto2);
         BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
         assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "WAITING", 0, 100).size());
@@ -204,9 +204,9 @@ public class BookingControllerUnitTest {
     @Test
     void getBookingByBookerIdWrongState() {
         UserDto user1 = userController.addUser(userDto1);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
+        itemController.addItem(user1.getId(), itemShortDto); //item id = 1
         UserDto user2 = userController.addUser(userDto2);
-        BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
+        bookingController.requestBooking(user2.getId(), bookingShortDto);
         assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "WAITING", 0, 100).size());
         assertThrows(WrongStateException.class,
                 () -> bookingController.getAllBookingsByBookerId(user2.getId(),
@@ -216,9 +216,9 @@ public class BookingControllerUnitTest {
     @Test
     void getBookingByOwnerIdWrongState() {
         UserDto user1 = userController.addUser(userDto1);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
+        itemController.addItem(user1.getId(), itemShortDto); //item id = 1
         UserDto user2 = userController.addUser(userDto2);
-        BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
+        bookingController.requestBooking(user2.getId(), bookingShortDto);
         assertEquals(1, bookingController.getAllBookingsByOwnerId(user1.getId(), "WAITING", 0, 100).size());
         assertThrows(WrongStateException.class, () -> bookingController.getAllBookingsByOwnerId(user1.getId(),
                 "UNKNOWN_STATE", 0, 100));
@@ -227,7 +227,7 @@ public class BookingControllerUnitTest {
     @Test
     void equalsHashcode() {
         UserDto user1 = userController.addUser(userDto1);
-        ItemDto item = itemController.addItem(user1.getId(), itemShortDto); //item id = 1
+        itemController.addItem(user1.getId(), itemShortDto); //item id = 1
         UserDto user2 = userController.addUser(userDto2);
         BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
         assertEquals(booking, booking);

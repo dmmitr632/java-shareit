@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -126,10 +127,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getAllItemsByUserId(int ownerId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from, size);
-        return (itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now(), pageable)).stream()
-                .collect(Collectors.toList())
-                .stream()
-                .map(item -> (ItemMapper.toItemDtoFromQueueAndComments(item,
+        Page<ItemQueueInfo> items = itemRepository.findAllByUserIdAndTime(ownerId, LocalDateTime.now(),
+                pageable);
+
+        return items.stream().map(item -> (ItemMapper.toItemDtoFromQueueAndComments(item,
                         commentRepository.findAllByItem_id(item.getId()))))
                 .collect(Collectors.toList());
     }
