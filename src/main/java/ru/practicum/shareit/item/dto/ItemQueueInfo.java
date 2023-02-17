@@ -2,7 +2,7 @@ package ru.practicum.shareit.item.dto;
 
 import java.time.LocalDateTime;
 
-public interface ItemLastNextBooking {
+public interface ItemQueueInfo {
     Integer getId();
 
     String getName();
@@ -28,4 +28,5 @@ public interface ItemLastNextBooking {
     LocalDateTime getNextEnd();
 
     Integer getOwnerId();
+
 }

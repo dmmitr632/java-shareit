@@ -1,12 +1,12 @@
 package ru.practicum.shareit.item.model;
 
 import lombok.*;
+import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 
 @Builder
 @Getter
@@ -32,7 +32,12 @@ public class Item {
     @JoinColumn(name = "owner_id")
     private User owner;
 
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "request_id")
+    private Request request;
+
     public Boolean isAvailable() {
         return this.getAvailable();
     }
+
 }

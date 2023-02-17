@@ -1,25 +1,28 @@
 package ru.practicum.shareit.item.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Value
+@Builder
+@AllArgsConstructor
+@ToString
+@Getter
+@Setter
 public class BookingShort {
     @EqualsAndHashCode.Exclude
-    Integer id;
+    private Integer id;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    LocalDateTime start;
+    private LocalDateTime start;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    LocalDateTime end;
+    private LocalDateTime end;
 
-    Integer bookerId;
+    private Integer bookerId;
 }
 
