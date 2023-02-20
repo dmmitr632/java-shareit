@@ -24,21 +24,21 @@ public class ItemClient extends BaseClient {
                 .build());
     }
 
-    public ResponseEntity<Object> getItems(long userId, Integer from, Integer size) {
-        Map<String, Object> parameters = Map.of("from", from, "size", size);
-        return get("?from={from}&size={size}", userId, parameters);
-    }
-
-    public ResponseEntity<Object> getItem(Long itemId, long userId) {
-        return get("/" + itemId, userId);
-    }
-
     public ResponseEntity<Object> addItem(long userId, ItemRequestDto requestDto) {
         return post("", userId, requestDto);
     }
 
     public ResponseEntity<Object> editItem(Long itemId, long userId, ItemRequestDto requestDto) {
         return patch("/" + itemId, userId, requestDto);
+    }
+
+    public ResponseEntity<Object> getItemById(Long itemId, long userId) {
+        return get("/" + itemId, userId);
+    }
+
+    public ResponseEntity<Object> getAllItemsByUserId(long userId, Integer from, Integer size) {
+        Map<String, Object> parameters = Map.of("from", from, "size", size);
+        return get("?from={from}&size={size}", userId, parameters);
     }
 
     public ResponseEntity<Object> getItemsByTextSearch(String text, Integer from, Integer size) {

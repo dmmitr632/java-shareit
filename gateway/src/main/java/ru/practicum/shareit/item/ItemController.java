@@ -21,23 +21,6 @@ import javax.validation.constraints.PositiveOrZero;
 public class ItemController {
     private final ItemClient itemClient;
 
-    @GetMapping
-    public ResponseEntity<Object> getItems(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                           @PositiveOrZero @RequestParam(name = "from", required = false,
-                                                   defaultValue = "0") Integer from,
-                                           @Positive @RequestParam(name = "size", required = false,
-                                                   defaultValue = "100") Integer size) {
-        log.info("Get items for user {}", userId);
-        return itemClient.getItems(userId, from, size);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getItem(@PathVariable Long id,
-                                          @RequestHeader("X-Sharer-User-Id") Long userId) {
-        log.info("Get item with id {}", id);
-        return itemClient.getItem(id, userId);
-    }
-
     @PostMapping
     public ResponseEntity<Object> addItem(@RequestHeader("X-Sharer-User-Id") Long userId,
                                           @RequestBody @Valid ItemRequestDto requestDto) {
@@ -51,6 +34,23 @@ public class ItemController {
                                            @RequestBody ItemRequestDto requestDto) {
         log.info("Edit item {}", id);
         return itemClient.editItem(id, userId, requestDto);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getItemById(@PathVariable Long id,
+                                              @RequestHeader("X-Sharer-User-Id") Long userId) {
+        log.info("Get item with id {}", id);
+        return itemClient.getItemById(id, userId);
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> getAllItemsByUserId(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                      @PositiveOrZero @RequestParam(name = "from",
+                                                              required = false, defaultValue = "0") Integer from,
+                                                      @Positive @RequestParam(name = "size", required =
+                                                              false, defaultValue = "100") Integer size) {
+        log.info("Get all items of user {}", userId);
+        return itemClient.getAllItemsByUserId(userId, from, size);
     }
 
     @GetMapping("/search")

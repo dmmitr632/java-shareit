@@ -1,8 +1,8 @@
 version: '3.8'
 services:
   gateway:
-    build: share_it_gateway
-    image: share_it_gateway_image
+    build: gateway
+    image: share_it_gateway
     container_name: share_it_gateway_contatiner
     ports:
       - "127.0.0.1:8080:8080"
@@ -14,12 +14,12 @@ services:
       - SHAREIT_SERVER_URL=http://server:9090
 
   server:
-    build: share_it_server
-    image: share_it_server_image
+    build: server
+    image: share_it_server
     container_name: share_it_server_container
     ports:
       - "127.0.0.1:9090:9090"
-      - "127.0.0.1:9091:9091"
+    #  - "127.0.0.1:9091:9091"
     depends_on:
       - db
     environment:
@@ -30,7 +30,7 @@ services:
     container_name: share_it_postgres
     ports:
       - "127.0.0.1:6541:5432"
-    volumes:
-      - /var/lib/postgresql/data/
+#    volumes:
+#      - /var/lib/postgresql/data/
     env_file:
       postgresdb.env
