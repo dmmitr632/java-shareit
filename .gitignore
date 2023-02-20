@@ -36,3 +36,5 @@ build/
 /src/main/resources/queries.sql
 
 /src/forignoring/
+/server/src/main/resources/db1.properties
+postgresdb.env
