@@ -32,5 +32,9 @@ services:
       - "127.0.0.1:6541:5432"
 #    volumes:
 #      - /var/lib/postgresql/data/
-    env_file:
-      postgresdb.env
+#    env_file:
+#      postgresdb.env
+    environment:
+      - POSTGRES_DB=shareit
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
