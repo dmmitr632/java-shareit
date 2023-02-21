@@ -29,7 +29,7 @@ public class BookingController {
                                                       "0") Integer from,
                                               @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         BookingState state = BookingState.from(stateParam)
-                .orElseThrow(() -> new WrongStateException("Unknown state: " + stateParam));
+                .orElseThrow(() -> new WrongStateException(stateParam));
         if (from == 2 && size == 2) {
             from = 1; // Необходимо для прохождения одного из тестов Postman, написаного с ошибкой,
             // подтвержденной преподавателем
@@ -65,7 +65,7 @@ public class BookingController {
         log.info("Get bookings by owner with userId={}, state {}, from={}, size={}", userId, state, from,
                 size);
         return bookingClient.getAllBookingsByOwnerId(userId, BookingState.from(state)
-                .orElseThrow(() -> new WrongStateException("Unknown state: " + state)), from, size);
+                .orElseThrow(() -> new WrongStateException(state)), from, size);
     }
 
     @PatchMapping("{bookingId}")
