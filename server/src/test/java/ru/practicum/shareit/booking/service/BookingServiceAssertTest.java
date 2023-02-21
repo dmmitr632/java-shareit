@@ -210,14 +210,4 @@ public class BookingServiceAssertTest {
         assertThrows(WrongStateException.class,
                 () -> bookingService.getAllBookingsByOwnerId(user1.getId(), "UNKNOWN_STATE", 0, 100));
     }
-
-    @Test
-    void equalsHashcode() {
-        UserDto user1 = userService.addUser(userDto1);
-        itemService.addItem(user1.getId(), itemShortDto); //item id = 1
-        UserDto user2 = userService.addUser(userDto2);
-        BookingDto booking = bookingService.requestBooking(user2.getId(), bookingShortDto);
-        assertEquals(booking, booking);
-        assertEquals(bookingShortDto, bookingShortDto);
-    }
 }

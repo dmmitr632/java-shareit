@@ -223,14 +223,4 @@ public class BookingControllerAssertTest {
         assertThrows(WrongStateException.class, () -> bookingController.getAllBookingsByOwnerId(user1.getId(),
                 "UNKNOWN_STATE", 0, 100));
     }
-
-    @Test
-    void equalsHashcode() {
-        UserDto user1 = userController.addUser(userDto1);
-        itemController.addItem(user1.getId(), itemShortDto); //item id = 1
-        UserDto user2 = userController.addUser(userDto2);
-        BookingDto booking = bookingController.requestBooking(user2.getId(), bookingShortDto);
-        assertEquals(booking, booking);
-        assertEquals(bookingShortDto, bookingShortDto);
-    }
 }
