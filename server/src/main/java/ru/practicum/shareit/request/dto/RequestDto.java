@@ -17,7 +17,9 @@ import java.util.Set;
 public class RequestDto {
     @EqualsAndHashCode.Exclude
     private Integer id;
-    @NotBlank @NotNull private String description;
+    @NotBlank
+    @NotNull
+    private String description;
     private LocalDateTime created;
     private Set<ItemShortDto> items;
 
