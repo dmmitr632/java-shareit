@@ -1,13 +1,10 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.dto;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
-import ru.practicum.shareit.item.dto.BookingShort;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemShortDto;
 
 import java.time.LocalDateTime;
 
@@ -79,10 +76,8 @@ public class ItemDtoTest {
 
     @Test
     void itemDtoMethods() {
-        ItemDto itemDto1 = new ItemDto(null, "name", "description",
-                true, null, null, null, null);
-        ItemDto itemDto2 = new ItemDto(null, "name", "description",
-                true, null, null, null, null);
+        ItemDto itemDto1 = new ItemDto(null, "name", "description", true, null, null, null, null);
+        ItemDto itemDto2 = new ItemDto(null, "name", "description", true, null, null, null, null);
         assertEquals(itemDto1, itemDto2);
     }
 
