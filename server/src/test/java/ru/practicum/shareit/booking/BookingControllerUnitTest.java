@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.practicum.shareit.Constants.MAX_INTEGER_AS_STRING;
 
 @WebMvcTest(controllers = BookingController.class)
-class BookingControllerMockTest {
+class BookingControllerUnitTest {
     @Autowired
     private ObjectMapper objectMapper = JsonMapper.builder()
             .findAndAddModules()
