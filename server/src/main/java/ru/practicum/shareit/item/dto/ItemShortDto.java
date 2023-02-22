@@ -2,7 +2,6 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @Getter
@@ -13,9 +12,9 @@ import java.util.Objects;
 public class ItemShortDto {
     @EqualsAndHashCode.Exclude
     Integer id;
-    @NotBlank String name;
+    String name;
     Integer ownerId;
-    @NotBlank String description;
+    String description;
     Boolean available;
     Integer requestId;
 

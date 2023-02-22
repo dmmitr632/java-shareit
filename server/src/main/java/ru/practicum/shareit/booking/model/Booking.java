@@ -7,7 +7,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -25,11 +24,11 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
     private Integer id;
-    @NotNull
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "start_time")
     private LocalDateTime start;
-    @NotNull
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "end_time")
     private LocalDateTime end;
@@ -38,9 +37,9 @@ public class Booking {
     private Item item;
     @ManyToOne
     @JoinColumn(name = "booker_id")
-    @NotNull
+
     private User booker;
-    @NotNull
+
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 

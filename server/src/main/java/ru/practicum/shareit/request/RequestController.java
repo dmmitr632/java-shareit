@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.service.RequestService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static ru.practicum.shareit.Constants.MAX_INTEGER_AS_STRING;
@@ -22,7 +21,7 @@ public class RequestController {
 
     @PostMapping
     public RequestDto addRequest(@RequestHeader("X-Sharer-User-Id") int userId,
-                                 @Valid @RequestBody RequestDto requestDto) {
+                                 @RequestBody RequestDto requestDto) {
         return requestService.addRequest(requestDto, userId);
     }
 

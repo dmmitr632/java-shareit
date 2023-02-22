@@ -3,8 +3,6 @@ package ru.practicum.shareit.request.dto;
 import lombok.*;
 import ru.practicum.shareit.item.dto.ItemShortDto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
@@ -17,8 +15,7 @@ import java.util.Set;
 public class RequestDto {
     @EqualsAndHashCode.Exclude
     private Integer id;
-    @NotBlank
-    @NotNull
+
     private String description;
     private LocalDateTime created;
     private Set<ItemShortDto> items;

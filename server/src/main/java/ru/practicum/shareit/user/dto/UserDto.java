@@ -2,9 +2,6 @@ package ru.practicum.shareit.user.dto;
 
 import lombok.*;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-
 @Builder
 @AllArgsConstructor
 @Getter
@@ -14,9 +11,8 @@ import javax.validation.constraints.NotBlank;
 public class UserDto {
     @EqualsAndHashCode.Exclude
     Integer id;
-    @NotBlank
+
     String name;
-    @NotBlank
-    @Email
+
     String email;
 }

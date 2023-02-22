@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -20,8 +19,8 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
                                                     Pageable pageable); // ALL
 
     Page<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(int bookerId,
-                                                                                 @NotNull LocalDateTime time1,
-                                                                                 @NotNull LocalDateTime time2,
+                                                                                 LocalDateTime time1,
+                                                                                 LocalDateTime time2,
                                                                                  Pageable pageable); //
     // CURRENT
 
@@ -31,7 +30,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     Page<Booking> findAllByBookerIdAndStartIsAfterOrderByStartDesc(int userId, LocalDateTime dateTime,
                                                                    Pageable pageable); // FUTURE
 
-    Page<Booking> findAllByBookerIdAndStatusOrderByStartDesc(int userId, @NotNull BookingStatus status,
+    Page<Booking> findAllByBookerIdAndStatusOrderByStartDesc(int userId, BookingStatus status,
                                                              Pageable pageable);
     // WAITING or
     // REJECTED
@@ -67,7 +66,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     @Query("select b from Booking b join b.item i where (i.owner.id = :userId  and b.status = " +
             ":status) order by b.start desc ")
     Page<Booking> findAllByOwnerIdAndStatusEqualsOrderByStartDesc(@Param("userId") int userId,
-                                                                  @NotNull BookingStatus status,
+                                                                  BookingStatus status,
                                                                   Pageable pageable); // WAITING or REJECTED
 
     Optional<Booking> findFirstByBooker_IdAndItem_Id(int bookerId, int itemId);

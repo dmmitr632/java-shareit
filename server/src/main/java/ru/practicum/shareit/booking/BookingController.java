@@ -6,7 +6,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.service.BookingService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static ru.practicum.shareit.Constants.MAX_INTEGER_AS_STRING;
@@ -23,7 +22,7 @@ public class BookingController {
 
     @PostMapping()
     public BookingDto requestBooking(@RequestHeader("X-Sharer-User-Id") int userId,
-                                     @RequestBody @Valid BookingShortDto bookingShortDto) {
+                                     @RequestBody BookingShortDto bookingShortDto) {
         return bookingService.requestBooking(userId, bookingShortDto);
     }
 

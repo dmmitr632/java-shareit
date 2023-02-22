@@ -5,8 +5,6 @@ import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Builder
 @Getter
@@ -22,11 +20,11 @@ public class Item {
     @Column(name = "item_id")
     @EqualsAndHashCode.Exclude
     private Integer id;
-    @NotBlank
+
     private String name;
-    @NotBlank
+
     private String description;
-    @NotNull
+
     private Boolean available;
     @ManyToOne
     @JoinColumn(name = "owner_id")
