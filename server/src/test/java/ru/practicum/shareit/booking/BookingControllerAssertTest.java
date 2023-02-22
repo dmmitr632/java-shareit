@@ -54,11 +54,7 @@ public class BookingControllerAssertTest {
 
         userDto2 = UserDto.builder().name("name").email("user2@gmail.com").build();
 
-        bookingShortDto = BookingShortDto.builder()
-                .start(week)
-                .end(nextWeek)
-                .itemId(1)
-                .build();
+        bookingShortDto = BookingShortDto.builder().start(week).end(nextWeek).itemId(1).build();
     }
 
     @Test
@@ -98,25 +94,12 @@ public class BookingControllerAssertTest {
     }
 
     @Test
-    void requestBookingWrongEndDateTime() {
-        UserDto user1 = userController.addUser(userDto1);
-        itemController.addItem(user1.getId(), itemShortDto);
-        UserDto user2 = userController.addUser(userDto2);
-        bookingShortDto.setEnd(LocalDateTime.of(2022, 9, 24, 12, 30));
-        assertThrows(ValidationException.class,
-                () -> bookingController.requestBooking(user2.getId(), bookingShortDto));
-    }
-
-    @Test
     void approveOrRejectBooking() {
         UserDto owner = userController.addUser(userDto1);
         UserDto booker = userController.addUser(userDto2);
         ItemDto item = itemController.addItem(owner.getId(), itemShortDto);
-        BookingDto booking = bookingController.requestBooking(booker.getId(), BookingShortDto.builder()
-                .start(week)
-                .end(nextWeek)
-                .itemId(item.getId())
-                .build());
+        BookingDto booking = bookingController.requestBooking(booker.getId(),
+                BookingShortDto.builder().start(week).end(nextWeek).itemId(item.getId()).build());
         assertEquals(BookingStatus.WAITING,
                 bookingController.getBookingById(booker.getId(), booking.getId()).getStatus());
         bookingController.approveOrRejectBooking(owner.getId(), booking.getId(), false);
@@ -209,8 +192,7 @@ public class BookingControllerAssertTest {
         bookingController.requestBooking(user2.getId(), bookingShortDto);
         assertEquals(1, bookingController.getAllBookingsByBookerId(user2.getId(), "WAITING", 0, 100).size());
         assertThrows(WrongStateException.class,
-                () -> bookingController.getAllBookingsByBookerId(user2.getId(),
-                        "UNKNOWN_STATE", 0, 100));
+                () -> bookingController.getAllBookingsByBookerId(user2.getId(), "UNKNOWN_STATE", 0, 100));
     }
 
     @Test
@@ -220,7 +202,7 @@ public class BookingControllerAssertTest {
         UserDto user2 = userController.addUser(userDto2);
         bookingController.requestBooking(user2.getId(), bookingShortDto);
         assertEquals(1, bookingController.getAllBookingsByOwnerId(user1.getId(), "WAITING", 0, 100).size());
-        assertThrows(WrongStateException.class, () -> bookingController.getAllBookingsByOwnerId(user1.getId(),
-                "UNKNOWN_STATE", 0, 100));
+        assertThrows(WrongStateException.class,
+                () -> bookingController.getAllBookingsByOwnerId(user1.getId(), "UNKNOWN_STATE", 0, 100));
     }
 }

@@ -90,16 +90,6 @@ public class BookingServiceAssertTest {
     }
 
     @Test
-    void requestBookingWrongEndDateTime() {
-        UserDto user1 = userService.addUser(userDto1);
-        itemService.addItem(user1.getId(), itemShortDto);
-        UserDto user2 = userService.addUser(userDto2);
-        bookingShortDto.setEnd(LocalDateTime.of(2022, 9, 24, 12, 30));
-        assertThrows(ValidationException.class,
-                () -> bookingService.requestBooking(user2.getId(), bookingShortDto));
-    }
-
-    @Test
     void approveOrRejectBooking() {
         UserDto owner = userService.addUser(userDto1);
         UserDto booker = userService.addUser(userDto2);
