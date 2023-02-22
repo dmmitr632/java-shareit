@@ -9,7 +9,6 @@ services:
       - "127.0.0.1:8081:8081"
     depends_on:
       - server
-      - db
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
 

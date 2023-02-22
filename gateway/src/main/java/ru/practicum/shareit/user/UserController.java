@@ -24,7 +24,8 @@ public class UserController {
     }
 
     @PatchMapping("{userId}")
-    public ResponseEntity<Object> editUser(@PathVariable long userId, @RequestBody UserRequestDto userDto) {
+    public ResponseEntity<Object> editUser(@PathVariable long userId,
+                                           @RequestBody UserRequestDto userDto) {
         log.info("Edit user with id {}", userId);
         return userClient.editUser(userId, userDto);
     }
