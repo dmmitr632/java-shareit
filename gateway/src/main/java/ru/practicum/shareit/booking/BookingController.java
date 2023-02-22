@@ -8,11 +8,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.exception.WrongStateException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/bookings")
@@ -28,6 +30,7 @@ public class BookingController {
                                               @PositiveOrZero @RequestParam(name = "from", defaultValue =
                                                       "0") Integer from,
                                               @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new WrongStateException(stateParam));
         if (from == 2 && size == 2) {
@@ -43,7 +46,7 @@ public class BookingController {
     public ResponseEntity<Object> bookItem(@RequestHeader("X-Sharer-User-Id") long userId,
                                            @RequestBody @Valid BookItemRequestDto requestDto) {
         log.info("Creating booking {}, userId={}", requestDto, userId);
-
+        validateBookingDto(requestDto);
         return bookingClient.bookItem(userId, requestDto);
     }
 
@@ -65,8 +68,8 @@ public class BookingController {
 
         log.info("Get bookings by owner with userId={}, state {}, from={}, size={}", userId, state, from,
                 size);
-        return bookingClient.getAllBookingsByOwnerId(userId, BookingState.from(state)
-                .orElseThrow(() -> new WrongStateException(state)), from, size);
+        return bookingClient.getAllBookingsByOwnerId(userId,
+                BookingState.from(state).orElseThrow(() -> new WrongStateException(state)), from, size);
     }
 
     @PatchMapping("{bookingId}")
@@ -74,5 +77,16 @@ public class BookingController {
                                                          @RequestHeader("X-Sharer-User-Id") long userId,
                                                          @PathVariable long bookingId) {
         return bookingClient.approveOrRejectBooking(userId, bookingId, approved);
+    }
+
+    public void validateBookingDto(BookItemRequestDto booking) {
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        if (booking.getEnd().isBefore(currentTime) || booking.getStart().isBefore(currentTime)) {
+            throw new ValidationException("Booking time in before current time");
+        }
+        if (booking.getEnd().isBefore(booking.getStart())) {
+            throw new ValidationException("Booking end time is before start time");
+        }
     }
 }
